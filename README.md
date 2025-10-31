@@ -28,4 +28,3 @@ Purpose:
 - Privion helps people **train with awareness** - blending data and instinct to make fitness sustainable, personal, and intelligent.
 
 _No hype. No rigid rules. Just progress that listens._
-
