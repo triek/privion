@@ -12,6 +12,9 @@ export default defineConfig({
     vueDevTools(),
     tailwind(),
   ],
+
+  base: '/privion/',
+
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
