@@ -5,12 +5,10 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import tailwind from '@tailwindcss/vite'
 
 // https://vite.dev/config/
-export default defineConfig(<UserConfig>{
+export default defineConfig(({ mode }) => (<UserConfig>{
   plugins: [vue(), vueDevTools(), tailwind()],
-  base: '/privion/',
+  base: mode === 'production' ? '/privion/' : '/',
   resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },
+    alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
-})
+}))
