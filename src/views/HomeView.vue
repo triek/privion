@@ -27,7 +27,7 @@
 
     <main>
       <section class="relative overflow-hidden">
-        <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.45),_rgba(15,23,42,0))]"></div>
+        <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.45),rgba(15,23,42,0))]"></div>
         <div class="relative mx-auto flex max-w-6xl flex-col gap-12 px-6 pb-24 pt-20 lg:flex-row lg:items-center">
           <div class="flex-1">
             <p class="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs uppercase tracking-[0.3em] text-slate-300">
