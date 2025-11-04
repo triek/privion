@@ -8,7 +8,7 @@
           </span>
           <div>
             <p class="text-lg font-semibold tracking-wide text-emerald-300">Privion</p>
-            <p class="text-sm text-slate-400">Adaptive fitness, finances, and fuel.</p>
+            <p class="text-sm text-slate-400">Adaptive fitness and fuel.</p>
           </div>
         </RouterLink>
         <nav class="flex flex-wrap items-center gap-2 text-sm font-medium text-slate-300">
@@ -43,10 +43,10 @@ const route = useRoute()
 
 const navItems: NavItem[] = [
   { label: 'Home', to: '/' },
-  { label: 'Log', to: '/log' },
-  { label: 'Coach', to: '/coach' },
-  { label: 'Insights', to: '/insights' },
-  { label: 'Wallet', to: '/wallet' },
+  { label: 'Workout', to: '/workout' },
+  { label: 'Nutrition', to: '/nutrition' },
+  { label: 'Login', to: '/login' },
+  { label: 'Signup', to: '/signup' },
 ]
 </script>
 

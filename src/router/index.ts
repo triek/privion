@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
-import CoachView from '../views/CoachView.vue'
 import HomeView from '../views/HomeView.vue'
-import InsightsView from '../views/InsightsView.vue'
-import LogView from '../views/LogView.vue'
-import WalletView from '../views/WalletView.vue'
+import LoginView from '../views/LoginView.vue'
+import NutritionView from '../views/NutritionView.vue'
+import SignupView from '../views/SignupView.vue'
+import WorkoutView from '../views/WorkoutView.vue'
 
 const base = import.meta.env.PROD ? '/privion/' : '/'
 
@@ -14,24 +14,24 @@ const routes: RouteRecordRaw[] = [
     component: HomeView,
   },
   {
-    path: '/log',
-    name: 'log',
-    component: LogView,
+    path: '/workout',
+    name: 'workout',
+    component: WorkoutView,
   },
   {
-    path: '/coach',
-    name: 'coach',
-    component: CoachView,
+    path: '/nutrition',
+    name: 'nutrition',
+    component: NutritionView,
   },
   {
-    path: '/insights',
-    name: 'insights',
-    component: InsightsView,
+    path: '/login',
+    name: 'login',
+    component: LoginView,
   },
   {
-    path: '/wallet',
-    name: 'wallet',
-    component: WalletView,
+    path: '/signup',
+    name: 'signup',
+    component: SignupView,
   },
 ]
 
