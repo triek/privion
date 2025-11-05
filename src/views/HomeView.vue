@@ -20,6 +20,7 @@
           </button>
         </div>
       </div>
+
       <div class="space-y-5">
         <div class="rounded-2xl border border-white/10 bg-slate-950/70 p-5">
           <p class="text-xs uppercase tracking-wide text-emerald-300">Today summary card</p>
@@ -42,6 +43,7 @@
             </div>
           </div>
         </div>
+
         <div class="grid gap-4 sm:grid-cols-2">
           <div class="rounded-2xl border border-white/10 bg-slate-950/70 p-4">
             <p class="text-xs uppercase text-slate-400">Energy signal</p>
@@ -66,16 +68,19 @@
             <span class="mt-1 h-2 w-2 rounded-full bg-emerald-400"></span>
             3 rounds of box breathing at 4-7 cadence.
           </li>
+
           <li class="flex items-start gap-2">
             <span class="mt-1 h-2 w-2 rounded-full bg-emerald-400"></span>
             Hip 90/90 flow, 2 minutes per side.
           </li>
+
           <li class="flex items-start gap-2">
             <span class="mt-1 h-2 w-2 rounded-full bg-emerald-400"></span>
             32g whey + 5g creatine + cinnamon oats.
           </li>
         </ul>
       </article>
+
       <article class="rounded-2xl border border-white/10 bg-slate-900/60 p-6">
         <h2 class="text-lg font-semibold text-white">Training emphasis</h2>
         <p class="mt-3 text-sm text-slate-400">Primary lift + intent-based accessory cues.</p>
@@ -85,6 +90,7 @@
             <p class="mt-1 text-lg font-semibold text-white">Front squat @ RPE 8</p>
             <p class="mt-1 text-xs text-emerald-100/70">Warm-up: tempo 3-1-1, focus on brace timing.</p>
           </div>
+
           <div class="rounded-xl border border-white/10 bg-slate-950/60 p-4">
             <p class="text-xs uppercase text-slate-400">Accessory pairing</p>
             <p class="mt-1 font-semibold text-white">Split squat iso hold · Cable row tempo</p>
@@ -92,6 +98,7 @@
           </div>
         </div>
       </article>
+
       <article class="rounded-2xl border border-white/10 bg-slate-900/60 p-6">
         <h2 class="text-lg font-semibold text-white">Evening reset</h2>
         <p class="mt-3 text-sm text-slate-400">Lock the day with micro-wins.</p>
@@ -100,10 +107,12 @@
             <span>Reflect: "What felt smooth today?"</span>
             <span class="text-xs uppercase text-slate-500">2 min</span>
           </li>
+
           <li class="flex items-center justify-between rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3">
             <span>Prep shaker + overnight oats</span>
             <span class="text-xs uppercase text-slate-500">5 min</span>
           </li>
+          
           <li class="flex items-center justify-between rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3">
             <span>Budget pulse: tag 2 expenses</span>
             <span class="text-xs uppercase text-slate-500">3 min</span>
