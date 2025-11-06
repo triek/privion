@@ -67,7 +67,7 @@
               v-for="(checked, setIndex) in exercise.completion"
               :key="`set-${index}-${setIndex}`"
               :aria-pressed="checked"
-              class="flex h-10 w-10 items-center justify-center rounded-xl border text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+              class="flex h-10 w-10 items-center justify-center rounded-full border text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
               :class="checked
                 ? 'border-transparent bg-emerald-400 text-slate-900 hover:bg-emerald-300'
                 : 'border-white/15 bg-transparent text-slate-300 hover:border-emerald-300/60 hover:text-white'
@@ -230,7 +230,18 @@ function toggleSet(exerciseIndex: number, setIndex: number) {
     return
   }
 
-  exercise.completion[setIndex] = !exercise.completion[setIndex]
+  const highestCompletedIndex = exercise.completion.lastIndexOf(true)
+
+  if (exercise.completion[setIndex] && highestCompletedIndex === setIndex) {
+    for (let i = 0; i <= setIndex; i += 1) {
+      exercise.completion[i] = false
+    }
+    return
+  }
+
+  for (let i = 0; i < exercise.completion.length; i += 1) {
+    exercise.completion[i] = i <= setIndex
+  }
 }
 
 function finishSession() {
