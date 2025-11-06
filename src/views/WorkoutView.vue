@@ -20,16 +20,36 @@
         <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">{{ historySessions.length }} entries</span>
       </div>
 
-      <ul class="space-y-4">
-        <li v-for="record in historySessions" :key="record.session">
-          <article class="space-y-3 rounded-2xl border border-white/10 bg-slate-950/70 p-5">
-            <h3 class="text-lg font-semibold text-white">{{ record.session }}</h3>
-            <ul class="space-y-2 text-sm text-slate-300">
-              <li v-for="exercise in record.exercises" :key="`${record.session}-${exercise}`">{{ exercise }}</li>
-            </ul>
-          </article>
-        </li>
-      </ul>
+      <div
+        ref="historyContainerRef"
+        class="history-scroll overflow-y-auto pr-1"
+      >
+        <ul class="space-y-4 pb-1">
+          <li v-for="record in historySessions" :key="record.session">
+            <article class="space-y-4 rounded-2xl border border-white/10 bg-slate-950/70 p-5">
+              <div class="flex items-baseline justify-between gap-3">
+                <h3 class="text-lg font-semibold text-white">{{ record.session }}</h3>
+                <span class="text-xs font-semibold uppercase tracking-wide text-emerald-300">{{ record.exercises.length }} exercises</span>
+              </div>
+              <ul class="space-y-3 text-sm text-slate-200">
+                <li
+                  v-for="(exercise, exerciseIndex) in record.exercises"
+                  :key="`${record.session}-${exercise.name}-${exerciseIndex}`"
+                  class="space-y-1 rounded-xl border border-white/5 bg-slate-900/60 p-3"
+                >
+                  <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                    <span class="font-semibold text-white">{{ exercise.name }}</span>
+                    <span class="text-xs font-semibold uppercase tracking-wide text-emerald-200">{{ exercise.weight }}</span>
+                  </div>
+                  <p class="text-xs text-slate-400">
+                    {{ exercise.setsCompleted }} / {{ exercise.setsPlanned }} sets · {{ exercise.reps }} reps
+                  </p>
+                </li>
+              </ul>
+            </article>
+          </li>
+        </ul>
+      </div>
     </section>
 
     <section
@@ -62,21 +82,35 @@
             <p v-if="exercise.notes" class="text-xs text-slate-400">{{ exercise.notes }}</p>
           </div>
 
-          <div class="flex flex-wrap gap-2">
-            <button
-              v-for="(checked, setIndex) in exercise.completion"
-              :key="`set-${index}-${setIndex}`"
-              :aria-pressed="checked"
-              class="flex h-10 w-10 items-center justify-center rounded-full border text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-              :class="checked
-                ? 'border-transparent bg-emerald-400 text-slate-900 hover:bg-emerald-300'
-                : 'border-white/15 bg-transparent text-slate-300 hover:border-emerald-300/60 hover:text-white'
-              "
-              type="button"
-              @click="toggleSet(index, setIndex)"
-            >
-              {{ setIndex + 1 }}
-            </button>
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div class="flex w-full max-w-xs flex-col gap-1">
+              <label :for="`weight-${index}`" class="text-xs font-semibold uppercase tracking-wide text-slate-400">Weight used</label>
+              <input
+                :id="`weight-${index}`"
+                v-model="exercise.weight"
+                class="w-full rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                placeholder="e.g. 40kg"
+                type="text"
+                inputmode="text"
+              />
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+              <button
+                v-for="(checked, setIndex) in exercise.completion"
+                :key="`set-${index}-${setIndex}`"
+                :aria-pressed="checked"
+                class="flex h-10 w-10 items-center justify-center rounded-full border text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                :class="checked
+                  ? 'border-transparent bg-emerald-400 text-slate-900 hover:bg-emerald-300'
+                  : 'border-white/15 bg-transparent text-slate-300 hover:border-emerald-300/60 hover:text-white'
+                "
+                type="button"
+                @click="toggleSet(index, setIndex)"
+              >
+                {{ setIndex + 1 }}
+              </button>
+            </div>
           </div>
         </article>
       </div>
@@ -158,6 +192,7 @@ import { workoutHistory } from '@/data/workoutHistory'
 
 type SessionExercise = Exercise & {
   completion: boolean[]
+  weight: string
 }
 
 const hasPlanner = true
@@ -173,6 +208,7 @@ const sessionActive = ref(false)
 const activePlan = ref<Plan | null>(null)
 const sessionExercises = ref<SessionExercise[]>([])
 const historySessions = ref<SessionRecord[]>([...workoutHistory])
+const historyContainerRef = ref<HTMLElement | null>(null)
 const pageEndRef = ref<HTMLElement | null>(null)
 
 const rotationOrder: Plan['id'][] = ['push', 'pull', 'legs']
@@ -182,8 +218,9 @@ const recommendedPlan = computed<Plan | null>(() => {
     return null
   }
 
-  const lastPlanId = historySessions.value[0]?.planId
-  if (!lastPlanId) {
+  const lastRecordIndex = historySessions.value.length - 1
+  const lastPlanId = lastRecordIndex >= 0 ? historySessions.value[lastRecordIndex]?.planId : undefined
+    if (!lastPlanId) {
     return weeklyPlan[0] ?? null
   }
 
@@ -202,16 +239,27 @@ const recommendedPlanLabel = computed(() => {
 })
 
 onMounted(() => {
+  scrollHistoryToBottom()
   nextTick(() => {
     pageEndRef.value?.scrollIntoView({ behavior: 'smooth', block: 'end' })
   })
 })
+
+function scrollHistoryToBottom() {
+  nextTick(() => {
+    const container = historyContainerRef.value
+    if (container) {
+      container.scrollTop = container.scrollHeight
+    }
+  })
+}
 
 function startSession(plan: Plan) {
   activePlan.value = plan
   sessionExercises.value = plan.exercises.map((exercise) => ({
     ...exercise,
     completion: Array.from({ length: exercise.sets }, () => false),
+    weight: '',
   }))
   sessionActive.value = true
   showPlanPicker.value = false
@@ -254,7 +302,19 @@ function finishSession() {
   const month = String(now.getMonth() + 1).padStart(2, '0')
   const day = String(now.getDate()).padStart(2, '0')
 
-  const completedExercises = sessionExercises.value.map((exercise) => `${exercise.name} ${exercise.sets} × ${exercise.reps}`)
+  const completedExercises: SessionRecord['exercises'] = sessionExercises.value.map((exercise) => {
+    const completedSets = Math.min(
+      exercise.sets,
+      exercise.completion.filter(Boolean).length,
+    )
+    return {
+      name: exercise.name,
+      weight: exercise.weight.trim() || 'Bodyweight',
+      setsCompleted: completedSets,
+      setsPlanned: exercise.sets,
+      reps: exercise.reps,
+    }
+  })
 
   const newRecord: SessionRecord = {
     session: `${month}/${day} - ${completedPlan.label} Day`,
@@ -262,7 +322,8 @@ function finishSession() {
     exercises: completedExercises,
   }
 
-  historySessions.value = [newRecord, ...historySessions.value]
+  historySessions.value = [...historySessions.value, newRecord]
+  scrollHistoryToBottom()
 
   sessionActive.value = false
   activePlan.value = null
@@ -275,6 +336,16 @@ function closePlanPicker() {
 </script>
 
 <style scoped>
+.history-scroll {
+  max-height: calc(3 * 12.5rem + 2rem);
+}
+
+@media (min-width: 768px) {
+  .history-scroll {
+    max-height: calc(3 * 13.75rem + 2rem);
+  }
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s ease;
