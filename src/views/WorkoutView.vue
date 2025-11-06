@@ -1,32 +1,35 @@
 <template>
   <div class="space-y-10">
     <section class="rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/30">
-      <header class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div class="space-y-2">
-          <h1 class="text-3xl font-bold text-white">Workout</h1>
-          <p v-if="hasPlanner" class="text-sm text-slate-400">Week {{ planner.week }} · Day {{ planner.day }}</p>
-        </div>
-        <div class="flex flex-wrap items-center gap-3">
-          <button
-            class="inline-flex items-center gap-2 rounded-full bg-emerald-400 px-5 py-2.5 text-sm font-semibold text-slate-900 shadow shadow-emerald-500/40 transition hover:-translate-y-0.5 hover:bg-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-            type="button"
-            @click="startTodayPlan"
-          >
-            Start {{ todayPlanLabel }}
-          </button>
-          <button
-            class="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-slate-100 transition hover:-translate-y-0.5 hover:border-white/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
-            type="button"
-            @click="showPlanPicker = true"
-          >
-            Start…
-          </button>
-        </div>
-      </header>
+      <div class="space-y-2">
+        <h1 class="text-3xl font-bold text-white">Workout</h1>
+        <p v-if="hasPlanner" class="text-sm text-slate-400">Week {{ planner.week }} · Day {{ planner.day }}</p>
+      </div>
 
       <p class="mt-6 text-sm text-slate-300">
-        Lock in today’s intent, pick your plan, and stay accountable as you check off every set.
+        Lock in today’s intent, review your recent efforts, and be ready to launch the next session when you’re set.
       </p>
+    </section>
+
+    <section class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/30">
+      <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h2 class="text-2xl font-semibold text-white">Session history</h2>
+          <p class="text-sm text-slate-400">Latest tracked workouts with weights, sets, and reps.</p>
+        </div>
+        <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">{{ historySessions.length }} entries</span>
+      </div>
+
+      <ul class="space-y-4">
+        <li v-for="record in historySessions" :key="record.session">
+          <article class="space-y-3 rounded-2xl border border-white/10 bg-slate-950/70 p-5">
+            <h3 class="text-lg font-semibold text-white">{{ record.session }}</h3>
+            <ul class="space-y-2 text-sm text-slate-300">
+              <li v-for="exercise in record.exercises" :key="`${record.session}-${exercise}`">{{ exercise }}</li>
+            </ul>
+          </article>
+        </li>
+      </ul>
     </section>
 
     <section
@@ -79,6 +82,33 @@
       </div>
     </section>
 
+    <section class="rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/30">
+      <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div class="space-y-2">
+          <h2 class="text-2xl font-semibold text-white">Ready for the next one?</h2>
+          <p class="text-sm text-slate-400">Kick off your planned session or pick a different focus.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <button
+            class="inline-flex items-center gap-2 rounded-full bg-emerald-400 px-5 py-2.5 text-sm font-semibold text-slate-900 shadow shadow-emerald-500/40 transition hover:-translate-y-0.5 hover:bg-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+            type="button"
+            @click="startTodayPlan"
+          >
+            Start {{ todayPlanLabel }}
+          </button>
+          <button
+            class="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-slate-100 transition hover:-translate-y-0.5 hover:border-white/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+            type="button"
+            @click="showPlanPicker = true"
+          >
+            Start…
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <div ref="pageEndRef"></div>
+
     <transition name="fade">
       <div
         v-if="showPlanPicker"
@@ -120,9 +150,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, nextTick, onMounted, reactive, ref } from 'vue'
 import type { Exercise, Plan } from '@/data/workoutPlans'
 import { workoutPlans } from '@/data/workoutPlans'
+import { workoutHistory } from '@/data/workoutHistory'
 
 type SessionExercise = Exercise & {
   completion: boolean[]
@@ -140,6 +171,8 @@ const showPlanPicker = ref(false)
 const sessionActive = ref(false)
 const activePlan = ref<Plan | null>(null)
 const sessionExercises = ref<SessionExercise[]>([])
+const historySessions = workoutHistory
+const pageEndRef = ref<HTMLElement | null>(null)
 
 const todayPlanIndex = computed(() => {
   if (!hasPlanner || weeklyPlan.length === 0) {
@@ -157,6 +190,12 @@ const todayPlanLabel = computed(() => {
     return `${todayPlan.value.label} Day`
   }
   return 'Session'
+})
+
+onMounted(() => {
+  nextTick(() => {
+    pageEndRef.value?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+  })
 })
 
 function startSession(plan: Plan) {
