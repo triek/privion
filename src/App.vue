@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-slate-950 text-slate-100">
-    <header class="border-b border-white/10 bg-slate-950/80 backdrop-blur">
+    <header class="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-slate-950/80 backdrop-blur">
       <div class="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-6 sm:flex-row sm:items-center sm:justify-between">
         <RouterLink to="/" class="flex items-center gap-3 text-left">
           <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/20 text-2xl font-black text-emerald-300 shadow-inner shadow-emerald-500/40">
@@ -25,7 +25,7 @@
       </div>
     </header>
 
-    <main class="mx-auto max-w-6xl px-6 py-12">
+    <main class="mx-auto max-w-6xl px-6 pb-12 pt-32">
       <RouterView />
     </main>
   </div>

@@ -1,11 +1,15 @@
+import type { Plan } from './workoutPlans'
+
 export type SessionRecord = {
   session: string
+  planId: Plan['id']
   exercises: string[]
 }
 
 export const workoutHistory: SessionRecord[] = [
   {
     session: '05/11 - Push Day',
+    planId: 'push',
     exercises: [
       'Barbell bench press 40kg 4x10',
       'Incline dumbbell press 2x20kg 3x8',
@@ -16,6 +20,7 @@ export const workoutHistory: SessionRecord[] = [
   },
   {
     session: '07/11 - Pull Day',
+    planId: 'pull',
     exercises: [
       'Weighted pull-up 10kg 4x6',
       'Bent-over row 50kg 4x10',
@@ -26,6 +31,7 @@ export const workoutHistory: SessionRecord[] = [
   },
   {
     session: '09/11 - Leg Day',
+    planId: 'legs',
     exercises: [
       'Back squat 80kg 5x5',
       'Romanian deadlift 70kg 4x8',

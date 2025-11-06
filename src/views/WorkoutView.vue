@@ -94,7 +94,7 @@
             type="button"
             @click="startTodayPlan"
           >
-            Start {{ todayPlanLabel }}
+            Start {{ recommendedPlanLabel }}
           </button>
           <button
             class="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-slate-100 transition hover:-translate-y-0.5 hover:border-white/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
@@ -153,6 +153,7 @@
 import { computed, nextTick, onMounted, reactive, ref } from 'vue'
 import type { Exercise, Plan } from '@/data/workoutPlans'
 import { workoutPlans } from '@/data/workoutPlans'
+import type { SessionRecord } from '@/data/workoutHistory'
 import { workoutHistory } from '@/data/workoutHistory'
 
 type SessionExercise = Exercise & {
@@ -171,23 +172,30 @@ const showPlanPicker = ref(false)
 const sessionActive = ref(false)
 const activePlan = ref<Plan | null>(null)
 const sessionExercises = ref<SessionExercise[]>([])
-const historySessions = workoutHistory
+const historySessions = ref<SessionRecord[]>([...workoutHistory])
 const pageEndRef = ref<HTMLElement | null>(null)
 
-const todayPlanIndex = computed(() => {
-  if (!hasPlanner || weeklyPlan.length === 0) {
-    return 0
+const rotationOrder: Plan['id'][] = ['push', 'pull', 'legs']
+
+const recommendedPlan = computed<Plan | null>(() => {
+  if (weeklyPlan.length === 0) {
+    return null
   }
 
-  const index = (planner.day - 1) % weeklyPlan.length
-  return index < 0 ? 0 : index
+  const lastPlanId = historySessions.value[0]?.planId
+  if (!lastPlanId) {
+    return weeklyPlan[0]
+  }
+
+  const currentIndex = rotationOrder.indexOf(lastPlanId)
+  const nextPlanId = currentIndex === -1 ? rotationOrder[0] : rotationOrder[(currentIndex + 1) % rotationOrder.length]
+
+  return weeklyPlan.find((plan) => plan.id === nextPlanId) ?? weeklyPlan[0]
 })
 
-const todayPlan = computed(() => weeklyPlan[todayPlanIndex.value] ?? null)
-
-const todayPlanLabel = computed(() => {
-  if (todayPlan.value) {
-    return `${todayPlan.value.label} Day`
+const recommendedPlanLabel = computed(() => {
+  if (recommendedPlan.value) {
+    return `${recommendedPlan.value.label} Day`
   }
   return 'Session'
 })
@@ -209,10 +217,10 @@ function startSession(plan: Plan) {
 }
 
 function startTodayPlan() {
-  if (!todayPlan.value) {
+  if (!recommendedPlan.value) {
     return
   }
-  startSession(todayPlan.value)
+  startSession(recommendedPlan.value)
 }
 
 function toggleSet(exerciseIndex: number, setIndex: number) {
@@ -225,6 +233,25 @@ function toggleSet(exerciseIndex: number, setIndex: number) {
 }
 
 function finishSession() {
+  if (!activePlan.value) {
+    return
+  }
+
+  const completedPlan = activePlan.value
+  const now = new Date()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+
+  const completedExercises = sessionExercises.value.map((exercise) => `${exercise.name} ${exercise.sets} × ${exercise.reps}`)
+
+  const newRecord: SessionRecord = {
+    session: `${month}/${day} - ${completedPlan.label} Day`,
+    planId: completedPlan.id,
+    exercises: completedExercises,
+  }
+
+  historySessions.value = [newRecord, ...historySessions.value]
+
   sessionActive.value = false
   activePlan.value = null
   sessionExercises.value = []
