@@ -7,7 +7,7 @@
       </div>
 
       <p class="mt-6 text-sm text-slate-300">
-        Lock in today’s intent, review your recent efforts, and be ready to launch the next session when you’re set.
+        Lock in today's intent, review your recent efforts, and be ready to launch the next session when you're set.
       </p>
     </section>
 
@@ -31,19 +31,36 @@
                 <h3 class="text-lg font-semibold text-white">{{ record.session }}</h3>
                 <span class="text-xs font-semibold uppercase tracking-wide text-emerald-300">{{ record.exercises.length }} exercises</span>
               </div>
+
+              <!-- Session list -->
               <ul class="space-y-3 text-sm text-slate-200">
                 <li
                   v-for="(exercise, exerciseIndex) in record.exercises"
                   :key="`${record.session}-${exercise.name}-${exerciseIndex}`"
-                  class="space-y-1 rounded-xl border border-white/5 bg-slate-900/60 p-3"
+                  class="space-y-1"
                 >
-                  <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                    <span class="font-semibold text-white">{{ exercise.name }}</span>
-                    <span class="text-xs font-semibold uppercase tracking-wide text-emerald-200">{{ exercise.weight }}</span>
+                  <div class="text-sm text-slate-200 grid gap-1 sm:grid-cols-[5fr_3fr_2fr] sm:items-center sm:w-full">
+                    <!-- Name -->
+                    <div class="flex items-center justify-start">
+                      <span class="font-semibold text-white">{{ exercise.name }}</span>
+                    </div>
+
+                    <div class="flex items-center justify-between sm:contents">
+                      <!-- Sets and reps -->
+                      <div class="flex items-center sm:justify-center gap-2">
+                        <span>{{ formatHistorySets(exercise) }}</span>
+                        <span class="text-slate-500">·</span>
+                        <span>{{ exercise.reps }} reps</span>
+                      </div>
+
+                      <!-- Weight -->
+                      <div class="flex items-center sm:justify-end">
+                        <span class="flex justify-center font-semibold text-emerald-200 sm:font-medium sm:text-slate-200 sm:normal-case">
+                          {{ exercise.weight }}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <p class="text-xs text-slate-400">
-                    {{ exercise.setsCompleted }} / {{ exercise.setsPlanned }} sets · {{ exercise.reps }} reps
-                  </p>
                 </li>
               </ul>
             </article>
@@ -212,6 +229,14 @@ const historyContainerRef = ref<HTMLElement | null>(null)
 const pageEndRef = ref<HTMLElement | null>(null)
 
 const rotationOrder: Plan['id'][] = ['push', 'pull', 'legs']
+
+function formatHistorySets(exercise: SessionRecord['exercises'][number]) {
+  if (exercise.setsCompleted === exercise.setsPlanned) {
+    return `${exercise.setsCompleted} sets`
+  }
+
+  return `${exercise.setsCompleted} / ${exercise.setsPlanned} sets`
+}
 
 const recommendedPlan = computed<Plan | null>(() => {
   if (weeklyPlan.length === 0) {
