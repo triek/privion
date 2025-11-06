@@ -97,6 +97,7 @@
             <div class="flex flex-col gap-1">
               <h3 class="text-lg font-semibold text-white">{{ exercise.name }}</h3>
               <div class="flex flex-wrap items-center gap-3 text-sm text-slate-300">
+                <!-- Sets -->
                 <label :for="`sets-${index}`" class="flex items-center gap-2">
                   <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">Sets</span>
                   <input
@@ -111,6 +112,8 @@
                   />
                 </label>
                 <span class="hidden text-slate-500 sm:inline">·</span>
+
+                <!-- Reps -->
                 <label :for="`reps-${index}`" class="flex items-center gap-2">
                   <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">Reps</span>
                   <input
@@ -125,28 +128,26 @@
                   />
                 </label>
               </div>
-              <p v-if="exercise.planRepsLabel" class="text-xs text-slate-400">
-                Plan target: {{ exercise.planSets }} × {{ exercise.planRepsLabel }}
-              </p>
-              <p v-if="exercise.notes" class="text-xs text-slate-400">{{ exercise.notes }}</p>
             </div>
 
             <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <!-- Weight used -->
               <div class="flex w-full max-w-xs flex-col gap-1">
                 <label :for="`weight-${index}`" class="text-xs font-semibold uppercase tracking-wide text-slate-400">Weight used</label>
                 <div class="flex items-center gap-2">
                   <input
                     :id="`weight-${index}`"
                     v-model="exercise.weight"
-                    class="w-full rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
-                    placeholder="e.g. 40"
+                    class="w-20 rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                    placeholder="Body Wg"
                     type="text"
                     inputmode="decimal"
                   />
-                  <span v-if="isNumericWeight(exercise.weight)" class="text-sm font-medium text-slate-400">kg</span>
+                  <span class="text-sm font-medium text-slate-400">kg</span>
                 </div>
               </div>
 
+              <!-- Sets check -->
               <div class="flex flex-wrap gap-2">
                 <button
                   v-for="(checked, setIndex) in exercise.completion"
@@ -164,6 +165,9 @@
                 </button>
               </div>
             </div>
+
+            <!-- Notes -->
+            <p v-if="exercise.notes" class="text-xs text-slate-400">{{ exercise.notes }}</p>
           </div>
         </article>
       </div>
@@ -324,6 +328,8 @@ function scrollHistoryToBottom() {
 function startSession(plan: Plan) {
 
   const previousRecord = findLatestRecordForPlan(plan.id)
+
+  activePlan.value = plan
 
   sessionExercises.value = plan.exercises.map((exercise) => {
     const previousExercise = previousRecord?.exercises.find(
