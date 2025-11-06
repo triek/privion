@@ -184,13 +184,14 @@ const recommendedPlan = computed<Plan | null>(() => {
 
   const lastPlanId = historySessions.value[0]?.planId
   if (!lastPlanId) {
-    return weeklyPlan[0]
+    return weeklyPlan[0] ?? null
   }
 
   const currentIndex = rotationOrder.indexOf(lastPlanId)
   const nextPlanId = currentIndex === -1 ? rotationOrder[0] : rotationOrder[(currentIndex + 1) % rotationOrder.length]
 
-  return weeklyPlan.find((plan) => plan.id === nextPlanId) ?? weeklyPlan[0]
+  const nextPlan = weeklyPlan.find((plan) => plan.id === nextPlanId)
+  return nextPlan ?? weeklyPlan[0] ?? null
 })
 
 const recommendedPlanLabel = computed(() => {
