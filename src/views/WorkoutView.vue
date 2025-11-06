@@ -11,8 +11,8 @@
       </p>
     </section>
 
-    <section class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/30">
-      <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+    <section class="space-y-6">
+      <div class="flex flex-col gap-2 mx-2 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 class="text-2xl font-semibold text-white">Session history</h2>
           <p class="text-sm text-slate-400">Latest tracked workouts with weights, sets, and reps.</p>
@@ -93,40 +93,76 @@
           :key="`${exercise.name}-${index}`"
           class="space-y-4 rounded-2xl border border-white/10 bg-slate-950/70 p-5"
         >
-          <div class="flex flex-col gap-1">
-            <h3 class="text-lg font-semibold text-white">{{ exercise.name }}</h3>
-            <p class="text-sm text-slate-300">{{ exercise.sets }} × {{ exercise.reps }}</p>
-            <p v-if="exercise.notes" class="text-xs text-slate-400">{{ exercise.notes }}</p>
-          </div>
-
-          <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div class="flex w-full max-w-xs flex-col gap-1">
-              <label :for="`weight-${index}`" class="text-xs font-semibold uppercase tracking-wide text-slate-400">Weight used</label>
-              <input
-                :id="`weight-${index}`"
-                v-model="exercise.weight"
-                class="w-full rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
-                placeholder="e.g. 40kg"
-                type="text"
-                inputmode="text"
-              />
+          <div class="flex flex-col gap-3">
+            <div class="flex flex-col gap-1">
+              <h3 class="text-lg font-semibold text-white">{{ exercise.name }}</h3>
+              <div class="flex flex-wrap items-center gap-3 text-sm text-slate-300">
+                <label :for="`sets-${index}`" class="flex items-center gap-2">
+                  <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">Sets</span>
+                  <input
+                    :id="`sets-${index}`"
+                    v-model.number="exercise.sets"
+                    class="h-9 w-16 rounded-lg border border-white/10 bg-slate-900/70 px-2 py-1 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                    min="1"
+                    step="1"
+                    type="number"
+                    inputmode="numeric"
+                    @change="normalizeSets(index)"
+                  />
+                </label>
+                <span class="hidden text-slate-500 sm:inline">·</span>
+                <label :for="`reps-${index}`" class="flex items-center gap-2">
+                  <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">Reps</span>
+                  <input
+                    :id="`reps-${index}`"
+                    v-model.number="exercise.reps"
+                    class="h-9 w-20 rounded-lg border border-white/10 bg-slate-900/70 px-2 py-1 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                    min="1"
+                    step="1"
+                    type="number"
+                    inputmode="numeric"
+                    @change="normalizeReps(index)"
+                  />
+                </label>
+              </div>
+              <p v-if="exercise.planRepsLabel" class="text-xs text-slate-400">
+                Plan target: {{ exercise.planSets }} × {{ exercise.planRepsLabel }}
+              </p>
+              <p v-if="exercise.notes" class="text-xs text-slate-400">{{ exercise.notes }}</p>
             </div>
 
-            <div class="flex flex-wrap gap-2">
-              <button
-                v-for="(checked, setIndex) in exercise.completion"
-                :key="`set-${index}-${setIndex}`"
-                :aria-pressed="checked"
-                class="flex h-10 w-10 items-center justify-center rounded-full border text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-                :class="checked
-                  ? 'border-transparent bg-emerald-400 text-slate-900 hover:bg-emerald-300'
-                  : 'border-white/15 bg-transparent text-slate-300 hover:border-emerald-300/60 hover:text-white'
-                "
-                type="button"
-                @click="toggleSet(index, setIndex)"
-              >
-                {{ setIndex + 1 }}
-              </button>
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div class="flex w-full max-w-xs flex-col gap-1">
+                <label :for="`weight-${index}`" class="text-xs font-semibold uppercase tracking-wide text-slate-400">Weight used</label>
+                <div class="flex items-center gap-2">
+                  <input
+                    :id="`weight-${index}`"
+                    v-model="exercise.weight"
+                    class="w-full rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                    placeholder="e.g. 40"
+                    type="text"
+                    inputmode="decimal"
+                  />
+                  <span v-if="isNumericWeight(exercise.weight)" class="text-sm font-medium text-slate-400">kg</span>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                <button
+                  v-for="(checked, setIndex) in exercise.completion"
+                  :key="`set-${index}-${setIndex}`"
+                  :aria-pressed="checked"
+                  class="flex h-10 w-10 items-center justify-center rounded-full border text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                  :class="checked
+                    ? 'border-transparent bg-emerald-400 text-slate-900 hover:bg-emerald-300'
+                    : 'border-white/15 bg-transparent text-slate-300 hover:border-emerald-300/60 hover:text-white'
+                  "
+                  type="button"
+                  @click="toggleSet(index, setIndex)"
+                >
+                  {{ setIndex + 1 }}
+                </button>
+              </div>
             </div>
           </div>
         </article>
@@ -202,14 +238,20 @@
 
 <script setup lang="ts">
 import { computed, nextTick, onMounted, reactive, ref } from 'vue'
-import type { Exercise, Plan } from '@/data/workoutPlans'
+import type { Plan } from '@/data/workoutPlans'
 import { workoutPlans } from '@/data/workoutPlans'
 import type { SessionRecord } from '@/data/workoutHistory'
 import { workoutHistory } from '@/data/workoutHistory'
 
-type SessionExercise = Exercise & {
+type SessionExercise = {
+  name: string
+  notes?: string
+  sets: number
+  reps: number
   completion: boolean[]
   weight: string
+  planRepsLabel: string
+  planSets: number
 }
 
 const hasPlanner = true
@@ -245,7 +287,7 @@ const recommendedPlan = computed<Plan | null>(() => {
 
   const lastRecordIndex = historySessions.value.length - 1
   const lastPlanId = lastRecordIndex >= 0 ? historySessions.value[lastRecordIndex]?.planId : undefined
-    if (!lastPlanId) {
+  if (!lastPlanId) {
     return weeklyPlan[0] ?? null
   }
 
@@ -280,12 +322,39 @@ function scrollHistoryToBottom() {
 }
 
 function startSession(plan: Plan) {
-  activePlan.value = plan
-  sessionExercises.value = plan.exercises.map((exercise) => ({
-    ...exercise,
-    completion: Array.from({ length: exercise.sets }, () => false),
-    weight: '',
-  }))
+
+  const previousRecord = findLatestRecordForPlan(plan.id)
+
+  sessionExercises.value = plan.exercises.map((exercise) => {
+    const previousExercise = previousRecord?.exercises.find(
+      (item) => item.name === exercise.name,
+    )
+
+    const derivedSets = sanitizePositiveInteger(
+      previousExercise?.setsPlanned ?? exercise.sets,
+    )
+    const derivedReps = sanitizePositiveInteger(
+      parseNumericFromString(previousExercise?.reps) ?? parseNumericFromString(exercise.reps) ?? exercise.sets,
+    )
+    const normalizedWeight = normalizeWeightInput(previousExercise?.weight)
+
+    return {
+      name: exercise.name,
+      notes: exercise.notes,
+      sets: derivedSets,
+      reps: derivedReps,
+      completion: Array.from({ length: derivedSets }, () => false),
+      weight: normalizedWeight,
+      planRepsLabel: exercise.reps,
+      planSets: exercise.sets,
+    }
+  })
+
+  sessionExercises.value.forEach((_, index) => {
+    normalizeSets(index)
+    normalizeReps(index)
+  })
+
   sessionActive.value = true
   showPlanPicker.value = false
 }
@@ -300,6 +369,10 @@ function startTodayPlan() {
 function toggleSet(exerciseIndex: number, setIndex: number) {
   const exercise = sessionExercises.value[exerciseIndex]
   if (!exercise) {
+    return
+  }
+
+  if (setIndex >= exercise.completion.length) {
     return
   }
 
@@ -334,10 +407,10 @@ function finishSession() {
     )
     return {
       name: exercise.name,
-      weight: exercise.weight.trim() || 'Bodyweight',
+      weight: formatWeightForHistory(exercise.weight),
       setsCompleted: completedSets,
       setsPlanned: exercise.sets,
-      reps: exercise.reps,
+      reps: String(exercise.reps),
     }
   })
 
@@ -357,6 +430,118 @@ function finishSession() {
 
 function closePlanPicker() {
   showPlanPicker.value = false
+}
+
+function findLatestRecordForPlan(planId: Plan['id']) {
+  for (let index = historySessions.value.length - 1; index >= 0; index -= 1) {
+    const record = historySessions.value[index]
+    if (!record) {
+      continue
+    }
+    if (record.planId === planId) {
+      return record
+    }
+  }
+  return null
+}
+
+function parseNumericFromString(value?: string | number) {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value
+  }
+
+  if (!value) {
+    return undefined
+  }
+
+  const match = String(value).match(/\d+(?:\.\d+)?/)
+  return match ? Number(match[0]) : undefined
+}
+
+function sanitizePositiveInteger(value: number) {
+  if (!Number.isFinite(value) || value <= 0) {
+    return 1
+  }
+  return Math.max(1, Math.round(value))
+}
+
+function normalizeSets(exerciseIndex: number) {
+  const exercise = sessionExercises.value[exerciseIndex]
+  if (!exercise) {
+    return
+  }
+
+  const sanitizedSets = sanitizePositiveInteger(exercise.sets)
+  if (exercise.sets !== sanitizedSets) {
+    exercise.sets = sanitizedSets
+  }
+
+  const nextCompletion = Array.from({ length: exercise.sets }, (_, index) => exercise.completion[index] ?? false)
+  exercise.completion = nextCompletion
+}
+
+function normalizeReps(exerciseIndex: number) {
+  const exercise = sessionExercises.value[exerciseIndex]
+  if (!exercise) {
+    return
+  }
+
+  const sanitizedReps = sanitizePositiveInteger(exercise.reps)
+  if (exercise.reps !== sanitizedReps) {
+    exercise.reps = sanitizedReps
+  }
+}
+
+function normalizeWeightInput(weight?: string) {
+  if (!weight) {
+    return ''
+  }
+
+  const trimmed = weight.trim()
+
+  if (!trimmed) {
+    return ''
+  }
+
+  if (/^bodyweight$/i.test(trimmed)) {
+    return 'Bodyweight'
+  }
+
+  return trimmed.replace(/\s*kg$/i, '')
+}
+
+function formatWeightForHistory(weightInput: string) {
+  const trimmed = weightInput.trim()
+
+  if (!trimmed) {
+    return 'Bodyweight'
+  }
+
+  if (/^bodyweight$/i.test(trimmed)) {
+    return 'Bodyweight'
+  }
+
+  if (/kg$/i.test(trimmed)) {
+    return trimmed
+  }
+
+  if (/^[\d.,]+$/.test(trimmed)) {
+    return `${trimmed}kg`
+  }
+
+  if (/^\d+\s*[×x]\s*\d+$/.test(trimmed)) {
+    return `${trimmed.replace(/\s+/g, '')}kg`
+  }
+
+  return trimmed
+}
+
+function isNumericWeight(weightInput: string) {
+  if (!weightInput) {
+    return true
+  }
+
+  return /^[\d.,]+$/.test(weightInput.trim())
 }
 </script>
 
