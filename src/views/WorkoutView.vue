@@ -121,24 +121,11 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
-
-type Exercise = {
-  name: string
-  sets: number
-  reps: string
-  notes?: string
-}
+import type { Exercise, Plan } from '@/data/workoutPlans'
+import { workoutPlans } from '@/data/workoutPlans'
 
 type SessionExercise = Exercise & {
   completion: boolean[]
-}
-
-type Plan = {
-  id: string
-  label: string
-  title: string
-  week: number
-  exercises: Exercise[]
 }
 
 const hasPlanner = true
@@ -147,101 +134,7 @@ const planner = reactive({
   day: 2,
 })
 
-const weeklyPlan: Plan[] = [
-  {
-    id: 'push',
-    label: 'Push',
-    title: 'Push Day · Week 4',
-    week: 4,
-    exercises: [
-      {
-        name: 'Barbell Bench Press',
-        sets: 4,
-        reps: '4–6',
-        notes: 'Tempo 2-1-2. Focus on leg drive.',
-      },
-      {
-        name: 'Incline Dumbbell Press',
-        sets: 3,
-        reps: '10',
-        notes: 'Keep shoulders packed and pause at the top.',
-      },
-      {
-        name: 'Dips',
-        sets: 3,
-        reps: '8–10',
-        notes: 'Keep torso forward, stop 1 rep shy of failure.',
-      },
-      {
-        name: 'Cable Lateral Raise',
-        sets: 3,
-        reps: '15',
-        notes: 'Slow eccentric and full range of motion.',
-      },
-    ],
-  },
-  {
-    id: 'pull',
-    label: 'Pull',
-    title: 'Pull Day · Week 4',
-    week: 4,
-    exercises: [
-      {
-        name: 'Weighted Pull-up',
-        sets: 4,
-        reps: '5',
-        notes: 'Neutral grip, focus on controlled descent.',
-      },
-      {
-        name: 'Bent-over Row',
-        sets: 4,
-        reps: '8',
-        notes: 'Keep spine neutral and squeeze at the top.',
-      },
-      {
-        name: 'Single-arm Cable Row',
-        sets: 3,
-        reps: '12',
-      },
-      {
-        name: 'Face Pull',
-        sets: 3,
-        reps: '15',
-        notes: 'Drive elbows high to hit rear delts.',
-      },
-    ],
-  },
-  {
-    id: 'legs',
-    label: 'Leg',
-    title: 'Leg Day · Week 4',
-    week: 4,
-    exercises: [
-      {
-        name: 'Back Squat',
-        sets: 5,
-        reps: '3–5',
-        notes: 'Brace hard and control the descent.',
-      },
-      {
-        name: 'Romanian Deadlift',
-        sets: 4,
-        reps: '8',
-      },
-      {
-        name: 'Walking Lunge',
-        sets: 3,
-        reps: '12/leg',
-      },
-      {
-        name: 'Leg Curl',
-        sets: 3,
-        reps: '12',
-        notes: 'Add a 2 sec squeeze at full contraction.',
-      },
-    ],
-  },
-]
+const weeklyPlan: Plan[] = workoutPlans
 
 const showPlanPicker = ref(false)
 const sessionActive = ref(false)
