@@ -103,7 +103,7 @@
                   <input
                     :id="`sets-${index}`"
                     v-model.number="exercise.sets"
-                    class="h-9 w-16 rounded-lg border border-white/10 bg-slate-900/70 px-2 py-1 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                    class="h-9 w-12 rounded-lg border border-white/10 bg-slate-900/70 px-2 py-1 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
                     min="1"
                     step="1"
                     type="number"
@@ -119,7 +119,7 @@
                   <input
                     :id="`reps-${index}`"
                     v-model.number="exercise.reps"
-                    class="h-9 w-20 rounded-lg border border-white/10 bg-slate-900/70 px-2 py-1 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                    class="h-9 w-14 rounded-lg border border-white/10 bg-slate-900/70 px-2 py-1 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
                     min="1"
                     step="1"
                     type="number"
@@ -542,13 +542,6 @@ function formatWeightForHistory(weightInput: string) {
   return trimmed
 }
 
-function isNumericWeight(weightInput: string) {
-  if (!weightInput) {
-    return true
-  }
-
-  return /^[\d.,]+$/.test(weightInput.trim())
-}
 </script>
 
 <style scoped>
