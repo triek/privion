@@ -9,7 +9,7 @@
             </span>
             <div>
               <p class="text-lg font-semibold tracking-wide text-emerald-300">Privion</p>
-              <p class="text-sm text-slate-400">Adaptive fitness and fuel.</p>
+              <p class="text-sm text-slate-400">Adaptive Fitness</p>
             </div>
           </RouterLink>
           <button
