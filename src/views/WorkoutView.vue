@@ -1,5 +1,6 @@
 <template>
   <div class="space-y-10">
+    <!-- Workout banner -->
     <section class="rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/30">
       <div class="space-y-2">
         <h1 class="text-3xl font-bold text-white">Workout</h1>
@@ -11,6 +12,7 @@
       </p>
     </section>
 
+    <!-- Session history -->
     <section class="space-y-6">
       <div class="flex flex-col gap-2 mx-2 md:flex-row md:items-center md:justify-between">
         <div>
@@ -173,6 +175,7 @@
       </div>
     </section>
 
+    <!-- Session creation -->
     <section class="rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/30">
       <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div class="space-y-2">
