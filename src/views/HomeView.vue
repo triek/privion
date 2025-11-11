@@ -1,5 +1,6 @@
 <template>
   <div class="space-y-12">
+    <!-- Hero banner -->
     <section class="grid gap-8 rounded-3xl border border-white/10 bg-slate-900/60 p-10 shadow-xl shadow-emerald-500/10 lg:grid-cols-[1.2fr_1fr]">
       <div class="space-y-6">
         <p class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs uppercase tracking-[0.3em] text-slate-400">
@@ -60,6 +61,7 @@
     </section>
 
     <section class="grid gap-6 lg:grid-cols-3">
+      <!-- Morning routine -->
       <article class="rounded-2xl border border-white/10 bg-slate-900/60 p-6">
         <h2 class="text-lg font-semibold text-white">Morning routine</h2>
         <p class="mt-3 text-sm text-slate-400">Breathing reset · Mobility primer · Protein shake</p>
@@ -81,6 +83,7 @@
         </ul>
       </article>
 
+      <!-- Training emphasis -->
       <article class="rounded-2xl border border-white/10 bg-slate-900/60 p-6">
         <h2 class="text-lg font-semibold text-white">Training emphasis</h2>
         <p class="mt-3 text-sm text-slate-400">Primary lift + intent-based accessory cues.</p>
@@ -99,6 +102,7 @@
         </div>
       </article>
 
+      <!-- Evening reset -->
       <article class="rounded-2xl border border-white/10 bg-slate-900/60 p-6">
         <h2 class="text-lg font-semibold text-white">Evening reset</h2>
         <p class="mt-3 text-sm text-slate-400">Lock the day with micro-wins.</p>
@@ -112,7 +116,7 @@
             <span>Prep shaker + overnight oats</span>
             <span class="text-xs uppercase text-slate-500">5 min</span>
           </li>
-          
+
           <li class="flex items-center justify-between rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3">
             <span>Budget pulse: tag 2 expenses</span>
             <span class="text-xs uppercase text-slate-500">3 min</span>
