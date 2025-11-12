@@ -1,5 +1,6 @@
 <template>
   <div class="space-y-10">
+    <!-- Nutrition banner -->
     <header class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h1 class="text-3xl font-bold text-white">Nutrition</h1>
@@ -16,6 +17,7 @@
     </header>
 
     <section class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+      <!-- Daily -->
       <article class="space-y-5 rounded-2xl border border-white/10 bg-slate-900/60 p-6">
         <h2 class="text-lg font-semibold text-white">Daily plate</h2>
         <p class="text-sm text-slate-400">Macro targets and meal anchors for today.</p>
@@ -50,6 +52,7 @@
         </div>
       </article>
 
+      <!-- Meal log -->
       <article class="space-y-5 rounded-2xl border border-white/10 bg-slate-900/60 p-6">
         <div class="flex items-center justify-between">
           <h2 class="text-lg font-semibold text-white">Meal log</h2>
