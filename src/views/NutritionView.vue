@@ -52,54 +52,79 @@
             <p class="mt-1 text-xs text-slate-500">Goal: {{ macro.goal }}</p>
           </div>
         </div>
-        <div class="grid gap-4 sm:grid-cols-2">
-          <div class="rounded-xl border border-emerald-400/40 bg-emerald-500/10 p-4 text-sm text-emerald-50">
-            <p class="text-xs uppercase text-emerald-200">Most logged recipe</p>
-            <p class="mt-1 font-semibold text-white">{{ topRecipe?.recipe.name ?? 'Track meals to see insights' }}</p>
-            <p v-if="topRecipe" class="mt-1 text-xs text-emerald-100/80">
-              {{ formatNumber(topRecipe.totals.protein) }}g protein ·
-              {{ formatNumber(topRecipe.totals.carbs) }}g carbs ·
-              {{ formatNumber(topRecipe.totals.fat) }}g fats
-            </p>
-          </div>
-          <div class="rounded-xl border border-white/10 bg-slate-950/70 p-4 text-sm text-slate-300">
-            <p class="text-xs uppercase text-slate-400">Estimated cost</p>
-            <p class="mt-1 text-3xl font-black text-white">${{ formatNumber(dailyTotals.cost) }}</p>
-            <p class="mt-1 text-xs text-slate-500">Across {{ mealLogDetails.length }} logged meals</p>
-          </div>
-        </div>
+        <p
+          class="rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-100"
+        >
+          {{ proteinTargetMessage }}
+        </p>
       </article>
 
       <article class="space-y-6 rounded-2xl border border-white/10 bg-slate-900/60 p-6">
-        <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold text-white">Meal log</h2>
-          <button class="text-xs font-semibold uppercase tracking-wide text-emerald-300" @click="isMealLogFormOpen = true">
-            Add entry
-          </button>
+        <div class="space-y-2">
+          <h2 class="text-lg font-semibold text-white">Today&apos;s lineup</h2>
+          <p class="text-sm text-slate-400">Pick meals to lock in for today&apos;s plan.</p>
         </div>
-        <ul class="space-y-4 text-sm text-slate-300">
-          <li v-if="!mealLogDetails.length" class="rounded-xl border border-dashed border-white/10 bg-slate-950/50 p-6 text-center text-slate-500">
-            Start logging meals to see macros roll up in real time.
-          </li>
-          <li
-            v-for="item in mealLogDetails"
-            :key="item.entry.id"
-            class="rounded-xl border border-white/10 bg-slate-950/70 p-4"
+        <div class="grid gap-3 sm:grid-cols-3">
+          <div
+            v-for="(slot, index) in plannedMealDetails"
+            :key="index"
+            class="flex min-h-[140px] flex-col justify-between rounded-2xl border-2 border-dashed border-white/15 bg-slate-950/60 p-4 text-sm"
+            :class="slot ? 'border-emerald-400/50 bg-emerald-500/10 text-emerald-50' : 'text-slate-500'"
           >
-            <div class="flex flex-wrap items-baseline justify-between gap-2 text-xs uppercase text-slate-400">
-              <span>{{ item.entry.time }} · {{ item.entry.mealType }}</span>
-              <span v-if="item.recipe" class="text-slate-500">{{ item.recipe.servings }} serving recipe</span>
+            <div v-if="slot" class="space-y-2">
+              <div class="flex items-start justify-between gap-2">
+                <p class="text-base font-semibold text-white">{{ slot.recipe.name }}</p>
+                <button
+                  class="text-xs uppercase tracking-wide text-emerald-200"
+                  type="button"
+                  @click="clearPlannedMeal(index)"
+                >
+                  Remove
+                </button>
+              </div>
+              <p class="text-xs text-emerald-100/80">
+                {{ formatNumber(slot.perServing.protein) }}g protein ·
+                {{ formatNumber(slot.perServing.carbs) }}g carbs ·
+                {{ formatNumber(slot.perServing.fat) }}g fats
+              </p>
             </div>
-            <p class="mt-1 font-semibold text-white">{{ item.recipe?.name ?? 'Recipe missing' }}</p>
-            <p v-if="item.totals" class="mt-1 text-xs text-slate-400">
-              {{ formatNumber(item.totals.protein) }}g protein ·
-              {{ formatNumber(item.totals.carbs) }}g carbs ·
-              {{ formatNumber(item.totals.fat) }}g fats ·
-              ${{ formatNumber(item.totals.cost) }}
-            </p>
-            <p v-if="item.entry.notes" class="mt-2 text-xs text-slate-500">{{ item.entry.notes }}</p>
-          </li>
-        </ul>
+            <div v-else class="flex h-full items-center justify-center text-center text-xs uppercase tracking-wide">
+              Tap a meal card to add it here.
+            </div>
+          </div>
+        </div>
+        <div class="space-y-3">
+          <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-400">Available meals</h3>
+          <div class="grid gap-3 md:grid-cols-2">
+            <button
+              v-for="item in recipeSummaries"
+              :key="item.recipe.id"
+              type="button"
+              class="flex flex-col gap-2 rounded-xl border border-white/10 bg-slate-950/70 p-4 text-left text-sm text-slate-300 transition hover:border-emerald-300/60 hover:text-emerald-100"
+              :class="{
+                'opacity-60 hover:border-white/10 hover:text-slate-300': planIsFull && !plannedMealCounts[item.recipe.id],
+                'border-emerald-300/60 text-emerald-100': plannedMealCounts[item.recipe.id],
+              }"
+              :disabled="planIsFull && !plannedMealCounts[item.recipe.id]"
+              @click="addPlannedMeal(item.recipe.id)"
+            >
+              <div class="flex items-center justify-between gap-2">
+                <p class="font-semibold text-white">{{ item.recipe.name }}</p>
+                <span
+                  v-if="plannedMealCounts[item.recipe.id]"
+                  class="text-xs uppercase tracking-wide text-emerald-300"
+                >
+                  Planned ×{{ plannedMealCounts[item.recipe.id] }}
+                </span>
+              </div>
+              <p class="text-xs text-slate-400">
+                {{ formatNumber(item.perServing.protein) }}g protein ·
+                {{ formatNumber(item.perServing.carbs) }}g carbs ·
+                {{ formatNumber(item.perServing.fat) }}g fats
+              </p>
+            </button>
+          </div>
+        </div>
       </article>
     </section>
 
@@ -416,63 +441,7 @@
       </Transition>
     </Teleport>
 
-    <Teleport to="body">
-      <Transition name="fade">
-        <div v-if="isMealLogFormOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 px-4">
-          <div class="w-full max-w-lg space-y-6 rounded-2xl border border-white/10 bg-slate-900/80 p-6 text-slate-200">
-            <div class="flex items-start justify-between">
-              <div>
-                <h2 class="text-xl font-semibold text-white">Log a meal</h2>
-                <p class="text-sm text-slate-400">Attach a recipe, servings, and we&apos;ll add it to your timeline.</p>
-              </div>
-              <button class="text-sm text-slate-400" @click="closeMealLogForm">Close</button>
-            </div>
-            <form class="space-y-4" @submit.prevent="handleAddMealLog">
-              <label class="text-sm">
-                <span class="text-xs uppercase tracking-wide text-slate-400">Recipe</span>
-                <select v-model="mealLogForm.recipeId" required class="mt-1 w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 py-2 text-sm focus:border-emerald-400 focus:outline-none">
-                  <option value="" disabled>Select recipe</option>
-                  <option v-for="recipe in recipes" :key="recipe.id" :value="recipe.id">{{ recipe.name }}</option>
-                </select>
-              </label>
-              <div class="grid gap-4 sm:grid-cols-2">
-                <label class="text-sm">
-                  <span class="text-xs uppercase tracking-wide text-slate-400">Servings</span>
-                  <input v-model.number="mealLogForm.servings" type="number" min="0.25" step="0.25" class="mt-1 w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 py-2 text-sm focus:border-emerald-400 focus:outline-none" />
-                </label>
-                <label class="text-sm">
-                  <span class="text-xs uppercase tracking-wide text-slate-400">Time</span>
-                  <input v-model="mealLogForm.time" type="time" class="mt-1 w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 py-2 text-sm focus:border-emerald-400 focus:outline-none" />
-                </label>
-              </div>
-              <label class="text-sm">
-                <span class="text-xs uppercase tracking-wide text-slate-400">Meal type</span>
-                <select v-model="mealLogForm.mealType" class="mt-1 w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 py-2 text-sm focus:border-emerald-400 focus:outline-none">
-                  <option value="Breakfast">Breakfast</option>
-                  <option value="Lunch">Lunch</option>
-                  <option value="Dinner">Dinner</option>
-                  <option value="Snack">Snack</option>
-                </select>
-              </label>
-              <label class="text-sm">
-                <span class="text-xs uppercase tracking-wide text-slate-400">Notes (optional)</span>
-                <textarea v-model="mealLogForm.notes" rows="2" class="mt-1 w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 py-2 text-sm focus:border-emerald-400 focus:outline-none"></textarea>
-              </label>
-              <p v-if="mealLogFormError" class="text-xs text-rose-300">{{ mealLogFormError }}</p>
-              <div class="flex justify-end gap-3">
-                <button type="button" class="rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-white/40" @click="closeMealLogForm">
-                  Cancel
-                </button>
-                <button type="submit" class="rounded-full bg-emerald-400 px-4 py-2 text-sm font-semibold text-slate-900 shadow shadow-emerald-500/30 transition hover:bg-emerald-300">
-                  Log meal
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </Transition>
-    </Teleport>
-  </div>
+     </div>
 </template>
 
 <script setup lang="ts">
@@ -484,7 +453,7 @@ import { formatNumber, mealLogTotals, perServingTotals, sumRecipeTotals } from '
 
 const nutritionStore = useNutritionStore()
 const { ingredients, recipes, mealLogs, ingredientMap, recipeSummaries } = storeToRefs(nutritionStore)
-const { addIngredient, addRecipe, toggleTemplate, addMealLog } = nutritionStore
+const { addIngredient, addRecipe, toggleTemplate } = nutritionStore
 
 const macroTargets = {
   protein: 190,
@@ -494,7 +463,36 @@ const macroTargets = {
 
 const isIngredientFormOpen = ref(false)
 const isRecipeBuilderOpen = ref(false)
-const isMealLogFormOpen = ref(false)
+
+const plannedMeals = ref<(string | null)[]>([null, null, null])
+
+const plannedMealDetails = computed(() =>
+  plannedMeals.value.map((id) =>
+    recipeSummaries.value.find((item) => item.recipe.id === id) ?? null
+  )
+)
+
+const plannedMealCounts = computed<Record<string, number>>(() => {
+  const counts: Record<string, number> = {}
+  plannedMeals.value.forEach((id) => {
+    if (!id) return
+    counts[id] = (counts[id] ?? 0) + 1
+  })
+  return counts
+})
+
+const planIsFull = computed(() => plannedMeals.value.every((slot) => slot !== null))
+
+const addPlannedMeal = (recipeId: string) => {
+  if (planIsFull.value) return
+  const emptyIndex = plannedMeals.value.findIndex((slot) => slot === null)
+  if (emptyIndex === -1) return
+  plannedMeals.value.splice(emptyIndex, 1, recipeId)
+}
+
+const clearPlannedMeal = (index: number) => {
+  plannedMeals.value.splice(index, 1, null)
+}
 
 const ingredientForm = reactive({
   name: '',
@@ -519,17 +517,8 @@ const recipeForm = reactive({
   quantity: 0,
 })
 
-const mealLogForm = reactive({
-  recipeId: '',
-  servings: 1,
-  mealType: 'Lunch' as MealLogEntry['mealType'],
-  time: '12:00',
-  notes: '',
-})
-
 const ingredientFormError = ref('')
 const recipeFormError = ref('')
-const mealLogFormError = ref('')
 
 const parseMicronutrients = (value: string): MicronutrientProfile | undefined => {
   const record: MicronutrientProfile = {}
@@ -688,38 +677,6 @@ const closeRecipeBuilder = () => {
   resetRecipeForm()
 }
 
-const handleAddMealLog = () => {
-  mealLogFormError.value = ''
-  if (!mealLogForm.recipeId) {
-    mealLogFormError.value = 'Select a recipe to log.'
-    return
-  }
-
-  addMealLog({
-    recipeId: mealLogForm.recipeId,
-    servings: Number(mealLogForm.servings) || 1,
-    mealType: mealLogForm.mealType,
-    time: mealLogForm.time || '12:00',
-    notes: mealLogForm.notes.trim() ? mealLogForm.notes.trim() : undefined,
-  })
-
-  closeMealLogForm()
-}
-
-const resetMealLogForm = () => {
-  mealLogForm.recipeId = ''
-  mealLogForm.servings = 1
-  mealLogForm.mealType = 'Lunch'
-  mealLogForm.time = '12:00'
-  mealLogForm.notes = ''
-  mealLogFormError.value = ''
-}
-
-const closeMealLogForm = () => {
-  isMealLogFormOpen.value = false
-  resetMealLogForm()
-}
-
 const mealLogDetails = computed(() =>
   mealLogs.value.map((entry) => ({
     entry,
@@ -762,19 +719,33 @@ const macroCards = computed(() => [
   },
 ])
 
-const topRecipe = computed(() => {
-  if (!mealLogDetails.value.length) return null
-  const counts = new Map<string, number>()
+const proteinTargetMessage = computed(() => {
+  if (!mealLogDetails.value.length) {
+    return 'Log a meal to see how it powers your goals.'
+  }
+
+  const contributions = new Map<MealLogEntry['mealType'], number>()
   mealLogDetails.value.forEach((detail) => {
-    if (!detail.recipe || !detail.totals) return
-    counts.set(detail.recipe.id, (counts.get(detail.recipe.id) ?? 0) + detail.entry.servings)
+    if (!detail.totals) return
+    contributions.set(
+      detail.entry.mealType,
+      (contributions.get(detail.entry.mealType) ?? 0) + detail.totals.protein
+    )
   })
-  const [topId] = [...counts.entries()].sort((a, b) => b[1] - a[1])[0] ?? []
-  if (!topId) return null
-  const recipe = recipes.value.find((item) => item.id === topId)
-  if (!recipe) return null
-  const totals = sumRecipeTotals(recipe, ingredientMap.value)
-  return { recipe, totals: perServingTotals(totals, recipe.servings) }
+
+  if (!contributions.size || macroTargets.protein === 0) {
+    return "You're on track! Keep fueling to hit your protein target."
+  }
+
+  const topEntry = [...contributions.entries()].sort((a, b) => b[1] - a[1])[0]
+  if (!topEntry) {
+    return "You're on track! Keep fueling to hit your protein target."
+  }
+
+  const [mealType, protein] = topEntry
+  const percentage = Math.round((protein / macroTargets.protein) * 100)
+  const clamped = Math.min(Math.max(percentage, 0), 150)
+  return `You’re on track! ${mealType} covered ${clamped}% of your protein target.`
 })
 
 const micronutrientHighlights = computed(() => {
