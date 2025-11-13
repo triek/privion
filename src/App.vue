@@ -43,7 +43,7 @@
           >
             {{ item.label }}
           </RouterLink>
-          <div ref="bookMenuRef" class="relative">
+          <!-- <div ref="bookMenuRef" class="relative">
             <button
               type="button"
               class="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-slate-300 transition hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
@@ -90,7 +90,7 @@
                 </svg>
               </RouterLink>
             </div>
-          </div>
+          </div> -->
         </nav>
       </div>
     </header>
@@ -99,7 +99,7 @@
       <RouterView />
     </main>
 
-    <div ref="bookMenuRef" class="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3">
+    <div ref="bookMenuRef" class="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-4">
       <div
         v-if="isBookMenuOpen"
         class="w-56 rounded-2xl border border-white/10 bg-slate-900/95 p-2 text-sm text-slate-200 shadow-[0_20px_45px_-15px_rgba(16,185,129,0.35)]"
@@ -151,14 +151,14 @@
 
       <button
         type="button"
-        class="inline-flex h-14 w-14 items-center justify-center rounded-full border border-emerald-400/40 bg-emerald-400/20 text-emerald-200 shadow-lg shadow-emerald-500/40 transition hover:bg-emerald-400/30 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+        class="inline-flex h-20 w-20 items-center justify-center rounded-full border border-emerald-400/40 bg-emerald-400/20 text-emerald-200 shadow-xl shadow-emerald-500/40 transition hover:bg-emerald-400/30 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
         :aria-expanded="isBookMenuOpen"
         aria-haspopup="menu"
         aria-label="Open collections"
         @click.stop="toggleBookMenu"
         @keydown.escape.prevent="isBookMenuOpen = false"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
