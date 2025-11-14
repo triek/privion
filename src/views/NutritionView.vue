@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-12">
-    <header class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <header class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h1 class="text-3xl font-bold text-white">Nutrition system</h1>
         <p class="text-sm text-slate-400">
@@ -8,6 +8,12 @@
         </p>
       </div>
       <div class="flex flex-wrap items-center gap-3">
+        <RouterLink
+          to="/workout"
+          class="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:-translate-y-0.5 hover:border-white/40"
+        >
+          Back to workout
+        </RouterLink>
         <button
           class="inline-flex items-center gap-2 rounded-full bg-emerald-400 px-4 py-2 text-sm font-semibold text-slate-900 shadow shadow-emerald-500/30 transition hover:-translate-y-0.5 hover:bg-emerald-300"
           @click="isRecipeBuilderOpen = true"
@@ -446,6 +452,7 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
+import { RouterLink } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import type { MealLogEntry, MicronutrientProfile, RecipeIngredient, UnitType } from '@/types/nutrition'
 import { useNutritionStore } from '@/stores/nutrition'

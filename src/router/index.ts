@@ -6,6 +6,7 @@ import NutritionView from '../views/NutritionView.vue'
 import RecipeBookView from '../views/RecipeBookView.vue'
 import SignupView from '../views/SignupView.vue'
 import WorkoutExercisesBookView from '../views/WorkoutExercisesBookView.vue'
+import WorkoutRoutineView from '../views/WorkoutRoutineView.vue'
 import WorkoutView from '../views/WorkoutView.vue'
 
 const base = import.meta.env.PROD ? '/privion/' : '/'
@@ -20,6 +21,11 @@ const routes: RouteRecordRaw[] = [
     path: '/workout',
     name: 'workout',
     component: WorkoutView,
+  },
+  {
+    path: '/workout-routine',
+    name: 'workout-routine',
+    component: WorkoutRoutineView,
   },
   {
     path: '/nutrition',

@@ -163,6 +163,7 @@ const navItems: NavItem[] = [
 const bookMenuItems = computed<CollectionMenuItem[]>(() => {
   if (route.path.startsWith('/workout')) {
     return [
+      { label: 'Workout routine', to: '/workout-routine', icon: 'workout' },
       { label: 'Workout exercises book', to: '/workout-exercises', icon: 'workout' },
     ]
   }
