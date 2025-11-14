@@ -8,12 +8,6 @@
         </p>
       </div>
       <div class="flex flex-wrap items-center gap-3">
-        <RouterLink
-          to="/workout"
-          class="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:-translate-y-0.5 hover:border-white/40"
-        >
-          Back to workout
-        </RouterLink>
         <button
           class="inline-flex items-center gap-2 rounded-full bg-emerald-400 px-4 py-2 text-sm font-semibold text-slate-900 shadow shadow-emerald-500/30 transition hover:-translate-y-0.5 hover:bg-emerald-300"
           @click="isRecipeBuilderOpen = true"
@@ -29,7 +23,8 @@
       </div>
     </header>
 
-    <section class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+    <section class="grid gap-6">
+      <!-- Daily plate -->
       <article class="space-y-6 rounded-2xl border border-white/10 bg-slate-900/60 p-6">
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div>
@@ -65,6 +60,7 @@
         </p>
       </article>
 
+      <!-- Today's lineup -->
       <article class="space-y-6 rounded-2xl border border-white/10 bg-slate-900/60 p-6">
         <div class="space-y-2">
           <h2 class="text-lg font-semibold text-white">Today&apos;s lineup</h2>
@@ -452,7 +448,6 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
-import { RouterLink } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import type { MealLogEntry, MicronutrientProfile, RecipeIngredient, UnitType } from '@/types/nutrition'
 import { useNutritionStore } from '@/stores/nutrition'
