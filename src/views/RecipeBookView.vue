@@ -26,7 +26,8 @@
           </p>
           <p class="text-xs uppercase tracking-wide text-emerald-200">{{ filteredRecipes.length }} recipes available</p>
         </div>
-        <div class="flex w-full flex-col gap-4 sm:flex-row sm:justify-end">
+        <div class="w-full space-y-4 justify-end">
+          <!-- Main ingredient -->
           <div class="space-y-2 sm:w-1/2 lg:w-auto">
             <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-400">Main ingredient</h3>
             <div class="flex flex-wrap gap-2">
@@ -46,6 +47,8 @@
               </button>
             </div>
           </div>
+
+          <!-- Intent -->
           <div class="space-y-2 sm:w-1/2 lg:w-auto">
             <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-400">Intent</h3>
             <div class="flex flex-wrap gap-2">
