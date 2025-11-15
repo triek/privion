@@ -8,6 +8,8 @@
         >
           ← Back to workout
         </RouterLink>
+
+        <!-- Header -->
         <h1 class="text-3xl font-bold text-white">Hypertrophy exercise book</h1>
         <p class="max-w-2xl text-sm text-slate-400">
           Filter the complete hypertrophy catalog by primary muscle group to find the perfect movement for the next training
@@ -19,6 +21,7 @@
     <section class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/30">
       <div class="flex flex-wrap items-start justify-between gap-6">
         <div class="space-y-2">
+          <!-- Filter -->
           <h2 class="text-lg font-semibold text-white">Exercise filter</h2>
           <p class="max-w-xl text-sm text-slate-400">
             Each movement is selected for hypertrophy-focused training with controlled tempos, defined end ranges, and simple
@@ -45,6 +48,7 @@
       </div>
 
       <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <!-- Exercises -->
         <article
           v-for="exercise in filteredExercises"
           :key="exercise.name"
