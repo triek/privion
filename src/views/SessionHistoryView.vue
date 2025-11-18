@@ -1,9 +1,48 @@
 <template>
-  <div class="space-y-10">
-    <section class="rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/30">
-      <div class="space-y-2">
-        <h1 class="text-3xl font-bold text-white">Session history</h1>
-        <p class="text-sm text-slate-300">A permanent log of every workout you've tracked.</p>
+  <div class="space-y-12">
+    <header class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div class="space-y-3">
+        <RouterLink
+          to="/workout"
+          class="inline-flex items-center gap-2 self-start rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:-translate-y-0.5 hover:border-white/40"
+        >
+          ← Back to workout
+        </RouterLink>
+
+        <h1 class="text-3xl font-bold text-white">Session history book</h1>
+        <p class="max-w-2xl text-sm text-slate-400">
+          Filter every tracked workout just like the exercise and recipe books. Toggle the focus to quickly review Push, Pull, or
+          Leg days and spot trends in your training log.
+        </p>
+      </div>
+    </header>
+
+    <section class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/30">
+      <div class="flex flex-wrap items-start justify-between gap-6">
+        <div class="space-y-2">
+          <h2 class="text-lg font-semibold text-white">Session filter</h2>
+          <p class="max-w-xl text-sm text-slate-400">
+            Choose a day focus to narrow the archive. The filters mirror the book collections so you can jump between catalogs and
+            detailed history without losing context.
+          </p>
+          <p class="text-xs uppercase tracking-wide text-emerald-200">{{ filteredHistory.length }} sessions · {{ totalExercisesTracked }} exercises</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button
+            v-for="filter in planFilters"
+            :key="filter.value"
+            type="button"
+            class="rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition"
+            :class="
+              selectedPlan === filter.value
+                ? 'border-emerald-400 bg-emerald-500/20 text-emerald-100'
+                : 'border-white/15 bg-slate-950/60 text-slate-300 hover:border-white/30 hover:text-white'
+            "
+            @click="selectedPlan = filter.value"
+          >
+            {{ filter.label }}
+          </button>
+        </div>
       </div>
     </section>
 
@@ -14,7 +53,7 @@
           <p class="text-sm text-slate-400">Review every past session in one place.</p>
         </div>
         <div class="flex flex-wrap items-center gap-3">
-          <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">{{ fullHistory.length }} entries</span>
+          <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">{{ filteredHistory.length }} entries</span>
           <RouterLink
             class="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-100 transition hover:-translate-y-0.5 hover:border-emerald-300/60 hover:text-white"
             to="/workout"
@@ -24,9 +63,9 @@
         </div>
       </div>
 
-      <div class="space-y-4">
+      <div v-if="filteredHistory.length" class="space-y-4">
         <article
-          v-for="record in fullHistory"
+          v-for="record in filteredHistory"
           :key="record.session"
           class="space-y-4 rounded-2xl border border-white/10 bg-slate-950/70 p-5"
         >
@@ -64,15 +103,42 @@
           </ul>
         </article>
       </div>
+      <div v-else class="rounded-2xl border border-dashed border-white/15 bg-slate-950/70 p-6 text-center text-sm text-slate-400">
+        No sessions match this filter yet. Run a workout to add a new entry.
+      </div>
     </section>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from 'vue'
+import { RouterLink } from 'vue-router'
+import type { Plan } from '@/data/workoutPlans'
+import { workoutPlans } from '@/data/workoutPlans'
 import type { SessionRecord } from '@/data/workoutHistory'
-import { workoutHistory } from '@/data/workoutHistory'
+import { useSessionHistoryStore } from '@/stores/sessionHistory'
 
-const fullHistory: SessionRecord[] = workoutHistory
+type PlanFilter = 'all' | Plan['id']
+
+const sessionHistoryStore = useSessionHistoryStore()
+const planFilters = [
+  { label: 'All sessions', value: 'all' },
+  ...workoutPlans.map((plan) => ({ label: `${plan.label} Day`, value: plan.id })),
+]
+
+const selectedPlan = ref<PlanFilter>('all')
+
+const filteredHistory = computed<SessionRecord[]>(() => {
+  if (selectedPlan.value === 'all') {
+    return sessionHistoryStore.records
+  }
+
+  return sessionHistoryStore.records.filter((record) => record.planId === selectedPlan.value)
+})
+
+const totalExercisesTracked = computed(() =>
+  filteredHistory.value.reduce((total, record) => total + record.exercises.length, 0)
+)
 
 function formatHistorySets(exercise: SessionRecord['exercises'][number]) {
   if (exercise.setsCompleted === exercise.setsPlanned) {
