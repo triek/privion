@@ -14,12 +14,28 @@
 
     <!-- Session history -->
     <section class="space-y-6">
-      <div class="flex flex-col gap-2 mx-2 md:flex-row md:items-center md:justify-between">
+      <div class="flex flex-col gap-3 mx-2 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 class="text-2xl font-semibold text-white">Session history</h2>
           <p class="text-sm text-slate-400">Latest tracked workouts with weights, sets, and reps.</p>
         </div>
-        <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">{{ historySessions.length }} entries</span>
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">{{ historySessions.length }} entries</span>
+          <button
+            class="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-100 transition hover:-translate-y-0.5 hover:border-emerald-300/60 hover:text-white"
+            type="button"
+            @click="clearSessionHistory"
+          >
+            Clear session history
+          </button>
+          <button
+            class="inline-flex items-center justify-center gap-2 rounded-full border border-emerald-400/50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:-translate-y-0.5 hover:border-emerald-300/70 hover:text-emerald-100"
+            type="button"
+            @click="goToSessionHistory"
+          >
+            View all history
+          </button>
+        </div>
       </div>
 
       <div
@@ -245,6 +261,7 @@
 
 <script setup lang="ts">
 import { computed, nextTick, onMounted, reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import type { Plan } from '@/data/workoutPlans'
 import { workoutPlans } from '@/data/workoutPlans'
 import type { SessionRecord } from '@/data/workoutHistory'
@@ -267,6 +284,7 @@ const planner = reactive({
   day: 2,
 })
 
+const router = useRouter()
 const weeklyPlan: Plan[] = workoutPlans
 
 const showPlanPicker = ref(false)
@@ -326,6 +344,14 @@ function scrollHistoryToBottom() {
       container.scrollTop = container.scrollHeight
     }
   })
+}
+
+function clearSessionHistory() {
+  historySessions.value = []
+}
+
+function goToSessionHistory() {
+  router.push({ name: 'session-history' })
 }
 
 function startSession(plan: Plan) {
