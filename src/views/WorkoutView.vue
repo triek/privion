@@ -27,9 +27,7 @@
           </p>
         </div>
         <div class="flex flex-wrap items-center gap-2">
-          <span class="text-xs font-semibold uppercase tracking-wide text-slate-500"
-            >{{ visibleHistory.length }} entries</span
-          >
+          <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">{{ visibleHistory.length }} entries</span>
           <button
             class="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-100 transition hover:-translate-y-0.5 hover:border-emerald-300/60 hover:text-white"
             type="button"
@@ -37,13 +35,12 @@
           >
             Clear session history
           </button>
-          <button
+          <RouterLink
             class="inline-flex items-center justify-center gap-2 rounded-full border border-emerald-400/50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:-translate-y-0.5 hover:border-emerald-300/70 hover:text-emerald-100"
-            type="button"
-            @click="goToSessionHistory"
+            :to="{ name: 'session-history' }"
           >
             View all history
-          </button>
+          </RouterLink>
         </div>
       </div>
 
@@ -290,7 +287,7 @@
 
 <script setup lang="ts">
 import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { RouterLink } from 'vue-router'
 import type { Plan } from '@/data/workoutPlans'
 import { workoutPlans } from '@/data/workoutPlans'
 import type { SessionRecord } from '@/data/workoutHistory'
@@ -322,9 +319,7 @@ const sessionExercises = ref<SessionExercise[]>([])
 const sessionHistoryStore = useSessionHistoryStore()
 const clearedIndex = ref(0)
 const historySessions = computed<SessionRecord[]>(() => sessionHistoryStore.records)
-const visibleHistory = computed<SessionRecord[]>(() =>
-  sessionHistoryStore.records.slice(clearedIndex.value),
-)
+const visibleHistory = computed<SessionRecord[]>(() => sessionHistoryStore.records.slice(clearedIndex.value))
 const historyContainerRef = ref<HTMLElement | null>(null)
 const pageEndRef = ref<HTMLElement | null>(null)
 
@@ -378,7 +373,7 @@ watch(
   () => visibleHistory.value.length,
   () => {
     scrollHistoryToBottom()
-  },
+  }
 )
 
 function scrollHistoryToBottom() {
@@ -392,10 +387,6 @@ function scrollHistoryToBottom() {
 
 function clearSessionHistory() {
   clearedIndex.value = sessionHistoryStore.records.length
-}
-
-function goToSessionHistory() {
-  router.push({ name: 'session-history' })
 }
 
 function startSession(plan: Plan) {
