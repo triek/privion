@@ -43,6 +43,15 @@
           >
             {{ item.label }}
           </RouterLink>
+
+          <button
+            v-if="authStore.isAuthenticated"
+            type="button"
+            class="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:text-white"
+            @click="authStore.logout(); isMenuOpen = false"
+          >
+            Sign out
+          </button>
         </nav>
       </div>
     </header>
@@ -139,6 +148,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
+import { useAuthStore } from './stores/auth'
 
 type NavItem = {
   label: string
@@ -151,14 +161,21 @@ const route = useRoute()
 const isMenuOpen = ref(false)
 const isBookMenuOpen = ref(false)
 const bookMenuRef = ref<HTMLElement | null>(null)
+const authStore = useAuthStore()
 
-const navItems: NavItem[] = [
-  { label: 'Home', to: '/' },
-  { label: 'Workout', to: '/workout' },
-  { label: 'Nutrition', to: '/nutrition' },
-  { label: 'Login', to: '/login' },
-  { label: 'Signup', to: '/signup' },
-]
+const navItems = computed<NavItem[]>(() => {
+  const base: NavItem[] = [
+    { label: 'Home', to: '/' },
+    { label: 'Workout', to: '/workout' },
+    { label: 'Nutrition', to: '/nutrition' },
+  ]
+
+  if (authStore.isAuthenticated) {
+    return [...base, { label: 'Profile', to: '/profile' }]
+  }
+
+  return [...base, { label: 'Login', to: '/login' }, { label: 'Signup', to: '/signup' }]
+})
 
 const bookMenuItems = computed<CollectionMenuItem[]>(() => {
   if (route.path.startsWith('/workout')) {
