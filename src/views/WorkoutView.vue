@@ -245,10 +245,11 @@
 
 <script setup lang="ts">
 import { computed, nextTick, onMounted, reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import type { Plan } from '@/data/workoutPlans'
 import { workoutPlans } from '@/data/workoutPlans'
 import type { SessionRecord } from '@/data/workoutHistory'
-import { useSessionHistoryStore } from '@/stores/sessionHistory'
+import { workoutHistory } from '@/data/workoutHistory'
 
 type SessionExercise = {
   name: string
@@ -273,8 +274,7 @@ const showPlanPicker = ref(false)
 const sessionActive = ref(false)
 const activePlan = ref<Plan | null>(null)
 const sessionExercises = ref<SessionExercise[]>([])
-const sessionHistoryStore = useSessionHistoryStore()
-const historySessions = computed<SessionRecord[]>(() => sessionHistoryStore.records)
+const historySessions = ref<SessionRecord[]>([...workoutHistory])
 const historyContainerRef = ref<HTMLElement | null>(null)
 const pageEndRef = ref<HTMLElement | null>(null)
 
@@ -320,13 +320,6 @@ onMounted(() => {
   })
 })
 
-watch(
-  () => historySessions.value.length,
-  () => {
-    scrollHistoryToBottom()
-  }
-)
-
 function scrollHistoryToBottom() {
   nextTick(() => {
     const container = historyContainerRef.value
@@ -334,6 +327,14 @@ function scrollHistoryToBottom() {
       container.scrollTop = container.scrollHeight
     }
   })
+}
+
+function clearSessionHistory() {
+  historySessions.value = []
+}
+
+function goToSessionHistory() {
+  router.push({ name: 'session-history' })
 }
 
 function startSession(plan: Plan) {
@@ -437,7 +438,8 @@ function finishSession() {
     exercises: completedExercises,
   }
 
-  sessionHistoryStore.addRecord(newRecord)
+  historySessions.value = [...historySessions.value, newRecord]
+  scrollHistoryToBottom()
 
   sessionActive.value = false
   activePlan.value = null
