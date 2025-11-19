@@ -181,8 +181,8 @@ const bookMenuItems = computed<CollectionMenuItem[]>(() => {
   if (route.path.startsWith('/workout') || route.path.startsWith('/session-history')) {
     return [
       { label: 'Session history', to: '/session-history', icon: 'workout' },
-      { label: 'Workout routine', to: '/workout-routine', icon: 'workout' },
-      { label: 'Workout exercises book', to: '/workout-exercises', icon: 'workout' },
+      { label: 'Routine book', to: '/workout-routine', icon: 'workout' },
+      { label: 'Exercises book', to: '/workout-exercises', icon: 'workout' },
     ]
   }
 

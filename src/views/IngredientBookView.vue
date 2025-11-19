@@ -1,16 +1,27 @@
 <template>
-  <div class="space-y-12">
-    <header class="space-y-3">
+  <div class="space-y-8">
+    <!-- Navigation buttons -->
+    <div class="flex justify-between items-center">
       <RouterLink
         to="/nutrition"
         class="inline-flex items-center gap-2 self-start rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:-translate-y-0.5 hover:border-white/40"
       >
         ← Back to nutrition
       </RouterLink>
+      <RouterLink
+        to="/recipes"
+        class="inline-flex items-center gap-2 self-start rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:-translate-y-0.5 hover:border-white/40"
+      >
+        Recipe book
+      </RouterLink>
+    </div>
 
-      <!-- Header -->
+    <!-- Header -->
+    <header class="space-y-3 mx-2">
       <h1 class="text-3xl font-bold text-white">Ingredient book</h1>
-      <p class="max-w-2xl text-sm text-slate-400">Quickly stash simple ingredients to reuse across your training meals.</p>
+      <p class="max-w-2xl text-sm text-slate-400">
+        Quickly stash simple ingredients to reuse across your training meals.
+      </p>
     </header>
 
     <section class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/30">

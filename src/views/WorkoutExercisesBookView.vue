@@ -1,21 +1,28 @@
 <template>
-  <div class="space-y-12">
-    <header class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-      <div class="space-y-3">
-        <RouterLink
-          to="/workout"
-          class="inline-flex items-center gap-2 self-start rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:-translate-y-0.5 hover:border-white/40"
-        >
-          ← Back to workout
-        </RouterLink>
+  <div class="space-y-8">
+    <!-- Navigation buttons -->
+    <div class="flex justify-between items-center">
+      <RouterLink
+        to="/workout"
+        class="inline-flex items-center gap-2 self-start rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:-translate-y-0.5 hover:border-white/40"
+      >
+        ← Back to workout
+      </RouterLink>
+      <RouterLink
+        to="/workout-routine"
+        class="inline-flex items-center gap-2 self-start rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:-translate-y-0.5 hover:border-white/40"
+      >
+        Routine book
+      </RouterLink>
+    </div>
 
-        <!-- Header -->
-        <h1 class="text-3xl font-bold text-white">Hypertrophy exercise book</h1>
-        <p class="max-w-2xl text-sm text-slate-400">
-          Filter the complete hypertrophy catalog by primary muscle group to find the perfect movement for the next training
-          block.
-        </p>
-      </div>
+    <!-- Header -->
+    <header class="space-y-3 mx-2">
+      <h1 class="text-3xl font-bold text-white">Hypertrophy exercise book</h1>
+      <p class="max-w-2xl text-sm text-slate-400">
+        Filter the complete hypertrophy catalog by primary muscle group to find the perfect movement for the next training
+        block.
+      </p>
     </header>
 
     <section class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/30">
