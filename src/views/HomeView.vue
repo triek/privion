@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-10">
     <section
-      class="grid gap-8 rounded-3xl border border-white/10 bg-slate-900/70 p-10 shadow-[0_25px_60px_-25px_rgba(16,185,129,0.35)] lg:grid-cols-[1.2fr_1fr]"
+      class="grid gap-8 rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-[0_25px_60px_-25px_rgba(16,185,129,0.35)] lg:grid-cols-[1.2fr_1fr]"
     >
       <div class="space-y-6">
         <p class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs uppercase tracking-[0.3em] text-slate-400">
