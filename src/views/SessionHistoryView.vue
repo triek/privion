@@ -29,10 +29,6 @@
       <div class="flex flex-wrap items-start justify-between gap-6">
         <div class="space-y-2">
           <h2 class="text-lg font-semibold text-white">Session filter</h2>
-          <p class="max-w-xl text-sm text-slate-400">
-            Choose a day focus to narrow the archive. The filters mirror the book collections so you can jump between catalogs and
-            detailed history without losing context.
-          </p>
           <p class="text-xs uppercase tracking-wide text-emerald-200">{{ filteredHistory.length }} sessions · {{ totalExercisesTracked }} exercises</p>
         </div>
         <div class="flex flex-wrap gap-2">
@@ -55,22 +51,6 @@
     </section>
 
     <section class="space-y-6">
-      <div class="flex flex-col gap-3 mx-2 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h2 class="text-2xl font-semibold text-white">History archive</h2>
-          <p class="text-sm text-slate-400">Review every past session in one place.</p>
-        </div>
-        <div class="flex flex-wrap items-center gap-3">
-          <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">{{ filteredHistory.length }} entries</span>
-          <RouterLink
-            class="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-100 transition hover:-translate-y-0.5 hover:border-emerald-300/60 hover:text-white"
-            to="/workout"
-          >
-            Back to workout
-          </RouterLink>
-        </div>
-      </div>
-
       <div v-if="filteredHistory.length" class="space-y-4">
         <article
           v-for="record in filteredHistory"
