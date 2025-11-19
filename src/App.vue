@@ -60,26 +60,7 @@
       <RouterView />
     </main>
 
-    <div ref="bookMenuRef" class="fixed top-28 right-6 z-40 flex flex-col items-end gap-4">
-      <button
-        type="button"
-        class="inline-flex h-16 w-16 items-center justify-center rounded-full border border-emerald-400/40 bg-emerald-400/60 text-white/80 shadow-xl shadow-emerald-500/40 transition hover:bg-emerald-400/30 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-        :aria-expanded="isBookMenuOpen"
-        aria-haspopup="menu"
-        aria-label="Open collections"
-        @click.stop="toggleBookMenu"
-        @keydown.escape.prevent="isBookMenuOpen = false"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M4.75 5.75h9.5a2 2 0 0 1 2 2v10.5a.75.75 0 0 1-1.167.624L12 16.25l-3.083 2.624A.75.75 0 0 1 7.75 18.25V7.75a2 2 0 0 0-2-2Z"
-          />
-          <path stroke-linecap="round" stroke-linejoin="round" d="M16.75 7.75h2.5a.75.75 0 0 1 .75.75v9.75" />
-        </svg>
-      </button>
-
+    <div ref="bookMenuRef" class="fixed bottom-8 right-6 z-40 flex flex-col items-end gap-4">
       <div
         v-if="isBookMenuOpen"
         class="w-50 rounded-2xl border border-white/10 bg-slate-900/95 p-2 text-sm text-slate-200 shadow-[0_20px_45px_-15px_rgba(16,185,129,0.35)]"
@@ -141,6 +122,25 @@
           </svg>
         </RouterLink>
       </div>
+
+      <button
+        type="button"
+        class="inline-flex h-16 w-16 items-center justify-center rounded-full border border-emerald-400/40 bg-emerald-400/60 text-emerald-200 shadow-xl shadow-emerald-500/40 transition hover:bg-emerald-400/30 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+        :aria-expanded="isBookMenuOpen"
+        aria-haspopup="menu"
+        aria-label="Open collections"
+        @click.stop="toggleBookMenu"
+        @keydown.escape.prevent="isBookMenuOpen = false"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M4.75 5.75h9.5a2 2 0 0 1 2 2v10.5a.75.75 0 0 1-1.167.624L12 16.25l-3.083 2.624A.75.75 0 0 1 7.75 18.25V7.75a2 2 0 0 0-2-2Z"
+          />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.75 7.75h2.5a.75.75 0 0 1 .75.75v9.75" />
+        </svg>
+      </button>
     </div>
   </div>
 </template>

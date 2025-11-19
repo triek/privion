@@ -1,8 +1,9 @@
 <template>
-  <div class="space-y-12">
-    <header class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+  <div class="space-y-6">
+    <!-- Nutrition banner -->
+    <header class="flex flex-col mx-4 gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <h1 class="text-3xl font-bold text-white">Nutrition system</h1>
+        <h1 class="text-3xl font-bold text-white">Nutrition</h1>
         <p class="text-sm text-slate-400">
           Plan meals from your recipe book and keep a running log of the food fueling your training.
         </p>

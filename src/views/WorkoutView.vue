@@ -1,26 +1,30 @@
 <template>
-  <div class="space-y-10">
+  <div class="space-y-6">
     <!-- Workout banner -->
-    <section
-      class="rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/30"
-    >
+    <header class="flex gap-2 mx-2 justify-between">
       <div class="space-y-2">
         <h1 class="text-3xl font-bold text-white">Workout</h1>
         <p v-if="hasPlanner" class="text-sm text-slate-400">
           Week {{ planner.week }} · Day {{ planner.day }}
         </p>
-      </div>
 
-      <p class="mt-6 text-sm text-slate-300">
-        Lock in today's intent, review your recent efforts, and be ready to launch the next session
-        when you're set.
-      </p>
-    </section>
+        <p class="mt-6 text-sm text-slate-300">
+          Lock in today's intent, review your recent efforts, and be ready to launch the next session
+          when you're set.
+        </p>
+      </div>
+      <RouterLink
+        to="/workout-exercises"
+        class="inline-flex items-center gap-2 self-start rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:-translate-y-0.5 hover:border-white/40"
+      >
+        Exercises book
+      </RouterLink>
+    </header>
 
     <!-- Session history -->
-    <section class="space-y-6">
-      <div class="flex flex-col gap-2 mx-2 md:flex-row md:items-center md:justify-between">
-        <div>
+    <section class="space-y-3">
+      <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+        <div class="rounded-2xl border border-white/10 bg-slate-900/60 p-6">
           <h2 class="text-2xl font-semibold text-white">Session history</h2>
           <p class="text-sm text-slate-400">
             Latest tracked workouts with weights, sets, and reps.
@@ -45,7 +49,7 @@
       </div>
 
       <div ref="historyContainerRef" class="history-scroll overflow-y-auto pr-1">
-        <ul class="space-y-4 pb-1">
+        <ul class="space-y-4">
           <li v-for="record in visibleHistory" :key="record.session">
             <article class="space-y-4 rounded-2xl border border-white/10 bg-slate-950/70 p-5">
               <div class="flex items-baseline justify-between gap-3">
@@ -315,9 +319,17 @@ const sessionActive = ref(false)
 const activePlan = ref<Plan | null>(null)
 const sessionExercises = ref<SessionExercise[]>([])
 const sessionHistoryStore = useSessionHistoryStore()
-const clearedIndex = ref(0)
+
+const workoutHistoryStart = computed(() =>
+  Math.min(sessionHistoryStore.workoutClearedThrough, sessionHistoryStore.records.length)
+)
+
 const historySessions = computed<SessionRecord[]>(() => sessionHistoryStore.records)
-const visibleHistory = computed<SessionRecord[]>(() => sessionHistoryStore.records.slice(clearedIndex.value))
+
+const visibleHistory = computed<SessionRecord[]>(() =>
+  sessionHistoryStore.records.slice(workoutHistoryStart.value)
+)
+
 const historyContainerRef = ref<HTMLElement | null>(null)
 const pageEndRef = ref<HTMLElement | null>(null)
 
@@ -384,7 +396,7 @@ function scrollHistoryToBottom() {
 }
 
 function clearSessionHistory() {
-  clearedIndex.value = sessionHistoryStore.records.length
+  sessionHistoryStore.clearWorkoutViewHistory()
 }
 
 function startSession(plan: Plan) {
