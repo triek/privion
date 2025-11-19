@@ -154,12 +154,20 @@
                   </span>
 
                 <div class="space-y-3">
-                  <!-- Exercise name -->
                   <div class="flex items-start justify-between gap-3">
-                    <div>
-                      <p class="text-[11px] font-semibold uppercase tracking-wide text-emerald-200">{{ exercise.muscle }}</p>
-                      <p class="text-sm font-semibold text-white">{{ exercise.name }}</p>
+                    <div class="flex gap-2">
+                      <!-- Exxercise number -->
+                      <div class="flex h-9 w-9 items-center justify-center text-2xl font-semibold text-white">
+                        {{ index + 1 }}
+                      </div>
+                      <!-- Exercise name -->
+                      <div>
+                        <p class="text-[11px] font-semibold uppercase tracking-wide text-emerald-200">{{ exercise.muscle }}</p>
+                        <p class="text-sm font-semibold text-white">{{ exercise.name }}</p>
+                      </div>
                     </div>
+
+                    <!-- Delete button -->
                     <button
                       type="button"
                       class="text-[11px] uppercase tracking-wide text-rose-300 transition hover:text-rose-200"
@@ -172,7 +180,9 @@
                   <!-- Sets, reps, weight -->
                   <div class="grid gap-3 sm:grid-cols-3">
                     <label class="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-wide text-slate-400">
-                      Sets
+                      <div class="mx-2">
+                        Sets
+                      </div>
                       <input
                         v-model.number="exercise.sets"
                         class="h-10 rounded-xl border border-white/10 bg-slate-900/70 px-3 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
@@ -181,7 +191,9 @@
                       />
                     </label>
                     <label class="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-wide text-slate-400">
-                      Reps
+                      <div class="mx-2">
+                        Reps
+                      </div>
                       <input
                         v-model.number="exercise.reps"
                         class="h-10 rounded-xl border border-white/10 bg-slate-900/70 px-3 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
@@ -190,7 +202,9 @@
                       />
                     </label>
                     <label class="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-wide text-slate-400">
-                      Weight (lb)
+                      <div class="mx-2">
+                        Weight (lbs)
+                      </div>
                       <input
                         v-model.number="exercise.weight"
                         class="h-10 rounded-xl border border-white/10 bg-slate-900/70 px-3 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
