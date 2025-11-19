@@ -56,7 +56,7 @@
       </div>
     </header>
 
-    <main class="mx-auto max-w-6xl px-6 pb-12 pt-32">
+    <main class="mx-auto max-w-6xl px-3 pb-12 pt-30">
       <RouterView />
     </main>
 
