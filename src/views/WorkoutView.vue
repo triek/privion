@@ -114,6 +114,7 @@
         </button>
       </div>
 
+      <!-- Session -->
       <div class="space-y-5">
         <article
           v-for="(exercise, index) in sessionExercises"
@@ -158,30 +159,27 @@
                     @change="normalizeReps(index)"
                   />
                 </label>
+                <span class="hidden text-slate-500 sm:inline">·</span>
+
+                <!-- Weight used -->
+                  <label :for="`reps-${index}`" class="flex items-center gap-2">
+                    <span class="text-xs font-semibold uppercase tracking-wide text-slate-400"
+                      >Weight</span
+                    >
+                      <input
+                        :id="`weight-${index}`"
+                        v-model="exercise.weight"
+                        class="w-20 rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                        placeholder="Body Wg"
+                        type="text"
+                        inputmode="decimal"
+                      />
+                      <span class="text-sm font-medium text-slate-400">kg</span>
+                  </label>
               </div>
             </div>
 
             <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-              <!-- Weight used -->
-              <div class="flex w-full max-w-xs flex-col gap-1">
-                <label
-                  :for="`weight-${index}`"
-                  class="text-xs font-semibold uppercase tracking-wide text-slate-400"
-                  >Weight used</label
-                >
-                <div class="flex items-center gap-2">
-                  <input
-                    :id="`weight-${index}`"
-                    v-model="exercise.weight"
-                    class="w-20 rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
-                    placeholder="Body Wg"
-                    type="text"
-                    inputmode="decimal"
-                  />
-                  <span class="text-sm font-medium text-slate-400">kg</span>
-                </div>
-              </div>
-
               <!-- Sets check -->
               <div class="flex flex-wrap gap-2">
                 <button
