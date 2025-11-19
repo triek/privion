@@ -54,8 +54,11 @@ export const useAuthStore = defineStore('auth', () => {
 
     if (profile.value) return
 
+    const cleanedEmail = email.trim()
+    const [username = cleanedEmail] = cleanedEmail.split('@')
+
     profile.value = {
-      name: email.split('@')[0],
+      name: username,
       email: credentials.value.email,
       goal: 'Staying consistent',
       location: 'Not provided yet',
