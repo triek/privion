@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-8">
+  <div class="space-y-6">
     <!-- Navigation buttons -->
     <div class="flex justify-between items-center">
       <RouterLink
@@ -17,14 +17,14 @@
     </div>
 
     <!-- Header -->
-    <header class="space-y-3 mx-2">
+    <header class="space-y-2 mx-4">
       <h1 class="text-3xl font-bold text-white">Ingredient book</h1>
       <p class="max-w-2xl text-sm text-slate-400">
         Quickly stash simple ingredients to reuse across your training meals.
       </p>
     </header>
 
-    <section class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/30">
+    <section class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-lg shadow-slate-950/30">
       <div class="grid gap-6 lg:grid-cols-[2fr_1fr]">
         <div class="space-y-6">
           <!-- Ingredient filter -->
@@ -52,16 +52,18 @@
           </div>
 
           <!-- Macro visibility -->
-          <div class="space-y-2 rounded-2xl border border-white/5 bg-slate-950/60 p-4">
-            <div class="flex items-center justify-between gap-3">
-              <div class="space-y-0.5">
-                <p class="text-xs uppercase tracking-wide text-slate-400">Macro visibility</p>
-                <p class="text-sm text-slate-300">Toggle which stats appear on the ingredient cards.</p>
+          <div class="space-y-4">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between gap-4">
+                <p class="text-lg font-semibold text-white">Macro visibility</p>
+                <p class="text-xs uppercase tracking-wide text-emerald-200">
+                  {{ visibleMacroOptions.length }} shown
+                </p>
               </div>
-              <p class="text-xs uppercase tracking-wide text-emerald-200">
-                {{ visibleMacroOptions.length }} shown
-              </p>
+
+              <p class="text-sm text-slate-300">Toggle which stats appear on the ingredient cards.</p>
             </div>
+
             <div class="flex flex-wrap gap-2">
               <label
                 v-for="macro in macroOptions"
@@ -84,11 +86,11 @@
             </div>
           </div>
 
-          <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <div class="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
             <article
               v-for="ingredient in filteredIngredients"
               :key="ingredient.name"
-              class="flex flex-col gap-3 rounded-2xl border border-white/10 bg-slate-950/70 p-5 text-sm text-slate-300"
+              class="flex flex-col gap-2 rounded-2xl border border-white/10 bg-slate-950/70 p-4 text-sm text-slate-300"
             >
               <div class="flex items-start justify-between gap-2">
                 <div class="space-y-1">
@@ -96,14 +98,14 @@
                   <h3 class="text-lg font-semibold text-white">{{ ingredient.name }}</h3>
                 </div>
               </div>
-              <dl class="grid grid-cols-2 gap-2 text-xs text-slate-400 sm:grid-cols-3">
+              <dl class="grid grid-cols-4 gap-2 text-xs text-slate-400 sm:grid-cols-4">
                 <div
                   v-for="macro in visibleMacrosByIngredient[ingredient.name]"
                   :key="macro.key"
                   class="rounded-xl border border-white/5 bg-slate-900/60 p-3"
                 >
                   <dt class="uppercase tracking-wide text-slate-500">{{ macro.label }}</dt>
-                  <dd class="text-base font-semibold text-white">{{ ingredient.stats[macro.key] }}</dd>
+                  <dd class="text-base text-slate-300">{{ ingredient.stats[macro.key] }}</dd>
                 </div>
               </dl>
             </article>

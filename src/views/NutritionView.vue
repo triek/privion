@@ -1,19 +1,25 @@
 <template>
   <div class="space-y-6">
     <!-- Nutrition banner -->
-    <header class="flex flex-col mx-4 gap-4 sm:flex-row sm:items-center sm:justify-between">
-      <div>
+    <header class="flex mx-4 justify-between mb-2">
+      <div class="space-y-2">
         <h1 class="text-3xl font-bold text-white">Nutrition</h1>
-        <p class="text-sm text-slate-400">
-          Plan meals from your recipe book and keep a running log of the food fueling your training.
-        </p>
       </div>
-      <div class="flex flex-wrap items-center gap-3"></div>
+
+      <RouterLink
+        to="/recipes"
+        class="inline-flex items-center gap-2 self-start rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:-translate-y-0.5 hover:border-white/40"
+      >
+        Recipe book
+      </RouterLink>
     </header>
+    <p class="text-sm text-slate-300 mx-4">
+      Plan meals from your recipe book and keep a running log of the food fueling your training.
+    </p>
 
     <section class="grid gap-6">
       <!-- Daily plate -->
-      <article class="space-y-6 rounded-2xl border border-white/10 bg-slate-900/60 p-6">
+      <article class="space-y-6 rounded-2xl border border-white/10 bg-slate-900/60 p-4">
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h2 class="text-lg font-semibold text-white">Daily plate</h2>
@@ -30,14 +36,14 @@
             </div>
           </div>
         </div>
-        <div class="grid gap-4 sm:grid-cols-3">
+        <div class="grid gap-2 grid-cols-3">
           <div
             v-for="macro in macroCards"
             :key="macro.label"
             class="rounded-xl border border-white/10 bg-slate-950/70 p-4 text-sm text-slate-300"
           >
             <p class="text-xs uppercase text-slate-400">{{ macro.label }}</p>
-            <p class="mt-1 text-3xl font-black text-white">{{ macro.value }}</p>
+            <p class="mt-1 text-2xl font-black text-white">{{ macro.value }}</p>
             <p class="mt-1 text-xs text-slate-500">Goal: {{ macro.goal }}</p>
           </div>
         </div>
@@ -49,16 +55,26 @@
       </article>
 
       <!-- Today's lineup -->
-      <article class="space-y-6 rounded-2xl border border-white/10 bg-slate-900/60 p-6">
-        <div class="space-y-2">
-          <h2 class="text-lg font-semibold text-white">Today&apos;s lineup</h2>
-          <p class="text-sm text-slate-400">Pick meals to lock in for today&apos;s plan.</p>
+      <article class="space-y-6 rounded-2xl border border-white/10 bg-slate-900/60 p-4">
+        <div class="flex justify-between mb-2">
+          <!-- Header -->
+          <div class="space-y-2">
+            <h2 class="text-lg font-semibold text-white mt-1">Today&apos;s lineup</h2>
+            <p class="text-sm text-slate-400">Pick the meals for today</p>
+          </div>
+
+          <RouterLink
+            to="/recipes"
+            class="inline-flex items-center gap-2 self-start rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:-translate-y-0.5 hover:border-white/40"
+          >
+            More recipes
+          </RouterLink>
         </div>
         <div class="grid gap-3 sm:grid-cols-3">
           <div
             v-for="(slot, index) in plannedMealDetails"
             :key="index"
-            class="flex min-h-[140px] flex-col justify-between rounded-2xl border-2 border-dashed border-white/15 bg-slate-950/60 p-4 text-sm"
+            class="flex min-h-[60px] flex-col justify-between rounded-2xl border-2 border-dashed border-white/15 bg-slate-950/60 p-4 text-sm"
             :class="slot ? 'border-emerald-400/50 bg-emerald-500/10 text-emerald-50' : 'text-slate-500'"
           >
             <div v-if="slot" class="space-y-2">
@@ -85,7 +101,7 @@
         </div>
         <div class="space-y-3">
           <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-400">Available meals</h3>
-          <div class="grid gap-3 md:grid-cols-2">
+          <div class="grid gap-2 md:grid-cols-2">
             <button
               v-for="item in recipeSummaries"
               :key="item.recipe.id"
