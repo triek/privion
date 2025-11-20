@@ -1,57 +1,57 @@
 <template>
   <div class="space-y-6">
     <!-- Workout banner -->
-    <header class="flex gap-2 mx-2 justify-between">
+    <header class="flex mx-4 justify-between mb-2">
       <div class="space-y-2">
         <h1 class="text-3xl font-bold text-white">Workout</h1>
         <p v-if="hasPlanner" class="text-sm text-slate-400">
           Week {{ planner.week }} · Day {{ planner.day }}
         </p>
-
-        <p class="mt-6 text-sm text-slate-300">
-          Lock in today's intent, review your recent efforts, and be ready to launch the next session
-          when you're set.
-        </p>
       </div>
       <RouterLink
         to="/workout-exercises"
-        class="inline-flex items-center gap-2 self-start rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:-translate-y-0.5 hover:border-white/40"
+        class="inline-flex items-center gap-2 self-start rounded-full border border-white/20 px-4 py-2 my-1 text-sm font-semibold text-slate-100 transition hover:-translate-y-0.5 hover:border-white/40"
       >
-        Exercises book
+        Exercise book
       </RouterLink>
     </header>
+    <p class="text-sm text-slate-300 mx-4">
+      Lock in today's intent, review your recent efforts, and be ready to launch the next session when you're set.
+    </p>
 
     <!-- Session history -->
-    <section class="space-y-3">
+    <section class="space-y-2">
       <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <div class="rounded-2xl border border-white/10 bg-slate-900/60 p-6">
+        <div class="rounded-2xl border border-white/10 bg-slate-900/60 p-4">
           <h2 class="text-2xl font-semibold text-white">Session history</h2>
           <p class="text-sm text-slate-400">
             Latest tracked workouts with weights, sets, and reps.
           </p>
         </div>
-        <div class="flex flex-wrap items-center gap-2">
+        <div class="flex flex-col-reverse sm:flex-row mx-2 items-center gap-2">
           <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">{{ visibleHistory.length }} entries</span>
-          <button
-            class="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-100 transition hover:-translate-y-0.5 hover:border-emerald-300/60 hover:text-white"
-            type="button"
-            @click="clearSessionHistory"
-          >
-            Clear session history
-          </button>
-          <RouterLink
-            class="inline-flex items-center justify-center gap-2 rounded-full border border-emerald-400/50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:-translate-y-0.5 hover:border-emerald-300/70 hover:text-emerald-100"
-            :to="{ name: 'session-history' }"
-          >
-            View all history
-          </RouterLink>
+          <div class="space-x-2">
+            <button
+              class="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-100 transition hover:-translate-y-0.5 hover:border-emerald-300/60 hover:text-white"
+              type="button"
+              @click="clearSessionHistory"
+            >
+              Clear session history
+            </button>
+            <RouterLink
+              class="inline-flex items-center justify-center gap-2 rounded-full border border-emerald-400/50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:-translate-y-0.5 hover:border-emerald-300/70 hover:text-emerald-100"
+              :to="{ name: 'session-history' }"
+            >
+              View all history
+            </RouterLink>
+          </div>
         </div>
       </div>
 
       <div ref="historyContainerRef" class="history-scroll overflow-y-auto pr-1">
         <ul class="space-y-4">
           <li v-for="record in visibleHistory" :key="record.session">
-            <article class="space-y-4 rounded-2xl border border-white/10 bg-slate-950/70 p-5">
+            <article class="space-y-4 rounded-2xl border border-white/10 bg-slate-950/70 p-4">
               <div class="flex items-baseline justify-between gap-3">
                 <h3 class="text-lg font-semibold text-white">{{ record.session }}</h3>
                 <span class="text-xs font-semibold uppercase tracking-wide text-emerald-300"
@@ -102,7 +102,7 @@
 
     <section
       v-if="sessionActive && activePlan"
-      class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/30"
+      class="space-y-4 rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-lg shadow-slate-950/30"
     >
       <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
@@ -118,12 +118,12 @@
         </button>
       </div>
 
-      <!-- Session -->
-      <div class="space-y-5">
+      <!-- Sessionw -->
+      <div class="space-y-2">
         <article
           v-for="(exercise, index) in sessionExercises"
           :key="`${exercise.name}-${index}`"
-          class="space-y-4 rounded-2xl border border-white/10 bg-slate-950/70 p-5"
+          class="space-y-2 rounded-2xl border border-white/10 bg-slate-950/70 p-4"
         >
           <div class="flex flex-col gap-3">
             <div class="flex flex-col gap-1">
@@ -213,7 +213,7 @@
 
     <!-- Session creation -->
     <section
-      class="rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/30"
+      class="rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-lg shadow-slate-950/30"
     >
       <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div class="space-y-2">
@@ -250,10 +250,10 @@
           @click="closePlanPicker"
         ></div>
         <div
-          class="relative w-full max-w-lg rounded-t-3xl border border-white/10 bg-slate-900/95 p-6 shadow-xl shadow-slate-950/40"
+          class="relative w-94 rounded-t-3xl border border-white/10 bg-slate-900/95 p-4 shadow-xl shadow-slate-950/40"
         >
-          <div class="mb-5 flex items-center justify-between">
-            <h3 class="text-lg font-semibold text-white">Pick a plan</h3>
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="text-lg mx-2 font-semibold text-white">Pick a plan</h3>
             <button
               class="text-xs font-semibold uppercase tracking-wide text-slate-400 transition hover:text-white"
               type="button"
@@ -263,7 +263,7 @@
             </button>
           </div>
 
-          <ul class="space-y-3">
+          <ul class="space-y-2">
             <li v-for="plan in weeklyPlan" :key="plan.id">
               <button
                 class="flex w-full flex-col items-start rounded-2xl border border-white/10 bg-slate-950/80 px-5 py-4 text-left transition hover:-translate-y-0.5 hover:border-emerald-400/50 hover:bg-slate-900"

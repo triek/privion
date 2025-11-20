@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-8">
+  <div class="space-y-6">
     <!-- Navigation buttons -->
     <div class="flex justify-between items-center">
       <RouterLink
@@ -17,15 +17,15 @@
     </div>
 
     <!-- Header -->
-    <header class="space-y-3 mx-2">
-      <h1 class="text-3xl font-bold text-white">Performance recipe book</h1>
+    <header class="space-y-2 mx-4">
+      <h1 class="text-3xl font-bold text-white">Recipe book</h1>
       <p class="max-w-2xl text-sm text-slate-400">
         Dial in your fueling plan by filtering meals around the primary ingredient you have on hand and the intent driving your
         training block.
       </p>
     </header>
 
-    <section class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/30">
+    <section class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-lg shadow-slate-950/30">
       <div class="flex flex-wrap items-start justify-between gap-6">
         <div class="space-y-2">
           <h2 class="text-lg font-semibold text-white">Recipe filter</h2>
