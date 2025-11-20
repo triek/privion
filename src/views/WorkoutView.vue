@@ -118,7 +118,7 @@
         </button>
       </div>
 
-      <!-- Sessionw -->
+      <!-- Sessions -->
       <div class="space-y-2">
         <article
           v-for="(exercise, index) in sessionExercises"
