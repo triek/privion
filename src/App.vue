@@ -60,7 +60,7 @@
       <RouterView />
     </main>
 
-    <div ref="bookMenuRef" class="fixed bottom-8 right-6 z-40 flex flex-col items-end gap-4">
+    <div v-if="showBookMenu" ref="bookMenuRef" class="fixed bottom-8 right-6 z-40 flex flex-col items-end gap-4">
       <div
         v-if="isBookMenuOpen"
         class="w-50 rounded-2xl border border-white/10 bg-slate-900/95 p-2 text-sm text-slate-200 shadow-[0_20px_45px_-15px_rgba(16,185,129,0.35)]"
@@ -162,6 +162,11 @@ const isMenuOpen = ref(false)
 const isBookMenuOpen = ref(false)
 const bookMenuRef = ref<HTMLElement | null>(null)
 const authStore = useAuthStore()
+
+const showBookMenu = computed(() => {
+  const hiddenPaths = ['/', '/login', '/signup', '/profile']
+  return !hiddenPaths.includes(route.path)
+})
 
 const navItems = computed<NavItem[]>(() => {
   const base: NavItem[] = [
