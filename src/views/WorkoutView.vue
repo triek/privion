@@ -104,10 +104,12 @@
       v-if="sessionActive && activePlan"
       class="space-y-4 rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-lg shadow-slate-950/30"
     >
-      <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h2 class="text-2xl font-semibold text-white">{{ activePlan.title }}</h2>
-          <p class="text-sm text-slate-400">Stay present, finish strong.</p>
+      <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div class="flex items-start gap-3">
+          <div>
+            <h2 class="text-2xl font-semibold text-white">{{ activePlan.title }}</h2>
+            <p class="text-sm text-slate-400">Stay present, finish strong.</p>
+          </div>
         </div>
         <button
           class="inline-flex items-center justify-center rounded-full border border-emerald-400/50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:-translate-y-0.5 hover:border-emerald-300/70"
@@ -126,50 +128,52 @@
           class="space-y-2 rounded-2xl border border-white/10 bg-slate-950/70 p-4"
         >
           <div class="flex flex-col gap-3">
-            <div class="flex flex-col gap-1">
-              <h3 class="text-lg font-semibold text-white">{{ exercise.name }}</h3>
-              <div class="flex flex-wrap items-center gap-3 text-sm text-slate-300">
-                <!-- Sets -->
-                <label :for="`sets-${index}`" class="flex items-center gap-2">
-                  <span class="text-xs font-semibold uppercase tracking-wide text-slate-400"
-                    >Sets</span
-                  >
-                  <input
-                    :id="`sets-${index}`"
-                    v-model.number="exercise.sets"
-                    class="h-9 w-12 rounded-lg border border-white/10 bg-slate-900/70 px-2 py-1 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
-                    min="1"
-                    step="1"
-                    type="number"
-                    inputmode="numeric"
-                    @change="normalizeSets(index)"
-                  />
-                </label>
-                <span class="hidden text-slate-500 sm:inline">·</span>
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex flex-col gap-1">
+                <h3 class="text-lg font-semibold text-white">{{ exercise.name }}</h3>
+                <div class="flex flex-wrap items-center gap-3 text-sm text-slate-300">
+                  <template v-if="exercise.editing">
+                    <!-- Sets -->
+                    <label :for="`sets-${index}`" class="flex items-center gap-2">
+                      <span class="text-xs font-semibold uppercase tracking-wide text-slate-400"
+                        >Sets</span
+                      >
+                      <input
+                        :id="`sets-${index}`"
+                        v-model.number="exercise.sets"
+                        class="h-9 w-12 rounded-lg border border-white/10 bg-slate-900/70 px-2 py-1 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                        min="1"
+                        step="1"
+                        type="number"
+                        inputmode="numeric"
+                        @change="normalizeSets(index)"
+                      />
+                    </label>
+                    <span class="hidden text-slate-500 sm:inline">·</span>
 
-                <!-- Reps -->
-                <label :for="`reps-${index}`" class="flex items-center gap-2">
-                  <span class="text-xs font-semibold uppercase tracking-wide text-slate-400"
-                    >Reps</span
-                  >
-                  <input
-                    :id="`reps-${index}`"
-                    v-model.number="exercise.reps"
-                    class="h-9 w-14 rounded-lg border border-white/10 bg-slate-900/70 px-2 py-1 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
-                    min="1"
-                    step="1"
-                    type="number"
-                    inputmode="numeric"
-                    @change="normalizeReps(index)"
-                  />
-                </label>
-                <span class="hidden text-slate-500 sm:inline">·</span>
+                    <!-- Reps -->
+                    <label :for="`reps-${index}`" class="flex items-center gap-2">
+                      <span class="text-xs font-semibold uppercase tracking-wide text-slate-400"
+                        >Reps</span
+                      >
+                      <input
+                        :id="`reps-${index}`"
+                        v-model.number="exercise.reps"
+                        class="h-9 w-14 rounded-lg border border-white/10 bg-slate-900/70 px-2 py-1 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                        min="1"
+                        step="1"
+                        type="number"
+                        inputmode="numeric"
+                        @change="normalizeReps(index)"
+                      />
+                    </label>
+                    <span class="hidden text-slate-500 sm:inline">·</span>
 
-                <!-- Weight used -->
-                  <label :for="`reps-${index}`" class="flex items-center gap-2">
-                    <span class="text-xs font-semibold uppercase tracking-wide text-slate-400"
-                      >Weight</span
-                    >
+                    <!-- Weight used -->
+                    <label :for="`reps-${index}`" class="flex items-center gap-2">
+                      <span class="text-xs font-semibold uppercase tracking-wide text-slate-400"
+                        >Weight</span
+                      >
                       <input
                         :id="`weight-${index}`"
                         v-model="exercise.weight"
@@ -179,8 +183,37 @@
                         inputmode="decimal"
                       />
                       <span class="text-sm font-medium text-slate-400">kg</span>
-                  </label>
+                    </label>
+                  </template>
+                  <template v-else>
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">Sets</span>
+                      <span class="text-sm font-semibold text-white">{{ exercise.sets }}</span>
+                    </div>
+                    <span class="hidden text-slate-500 sm:inline">·</span>
+
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">Reps</span>
+                      <span class="text-sm font-semibold text-white">{{ exercise.reps }}</span>
+                    </div>
+                    <span class="hidden text-slate-500 sm:inline">·</span>
+
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">Weight</span>
+                      <span class="text-sm font-semibold text-white">{{ exercise.weight || 'Bodyweight' }}</span>
+                      <span class="text-sm font-medium text-slate-400">kg</span>
+                    </div>
+                  </template>
+                </div>
               </div>
+              <button
+                class="self-start rounded-full border border-white/20 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-slate-100 transition hover:-translate-y-0.5 hover:border-white/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+                type="button"
+                :aria-pressed="exercise.editing"
+                @click="toggleExerciseEditing(index)"
+              >
+                {{ exercise.editing ? 'Done' : 'Edit' }}
+              </button>
             </div>
 
             <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -302,8 +335,7 @@ type SessionExercise = {
   reps: number
   completion: boolean[]
   weight: string
-  planRepsLabel: string
-  planSets: number
+  editing: boolean
 }
 
 const hasPlanner = true
@@ -422,8 +454,7 @@ function startSession(plan: Plan) {
       reps: derivedReps,
       completion: Array.from({ length: derivedSets }, () => false),
       weight: normalizedWeight,
-      planRepsLabel: exercise.reps,
-      planSets: exercise.sets,
+      editing: false,
     }
   })
 
@@ -441,6 +472,15 @@ function startTodayPlan() {
     return
   }
   startSession(recommendedPlan.value)
+}
+
+function toggleExerciseEditing(exerciseIndex: number) {
+  const exercise = sessionExercises.value[exerciseIndex]
+  if (!exercise) {
+    return
+  }
+
+  exercise.editing = !exercise.editing
 }
 
 function toggleSet(exerciseIndex: number, setIndex: number) {
