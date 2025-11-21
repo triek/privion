@@ -203,29 +203,36 @@
       </div>
 
       <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <!-- Recipes -->
         <article
           v-for="recipe in filteredRecipes"
           :key="recipe.id"
           class="flex flex-col gap-3 rounded-2xl border border-white/10 bg-slate-950/70 p-5 text-sm text-slate-300"
         >
-          <header class="flex items-start justify-between gap-3">
+          <button
+            type="button"
+            class="flex w-full items-start justify-between gap-3 text-left"
+            :aria-expanded="isRecipeExpanded(recipe.id)"
+            @click="toggleRecipe(recipe.id)"
+          >
             <div class="space-y-1">
-              <p class="text-xs uppercase tracking-wide text-emerald-300">{{ recipe.mainIngredient }}</p>
-              <h3 class="text-lg font-semibold text-white">{{ recipe.name }}</h3>
+              <p class="text-xs uppercase tracking-wide text-emerald-300">
+                {{ recipe.mainIngredient }}
+              </p>
+              <h3 class="text-lg font-semibold text-white">
+                {{ recipe.name }}
+              </h3>
             </div>
-            <button
-              type="button"
-              class="rounded-full border border-white/10 bg-slate-900/70 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-200 transition hover:border-white/30 hover:text-white"
-              @click="toggleRecipe(recipe.id)"
+
+            <span
+              aria-hidden="true"
+              class="inline-flex h-8 w-8 items-center justify-center self-end rounded-full border border-white/10 bg-slate-900/70 text-xs font-semibold uppercase tracking-wide text-slate-200 transition hover:border-white/30 hover:text-white transform"
+              :class="{ 'rotate-180': isRecipeExpanded(recipe.id) }"
             >
-              <span
-                aria-hidden="true"
-                class="inline-block transform transition-transform"
-                :class="{ 'rotate-180': isRecipeExpanded(recipe.id) }"
-              >▼</span>
-              <span class="sr-only">Toggle recipe details</span>
-            </button>
-          </header>
+              ▼
+            </span>
+            <span class="sr-only">Toggle recipe details</span>
+          </button>
 
           <div v-if="isRecipeExpanded(recipe.id)" class="space-y-3">
             <p class="text-xs uppercase tracking-wide text-slate-500">Serves {{ recipe.servings }}</p>

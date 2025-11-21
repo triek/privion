@@ -25,7 +25,7 @@
       </p>
     </header>
 
-    <section class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/30">
+    <section class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-lg shadow-slate-950/30">
       <div class="flex flex-wrap items-start justify-between gap-6">
         <div class="space-y-2">
           <!-- Filter -->
@@ -96,6 +96,7 @@
             </span>
             <span class="sr-only">Toggle exercise details</span>
           </button>
+
           <div v-if="isExerciseExpanded(exercise.name)" class="space-y-3">
             <p class="text-xs uppercase tracking-wide text-slate-500">Equipment: {{ exercise.equipment }}</p>
             <p class="text-slate-400">{{ exercise.description }}</p>
