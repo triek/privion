@@ -1,13 +1,13 @@
 <template>
-  <div class="space-y-10">
+  <div class="space-y-6">
     <section
-      class="grid gap-8 rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-[0_25px_60px_-25px_rgba(16,185,129,0.35)] lg:grid-cols-[1.2fr_1fr]"
+      class="grid gap-8 rounded-3xl border border-white/10 bg-slate-900/70 p-4 shadow-[0_25px_60px_-25px_rgba(16,185,129,0.35)] lg:grid-cols-[1.2fr_1fr]"
     >
-      <div class="space-y-6">
+      <div class="space-y-4">
         <p class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs uppercase tracking-[0.3em] text-slate-400">
           Daily control center
         </p>
-        <div class="space-y-3">
+        <div class="space-y-2">
           <h1 class="text-3xl font-black leading-tight text-white sm:text-4xl">
             Keep training and nutrition in the same rhythm.
           </h1>
@@ -31,15 +31,25 @@
           </RouterLink>
         </div>
 
-        <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <div
-            v-for="stat in quickStats"
-            :key="stat.label"
-            class="rounded-2xl border border-white/10 bg-slate-950/70 p-4 shadow-inner shadow-slate-950/30"
-          >
-            <p class="text-xs uppercase tracking-wide text-slate-400">{{ stat.label }}</p>
-            <p class="mt-2 text-2xl font-black text-white">{{ stat.value }}</p>
-            <p class="mt-1 text-xs text-slate-500">{{ stat.context }}</p>
+        <div class="space-y-3">
+          <div class="flex items-center justify-between rounded-2xl border border-emerald-400/40 bg-emerald-500/10 p-4">
+            <div>
+              <p class="text-xs uppercase tracking-wide text-emerald-200">Your tracking streak</p>
+              <p class="mt-1 text-3xl font-black text-white">
+                {{ trackingStreakDays }} <span aria-hidden="true">🔥</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="grid gap-3 grid-cols-2">
+            <div class="rounded-2xl border border-white/10 bg-slate-950/70 p-4 shadow-inner shadow-slate-950/30">
+              <p class="text-xs uppercase tracking-wide text-slate-400">{{ sessionStat.label }}</p>
+              <p class="mt-2 text-2xl font-black text-white">{{ sessionStat.value }}</p>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-slate-950/70 p-4 shadow-inner shadow-slate-950/30">
+              <p class="text-xs uppercase tracking-wide text-slate-400">{{ mealStat.label }}</p>
+              <p class="mt-2 text-2xl font-black text-white">{{ mealStat.value }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -104,7 +114,7 @@
     </section>
 
     <section class="grid gap-6 lg:grid-cols-2">
-      <article class="space-y-4 rounded-2xl border border-white/10 bg-slate-900/70 p-6">
+      <article class="space-y-4 rounded-2xl border border-white/10 bg-slate-900/70 p-4">
         <div class="flex items-start justify-between gap-3">
           <div>
             <h2 class="text-lg font-semibold text-white">Recent workout momentum</h2>
@@ -132,7 +142,7 @@
         </ul>
       </article>
 
-      <article class="space-y-4 rounded-2xl border border-white/10 bg-slate-900/70 p-6">
+      <article class="space-y-4 rounded-2xl border border-white/10 bg-slate-900/70 p-4">
         <div class="flex items-start justify-between gap-3">
           <div>
             <h2 class="text-lg font-semibold text-white">Today&apos;s meal log</h2>
@@ -169,64 +179,6 @@
         </div>
       </article>
     </section>
-
-    <section class="grid gap-6 lg:grid-cols-2">
-      <article class="space-y-4 rounded-2xl border border-white/10 bg-slate-900/70 p-6">
-        <div class="flex items-center justify-between gap-3">
-          <div>
-            <h2 class="text-lg font-semibold text-white">High-value meals</h2>
-            <p class="text-sm text-slate-400">Protein-forward recipes surfaced from your book.</p>
-          </div>
-          <RouterLink
-            to="/nutrition"
-            class="text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:text-emerald-100"
-          >
-            Nutrition view
-          </RouterLink>
-        </div>
-        <div class="grid gap-3 sm:grid-cols-2">
-          <div
-            v-for="item in topRecipes"
-            :key="item.recipe.id"
-            class="rounded-xl border border-white/10 bg-slate-950/70 p-4 text-sm text-slate-300"
-          >
-            <p class="text-base font-semibold text-white">{{ item.recipe.name }}</p>
-            <p class="mt-1 text-xs text-slate-400">{{ item.recipe.servings }} servings · {{ item.recipe.summary ?? 'Protein-forward prep' }}</p>
-            <p class="mt-2 text-xs text-slate-400">
-              {{ formatNumber(item.perServing.protein) }}g protein · {{ formatNumber(item.perServing.carbs) }}g carbs ·
-              {{ formatNumber(item.perServing.fat) }}g fats
-            </p>
-          </div>
-        </div>
-      </article>
-
-      <article class="space-y-4 rounded-2xl border border-white/10 bg-slate-900/70 p-6">
-        <div class="flex items-start justify-between gap-3">
-          <div>
-            <h2 class="text-lg font-semibold text-white">Strength cues</h2>
-            <p class="text-sm text-slate-400">Stay aligned with the updated workout interface.</p>
-          </div>
-          <RouterLink
-            to="/workout-exercises"
-            class="text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:text-emerald-100"
-          >
-            Exercise book
-          </RouterLink>
-        </div>
-        <div class="space-y-3 text-sm text-slate-300">
-          <div class="rounded-xl border border-white/10 bg-slate-950/70 p-4">
-            <p class="text-xs uppercase text-emerald-200">Latest session</p>
-            <p class="mt-1 text-base font-semibold text-white">{{ latestSession?.session ?? 'No session logged yet' }}</p>
-            <p class="mt-1 text-xs text-slate-400">{{ latestSessionCue }}</p>
-          </div>
-          <div class="rounded-xl border border-white/10 bg-slate-950/70 p-4">
-            <p class="text-xs uppercase text-emerald-200">Sets completed</p>
-            <p class="mt-1 text-3xl font-black text-white">{{ totalSetsLogged }}</p>
-            <p class="text-xs text-slate-400">Across {{ sessionHistoryStore.totalEntries }} logged sessions</p>
-          </div>
-        </div>
-      </article>
-    </section>
   </div>
 </template>
 
@@ -244,13 +196,12 @@ const sessionHistoryStore = useSessionHistoryStore()
 const { records } = storeToRefs(sessionHistoryStore)
 
 const nutritionStore = useNutritionStore()
-const { recipes, mealLogs, ingredientMap, recipeSummaries } = storeToRefs(nutritionStore)
+const { recipes, mealLogs, ingredientMap, } = storeToRefs(nutritionStore)
 
 const nextPlan = computed(() => workoutPlans[0])
 const nextPlanPreview = computed(() => nextPlan.value?.exercises.slice(0, 3) ?? [])
 
 const recentSessions = computed(() => records.value.slice(-3).reverse())
-const latestSession = computed(() => recentSessions.value[0])
 
 const macroTargets = { protein: 190, carbs: 300, fat: 70 }
 
@@ -296,28 +247,19 @@ const macroCards = computed(() => [
   },
 ])
 
-const quickStats = computed(() => [
-  {
-    label: 'Sessions logged',
-    value: sessionHistoryStore.totalEntries,
-    context: 'From the new workout view',
-  },
-  {
-    label: 'Sets tracked',
-    value: totalSetsLogged.value,
-    context: 'Completed across plans',
-  },
-  {
-    label: 'Protein today',
-    value: `${formatNumber(dailyTotals.value.protein)}g`,
-    context: 'Logged in the nutrition view',
-  },
-  {
-    label: 'Meals logged',
-    value: mealLogs.value.length,
-    context: 'Using the updated meal log',
-  },
-])
+const trackingStreakDays = computed(() => 9)
+
+const sessionStat = computed(() => ({
+  label: 'Sessions logged',
+  value: sessionHistoryStore.totalEntries,
+  context: 'From the new workout view',
+}))
+
+const mealStat = computed(() => ({
+  label: 'Meals logged',
+  value: mealLogs.value.length,
+  context: 'Using the updated meal log',
+}))
 
 const todayMeals = computed(() => mealLogDetails.value.slice(0, 3))
 
@@ -326,27 +268,6 @@ const macroProgressMessage = computed(() => {
   const proteinGap = Math.max(macroTargets.protein - dailyTotals.value.protein, 0)
   const carbsGap = Math.max(macroTargets.carbs - dailyTotals.value.carbs, 0)
   return `Still ${formatNumber(proteinGap)}g protein and ${formatNumber(carbsGap)}g carbs from target.`
-})
-
-const topRecipes = computed(() =>
-  [...recipeSummaries.value]
-    .sort((a, b) => b.perServing.protein - a.perServing.protein)
-    .slice(0, 2)
-)
-
-const totalSetsLogged = computed(() =>
-  records.value.reduce(
-    (setTotal, record) =>
-      setTotal + record.exercises.reduce((exerciseTotal, exercise) => exerciseTotal + exercise.setsCompleted, 0),
-    0
-  )
-)
-
-const latestSessionCue = computed(() => {
-  if (!latestSession.value) return 'No strength work logged yet.'
-  const firstExercise = latestSession.value.exercises[0]
-  if (!firstExercise) return 'Add movements to the session to see cues.'
-  return `${firstExercise.name} · ${firstExercise.setsCompleted}/${firstExercise.setsPlanned} sets complete`
 })
 
 const proteinTargetMessage = computed(() => {
