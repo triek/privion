@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-6">
+  <div class="space-y-4">
     <!-- Navigation buttons -->
     <div class="flex justify-between items-center">
       <RouterLink
@@ -25,18 +25,144 @@
       </p>
     </header>
 
+    <div class="flex justify-end px-2">
+      <button
+        type="button"
+        class="rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-200 transition hover:-translate-y-0.5 hover:border-emerald-300/70 hover:text-emerald-100"
+        @click="openNewRecipeForm"
+      >
+        Add recipe
+      </button>
+    </div>
+
+    <section
+      v-if="showNewRecipeForm"
+      class="space-y-4 rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-lg shadow-slate-950/30"
+    >
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="space-y-1">
+          <p class="text-xs font-semibold uppercase tracking-wide text-emerald-200">Create a recipe</p>
+          <h2 class="text-lg font-semibold text-white">Add a new recipe from your ingredient list</h2>
+        </div>
+      </div>
+
+      <form class="space-y-4" @submit.prevent="saveRecipe">
+        <div class="grid gap-4 md:grid-cols-[2fr,1fr]">
+          <label class="flex flex-col gap-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+            Recipe name
+            <input
+              v-model="newRecipe.name"
+              class="rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+              type="text"
+              required
+            />
+          </label>
+          <label class="flex flex-col gap-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+            Servings
+            <input
+              v-model.number="newRecipe.servings"
+              class="rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+              min="1"
+              type="number"
+            />
+          </label>
+        </div>
+
+        <label class="flex flex-col gap-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+          Summary (optional)
+          <textarea
+            v-model="newRecipe.summary"
+            class="min-h-[80px] rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+            placeholder="What makes this recipe special?"
+          />
+        </label>
+
+        <div class="space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 class="text-sm font-semibold text-white">Ingredients</h3>
+              <p class="text-xs text-slate-400">Select items from your ingredient book and set quantities.</p>
+            </div>
+            <label class="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+              <span class="mx-1">Choose ingredient</span>
+              <select
+                v-model="selectedIngredientOption"
+                class="min-w-[240px] rounded-full border border-white/10 bg-slate-900/70 px-4 py-2 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                @change="addSelectedIngredient"
+              >
+                <option disabled value="">Add an ingredient</option>
+                <option v-for="option in ingredientOptions" :key="option.id" :value="option.id">{{ option.name }}</option>
+              </select>
+            </label>
+          </div>
+
+          <div
+            class="grid gap-3 rounded-2xl border-2 border-dashed border-white/15 bg-slate-950/60 p-3"
+            :class="newRecipe.ingredients.length ? 'border-emerald-400/40 bg-emerald-500/5' : ''"
+          >
+            <p
+              v-if="!newRecipe.ingredients.length"
+              class="text-center text-xs uppercase tracking-wide text-slate-500"
+            >
+              Add ingredients from the dropdown above.
+            </p>
+            <article
+              v-for="(ingredient, index) in newRecipe.ingredients"
+              :key="index"
+              class="grid items-center gap-3 rounded-2xl border border-white/10 bg-slate-950/80 p-4 md:grid-cols-[1fr,160px,auto]"
+            >
+              <p class="text-sm font-semibold text-white">{{ ingredientName(ingredient.ingredientId) }}</p>
+
+              <label class="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                <span class="mx-1">Quantity ({{ ingredientUnitLabel(ingredient.ingredientId) }})</span>
+                <input
+                  v-model.number="ingredient.quantity"
+                  class="rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                  min="0"
+                  type="number"
+                />
+              </label>
+
+              <button
+                type="button"
+                class="text-[11px] uppercase tracking-wide text-rose-300 transition hover:text-rose-200"
+                @click="removeIngredientRow(index)"
+              >
+                Delete
+              </button>
+            </article>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap justify-between items-center gap-3">
+          <button
+            type="button"
+            class="rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-200 transition hover:-translate-y-0.5 hover:border-rose-300/70 hover:text-rose-100"
+            @click="closeNewRecipeForm"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="rounded-full border border-emerald-400/60 bg-emerald-500/10 px-5 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:-translate-y-0.5 hover:border-emerald-300/70"
+          >
+            Save recipe
+          </button>
+        </div>
+      </form>
+    </section>
+
     <section class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-lg shadow-slate-950/30">
       <div class="flex flex-wrap items-start justify-between gap-6">
         <div class="space-y-2">
           <h2 class="text-lg font-semibold text-white">Recipe filter</h2>
           <p class="max-w-xl text-sm text-slate-400">
             Each recipe balances flavor and macros so you can stay on track whether you are pushing volume, rebuilding, or
-            coasting on a rest day. Lock in an ingredient and intent to see what fits.
+            coasting on a rest day. Lock in an ingredient to see what fits.
           </p>
           <p class="text-xs uppercase tracking-wide text-emerald-200">{{ filteredRecipes.length }} recipes available</p>
         </div>
-        <div class="w-full space-y-4 justify-end">
-          <!-- Main ingredient -->
+        <div class="flex flex-col items-end gap-3 sm:flex-row sm:items-center">
           <div class="space-y-2 sm:w-1/2 lg:w-auto">
             <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-400">Main ingredient</h3>
             <div class="flex flex-wrap gap-2">
@@ -56,62 +182,45 @@
               </button>
             </div>
           </div>
-
-          <!-- Intent -->
-          <div class="space-y-2 sm:w-1/2 lg:w-auto">
-            <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-400">Intent</h3>
-            <div class="flex flex-wrap gap-2">
-              <button
-                v-for="filter in intentFilters"
-                :key="filter.value"
-                type="button"
-                class="rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition"
-                :class="
-                  selectedIntent === filter.value
-                    ? 'border-emerald-400 bg-emerald-500/20 text-emerald-100'
-                    : 'border-white/15 bg-slate-950/60 text-slate-300 hover:border-white/30 hover:text-white'
-                "
-                @click="selectedIntent = filter.value"
-              >
-                {{ filter.label }}
-              </button>
-            </div>
-          </div>
         </div>
       </div>
 
       <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <article
           v-for="recipe in filteredRecipes"
-          :key="recipe.name"
+          :key="recipe.id"
           class="flex flex-col gap-4 rounded-2xl border border-white/10 bg-slate-950/70 p-5 text-sm text-slate-300"
         >
-          <header class="space-y-2">
+          <header class="space-y-1">
             <p class="text-xs uppercase tracking-wide text-emerald-300">{{ recipe.mainIngredient }}</p>
             <h3 class="text-lg font-semibold text-white">{{ recipe.name }}</h3>
-            <p class="text-xs uppercase tracking-wide text-slate-500">Intent: {{ recipe.intent }} · Cook time: {{ recipe.cookTime }} · Serves {{ recipe.servings }}</p>
+            <p class="text-xs uppercase tracking-wide text-slate-500">Serves {{ recipe.servings }}</p>
           </header>
-          <p class="text-slate-400">{{ recipe.description }}</p>
+          <p class="text-slate-400">{{ recipe.summary }}</p>
           <dl class="grid grid-cols-3 gap-2 text-xs text-slate-400">
             <div>
               <dt class="uppercase tracking-wide text-slate-500">Protein</dt>
-              <dd class="text-base font-semibold text-white">{{ recipe.macros.protein }}g</dd>
+              <dd class="text-base font-semibold text-white">{{ recipe.totals.protein.toFixed(0) }}g</dd>
             </div>
             <div>
               <dt class="uppercase tracking-wide text-slate-500">Carbs</dt>
-              <dd class="text-base font-semibold text-white">{{ recipe.macros.carbs }}g</dd>
+              <dd class="text-base font-semibold text-white">{{ recipe.totals.carbs.toFixed(0) }}g</dd>
             </div>
             <div>
               <dt class="uppercase tracking-wide text-slate-500">Fat</dt>
-              <dd class="text-base font-semibold text-white">{{ recipe.macros.fat }}g</dd>
+              <dd class="text-base font-semibold text-white">{{ recipe.totals.fat.toFixed(0) }}g</dd>
             </div>
           </dl>
-          <ul class="space-y-1 text-xs text-slate-400">
-            <li v-for="highlight in recipe.highlights" :key="highlight" class="flex items-start gap-2">
-              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
-              <span>{{ highlight }}</span>
-            </li>
-          </ul>
+          <dl class="grid grid-cols-2 gap-2 text-xs text-slate-400">
+            <div class="rounded-xl border border-white/5 bg-slate-900/60 p-3">
+              <dt class="uppercase tracking-wide text-slate-500">Calories</dt>
+              <dd class="text-base text-slate-300">{{ recipe.totals.calories.toFixed(0) }}</dd>
+            </div>
+            <div class="rounded-xl border border-white/5 bg-slate-900/60 p-3">
+              <dt class="uppercase tracking-wide text-slate-500">Cost</dt>
+              <dd class="text-base text-slate-300">${{ recipe.totals.cost.toFixed(2) }}</dd>
+            </div>
+          </dl>
         </article>
       </div>
     </section>
@@ -119,38 +228,110 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { RouterLink } from 'vue-router'
+import { storeToRefs } from 'pinia'
 
-import { performanceRecipes, type MainIngredient, type RecipeCardData, type RecipeIntent } from '@/data/recipes'
+import type { RecipeIngredient } from '@/types/nutrition'
+import { useNutritionStore } from '@/stores/nutrition'
 
-type IngredientFilterOption = 'All' | MainIngredient
+type IngredientFilterOption = 'All' | string
 
-type IntentFilterOption = 'All' | RecipeIntent
-
-const recipes: RecipeCardData[] = performanceRecipes
-
-const ingredientOptions = [...new Set(recipes.map((recipe) => recipe.mainIngredient))] as MainIngredient[]
-const intentOptions = [...new Set(recipes.map((recipe) => recipe.intent))] as RecipeIntent[]
-
-const ingredientFilters: { label: string; value: IngredientFilterOption }[] = [
-  { label: 'All ingredients', value: 'All' },
-  ...ingredientOptions.map((ingredient) => ({ label: ingredient, value: ingredient })),
-]
-
-const intentFilters: { label: string; value: IntentFilterOption }[] = [
-  { label: 'All intents', value: 'All' },
-  ...intentOptions.map((intent) => ({ label: intent, value: intent })),
-]
+const nutritionStore = useNutritionStore()
+const { ingredients, recipeSummaries } = storeToRefs(nutritionStore)
 
 const selectedIngredient = ref<IngredientFilterOption>('All')
-const selectedIntent = ref<IntentFilterOption>('All')
+const showNewRecipeForm = ref(false)
+const selectedIngredientOption = ref('')
+
+const newRecipe = reactive<{ name: string; servings: number; summary: string; ingredients: RecipeIngredient[] }>({
+  name: '',
+  servings: 2,
+  summary: '',
+  ingredients: [],
+})
+
+const ingredientOptions = computed(() => ingredients.value.map((ingredient) => ({ id: ingredient.id, name: ingredient.name })))
+
+const recipeCards = computed(() =>
+  recipeSummaries.value.map(({ recipe, totals }) => {
+    const mainIngredient = ingredients.value.find((item) => item.id === recipe.ingredients[0]?.ingredientId)
+
+    return {
+      id: recipe.id,
+      name: recipe.name,
+      servings: recipe.servings,
+      summary: recipe.summary ?? 'Protein-forward prep built from your book.',
+      mainIngredient: mainIngredient?.name ?? 'Uncategorized',
+      totals,
+    }
+  })
+)
+
+const ingredientFilters = computed(() => [
+  { label: 'All ingredients', value: 'All' as IngredientFilterOption },
+  ...[...new Set(recipeCards.value.map((item) => item.mainIngredient))].map((ingredient) => ({ label: ingredient, value: ingredient })),
+])
 
 const filteredRecipes = computed(() =>
-  recipes.filter(
-    (recipe) =>
-      (selectedIngredient.value === 'All' || recipe.mainIngredient === selectedIngredient.value) &&
-      (selectedIntent.value === 'All' || recipe.intent === selectedIntent.value)
-  )
+  recipeCards.value.filter((recipe) => selectedIngredient.value === 'All' || recipe.mainIngredient === selectedIngredient.value)
 )
+
+const resetForm = () => {
+  newRecipe.name = ''
+  newRecipe.servings = 2
+  newRecipe.summary = ''
+  newRecipe.ingredients = []
+  selectedIngredientOption.value = ''
+}
+
+const openNewRecipeForm = () => {
+  showNewRecipeForm.value = true
+}
+
+const closeNewRecipeForm = () => {
+  resetForm()
+  showNewRecipeForm.value = false
+}
+
+const removeIngredientRow = (index: number) => {
+  newRecipe.ingredients.splice(index, 1)
+}
+
+const ingredientName = (ingredientId: string) => ingredients.value.find((item) => item.id === ingredientId)?.name ?? 'Ingredient'
+
+const addSelectedIngredient = () => {
+  if (!selectedIngredientOption.value) return
+
+  newRecipe.ingredients.push({ ingredientId: selectedIngredientOption.value, quantity: 0 })
+  selectedIngredientOption.value = ''
+}
+
+const ingredientUnitLabel = (ingredientId: string) => {
+  const ingredient = ingredients.value.find((item) => item.id === ingredientId)
+  return ingredient?.unit ?? 'g'
+}
+
+const saveRecipe = () => {
+  const trimmedName = newRecipe.name.trim()
+  if (!trimmedName || !newRecipe.ingredients.length) return
+
+  const cleanedIngredients = newRecipe.ingredients
+    .filter((item) => item.ingredientId && item.quantity > 0)
+    .map((item) => ({
+      ingredientId: item.ingredientId,
+      quantity: item.quantity,
+    }))
+
+  if (!cleanedIngredients.length) return
+
+  nutritionStore.addRecipe({
+    name: trimmedName,
+    servings: newRecipe.servings > 0 ? newRecipe.servings : 1,
+    summary: newRecipe.summary.trim() || undefined,
+    ingredients: cleanedIngredients,
+  })
+
+  closeNewRecipeForm()
+}
 </script>
