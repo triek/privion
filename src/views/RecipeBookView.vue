@@ -17,7 +17,7 @@
     </div>
 
     <!-- Header -->
-    <header class="space-y-2 mx-4">
+    <header class="space-y-2 mx-4 mb-0">
       <h1 class="text-3xl font-bold text-white">Recipe book</h1>
       <p class="max-w-2xl text-sm text-slate-400">
         Dial in your fueling plan by filtering meals around the primary ingredient you have on hand and the intent driving your
@@ -206,38 +206,55 @@
         <article
           v-for="recipe in filteredRecipes"
           :key="recipe.id"
-          class="flex flex-col gap-4 rounded-2xl border border-white/10 bg-slate-950/70 p-5 text-sm text-slate-300"
+          class="flex flex-col gap-3 rounded-2xl border border-white/10 bg-slate-950/70 p-5 text-sm text-slate-300"
         >
-          <header class="space-y-1">
-            <p class="text-xs uppercase tracking-wide text-emerald-300">{{ recipe.mainIngredient }}</p>
-            <h3 class="text-lg font-semibold text-white">{{ recipe.name }}</h3>
-            <p class="text-xs uppercase tracking-wide text-slate-500">Serves {{ recipe.servings }}</p>
+          <header class="flex items-start justify-between gap-3">
+            <div class="space-y-1">
+              <p class="text-xs uppercase tracking-wide text-emerald-300">{{ recipe.mainIngredient }}</p>
+              <h3 class="text-lg font-semibold text-white">{{ recipe.name }}</h3>
+            </div>
+            <button
+              type="button"
+              class="rounded-full border border-white/10 bg-slate-900/70 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-200 transition hover:border-white/30 hover:text-white"
+              @click="toggleRecipe(recipe.id)"
+            >
+              <span
+                aria-hidden="true"
+                class="inline-block transform transition-transform"
+                :class="{ 'rotate-180': isRecipeExpanded(recipe.id) }"
+              >▼</span>
+              <span class="sr-only">Toggle recipe details</span>
+            </button>
           </header>
-          <p class="text-slate-400">{{ recipe.summary }}</p>
-          <dl class="grid grid-cols-3 gap-2 text-xs text-slate-400">
-            <div>
-              <dt class="uppercase tracking-wide text-slate-500">Protein</dt>
-              <dd class="text-base font-semibold text-white">{{ recipe.totals.protein.toFixed(0) }}g</dd>
-            </div>
-            <div>
-              <dt class="uppercase tracking-wide text-slate-500">Carbs</dt>
-              <dd class="text-base font-semibold text-white">{{ recipe.totals.carbs.toFixed(0) }}g</dd>
-            </div>
-            <div>
-              <dt class="uppercase tracking-wide text-slate-500">Fat</dt>
-              <dd class="text-base font-semibold text-white">{{ recipe.totals.fat.toFixed(0) }}g</dd>
-            </div>
-          </dl>
-          <dl class="grid grid-cols-2 gap-2 text-xs text-slate-400">
-            <div class="rounded-xl border border-white/5 bg-slate-900/60 p-3">
-              <dt class="uppercase tracking-wide text-slate-500">Calories</dt>
-              <dd class="text-base text-slate-300">{{ recipe.totals.calories.toFixed(0) }}</dd>
-            </div>
-            <div class="rounded-xl border border-white/5 bg-slate-900/60 p-3">
-              <dt class="uppercase tracking-wide text-slate-500">Cost</dt>
-              <dd class="text-base text-slate-300">${{ recipe.totals.cost.toFixed(2) }}</dd>
-            </div>
-          </dl>
+
+          <div v-if="isRecipeExpanded(recipe.id)" class="space-y-3">
+            <p class="text-xs uppercase tracking-wide text-slate-500">Serves {{ recipe.servings }}</p>
+            <p class="text-slate-400">{{ recipe.summary }}</p>
+            <dl class="grid grid-cols-3 gap-2 text-xs text-slate-400">
+              <div>
+                <dt class="uppercase tracking-wide text-slate-500">Protein</dt>
+                <dd class="text-base font-semibold text-white">{{ recipe.totals.protein.toFixed(0) }}g</dd>
+              </div>
+              <div>
+                <dt class="uppercase tracking-wide text-slate-500">Carbs</dt>
+                <dd class="text-base font-semibold text-white">{{ recipe.totals.carbs.toFixed(0) }}g</dd>
+              </div>
+              <div>
+                <dt class="uppercase tracking-wide text-slate-500">Fat</dt>
+                <dd class="text-base font-semibold text-white">{{ recipe.totals.fat.toFixed(0) }}g</dd>
+              </div>
+            </dl>
+            <dl class="grid grid-cols-2 gap-2 text-xs text-slate-400">
+              <div class="rounded-xl border border-white/5 bg-slate-900/60 p-3">
+                <dt class="uppercase tracking-wide text-slate-500">Calories</dt>
+                <dd class="text-base text-slate-300">{{ recipe.totals.calories.toFixed(0) }}</dd>
+              </div>
+              <div class="rounded-xl border border-white/5 bg-slate-900/60 p-3">
+                <dt class="uppercase tracking-wide text-slate-500">Cost</dt>
+                <dd class="text-base text-slate-300">${{ recipe.totals.cost.toFixed(2) }}</dd>
+              </div>
+            </dl>
+          </div>
         </article>
       </div>
     </section>
@@ -262,6 +279,7 @@ const showNewRecipeForm = ref(false)
 const selectedIngredientOption = ref('')
 const showAllIngredientFilters = ref(false)
 const maxVisibleIngredientFilters = 4
+const expandedRecipes = reactive<Record<string, boolean>>({})
 
 const newRecipe = reactive<{ name: string; servings: number; summary: string; ingredients: RecipeIngredient[] }>({
   name: '',
@@ -313,6 +331,12 @@ const filteredRecipes = computed(() =>
       recipe.ingredientIds.some((ingredientId) => ingredientId === selectedIngredient.value)
   )
 )
+
+const toggleRecipe = (id: string) => {
+  expandedRecipes[id] = !expandedRecipes[id]
+}
+
+const isRecipeExpanded = (id: string) => Boolean(expandedRecipes[id])
 
 const resetForm = () => {
   newRecipe.name = ''
