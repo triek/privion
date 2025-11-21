@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-slate-950 text-slate-100">
     <header class="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-slate-950/80 backdrop-blur">
-      <div class="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-6 sm:flex-row sm:items-center sm:justify-between">
+      <div class="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
         <div class="flex w-full items-center justify-between sm:w-auto">
           <RouterLink to="/" class="flex items-center gap-3 text-left">
             <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/20 text-2xl font-black text-emerald-300 shadow-inner shadow-emerald-500/40">
@@ -56,17 +56,17 @@
       </div>
     </header>
 
-    <main class="mx-auto max-w-6xl px-3 pb-12 pt-30">
+    <main class="mx-auto max-w-6xl px-3 pb-12 pt-24">
       <RouterView />
     </main>
 
     <div v-if="showBookMenu" ref="bookMenuRef" class="fixed bottom-8 right-6 z-40 flex flex-col items-end gap-4">
       <div
         v-if="isBookMenuOpen"
-        class="w-50 rounded-2xl border border-white/10 bg-slate-900/95 p-2 text-sm text-slate-200 shadow-[0_20px_45px_-15px_rgba(16,185,129,0.35)]"
+        class="w-50 rounded-2xl border border-white/10 bg-slate-900/95 p-2 text-md text-slate-200 shadow-[0_20px_45px_-15px_rgba(16,185,129,0.35)]"
         role="menu"
       >
-        <p class="px-3 pb-1 text-xs uppercase tracking-wide text-slate-500">Browse</p>
+        <p class="px-3 py-1 text-md uppercase tracking-wide text-slate-500">Browse</p>
         <RouterLink
           v-for="option in bookMenuItems"
           :key="option.to"
