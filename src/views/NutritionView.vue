@@ -217,8 +217,24 @@ const mealLogDetails = computed(() =>
   }))
 )
 
+const plannedTotals = computed(() =>
+  plannedMealDetails.value.reduce(
+    (accumulator, detail) => {
+      if (!detail) return accumulator
+      accumulator.calories += detail.perServing.calories
+      accumulator.protein += detail.perServing.protein
+      accumulator.carbs += detail.perServing.carbs
+      accumulator.fat += detail.perServing.fat
+      accumulator.fiber += detail.perServing.fiber
+      accumulator.cost += detail.perServing.cost
+      return accumulator
+    },
+    { calories: 0, protein: 0, carbs: 0, fat: 0, fiber: 0, cost: 0 }
+  )
+)
+
 const dailyTotals = computed(() => {
-  return mealLogDetails.value.reduce(
+  const loggedTotals = mealLogDetails.value.reduce(
     (accumulator, detail) => {
       if (!detail.totals) return accumulator
       accumulator.calories += detail.totals.calories
@@ -231,6 +247,15 @@ const dailyTotals = computed(() => {
     },
     { calories: 0, protein: 0, carbs: 0, fat: 0, fiber: 0, cost: 0 }
   )
+
+  return {
+    calories: loggedTotals.calories + plannedTotals.value.calories,
+    protein: loggedTotals.protein + plannedTotals.value.protein,
+    carbs: loggedTotals.carbs + plannedTotals.value.carbs,
+    fat: loggedTotals.fat + plannedTotals.value.fat,
+    fiber: loggedTotals.fiber + plannedTotals.value.fiber,
+    cost: loggedTotals.cost + plannedTotals.value.cost,
+  }
 })
 
 const progressRadius = 32
