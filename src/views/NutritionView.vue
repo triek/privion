@@ -17,7 +17,7 @@
       Plan meals from your recipe book and keep a running log of the food fueling your training.
     </p>
 
-    <section class="grid gap-6">
+    <section class="grid gap-4">
       <!-- Daily plate -->
       <article class="space-y-6 rounded-2xl border border-white/10 bg-slate-900/60 p-4">
         <div class="flex flex-wrap items-center justify-between gap-4">
@@ -36,15 +36,44 @@
             </div>
           </div>
         </div>
+      </article>
+
         <div class="grid gap-2 grid-cols-3">
           <div
             v-for="macro in macroCards"
             :key="macro.label"
-            class="rounded-xl border border-white/10 bg-slate-950/70 p-4 text-sm text-slate-300"
+            class="rounded-2xl border border-white/10 bg-slate-900/60 p-2 text-sm text-slate-300"
           >
-            <p class="text-xs uppercase text-slate-400">{{ macro.label }}</p>
-            <p class="mt-1 text-2xl font-black text-white">{{ macro.value }}</p>
-            <p class="mt-1 text-xs text-slate-500">Goal: {{ macro.goal }}</p>
+            <p class="flex justify-center text-md uppercase text-slate-200 font-semibold mt-1">{{ macro.label }}</p>
+            <div class="flex items-center justify-center gap-4">
+              <div class="relative w-32 h-32">
+                <svg class="h-full w-full -rotate-90" viewBox="0 0 80 80" fill="none">
+                  <circle
+                    cx="40"
+                    cy="40"
+                    r="32"
+                    class="stroke-white/10"
+                    stroke-width="10"
+                  />
+                  <circle
+                    cx="40"
+                    cy="40"
+                    r="32"
+                    class="stroke-emerald-400"
+                    stroke-width="10"
+                    stroke-linecap="round"
+                    :stroke-dasharray="macro.circumference"
+                    :stroke-dashoffset="macro.strokeOffset"
+                  />
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center flex-row gap-1">
+                  <div>
+                    <p class="flex justify-center text-lg font-semibold text-white">{{ macro.value }}g</p>
+                    <p class="flex justify-center text-xs text-slate-500">/{{ macro.goal }}g</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <p
@@ -52,7 +81,6 @@
         >
           {{ proteinTargetMessage }}
         </p>
-      </article>
 
       <!-- Today's lineup -->
       <article class="space-y-6 rounded-2xl border border-white/10 bg-slate-900/60 p-4">
@@ -205,23 +233,31 @@ const dailyTotals = computed(() => {
   )
 })
 
-const macroCards = computed(() => [
-  {
-    label: 'Protein',
-    value: `${formatNumber(dailyTotals.value.protein)}g`,
-    goal: `${macroTargets.protein}g`,
-  },
-  {
-    label: 'Carbs',
-    value: `${formatNumber(dailyTotals.value.carbs)}g`,
-    goal: `${macroTargets.carbs}g`,
-  },
-  {
-    label: 'Fats',
-    value: `${formatNumber(dailyTotals.value.fat)}g`,
-    goal: `${macroTargets.fat}g`,
-  },
-])
+const progressRadius = 32
+const circumference = 2 * Math.PI * progressRadius
+
+const macroCards = computed(() => {
+  const macros = [
+    { label: 'Protein', value: dailyTotals.value.protein, goal: macroTargets.protein },
+    { label: 'Carbs', value: dailyTotals.value.carbs, goal: macroTargets.carbs },
+    { label: 'Fats', value: dailyTotals.value.fat, goal: macroTargets.fat },
+  ]
+
+  return macros.map((macro) => {
+    const progressPercentage = macro.goal > 0 ? (macro.value / macro.goal) * 100 : 0
+    const strokeProgress = Math.min(Math.max(progressPercentage / 100, 0), 1.5)
+    const strokeOffset = circumference * (1 - strokeProgress)
+
+    return {
+      ...macro,
+      value: formatNumber(macro.value),
+      goal: macro.goal,
+      progress: Math.round(progressPercentage),
+      circumference,
+      strokeOffset,
+    }
+  })
+})
 
 const proteinTargetMessage = computed(() => {
   if (!mealLogDetails.value.length) {
