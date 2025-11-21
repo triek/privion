@@ -35,7 +35,7 @@
             </div>
             <div class="flex flex-wrap gap-2">
               <button
-                v-for="filter in categoryFilters"
+                v-for="filter in visibleCategoryFilters"
                 :key="filter.value"
                 type="button"
                 class="rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition"
@@ -47,6 +47,23 @@
                 @click="selectedCategory = filter.value"
               >
                 {{ filter.label }}
+              </button>
+
+              <button
+                v-if="hiddenCategoryFiltersCount && !showAllCategoryFilters"
+                type="button"
+                class="rounded-full border border-white/15 bg-slate-950/60 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-300 transition hover:border-white/30 hover:text-white"
+                @click="showAllCategoryFilters = true"
+              >
+                ...
+              </button>
+              <button
+                v-else-if="hiddenCategoryFiltersCount"
+                type="button"
+                class="rounded-full border border-white/15 bg-slate-950/60 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-300 transition hover:border-white/30 hover:text-white"
+                @click="showAllCategoryFilters = false"
+              >
+                ... Show less
               </button>
             </div>
           </div>
@@ -64,9 +81,9 @@
               <p class="text-sm text-slate-300">Toggle which stats appear on the ingredient cards.</p>
             </div>
 
-            <div class="flex flex-wrap gap-2">
+            <div class="flex flex-wrap items-center gap-2">
               <label
-                v-for="macro in macroOptions"
+                v-for="macro in visibleMacroToggleOptions"
                 :key="macro.key"
                 class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-900/70 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-slate-200 shadow-sm shadow-slate-950/40 transition hover:border-white/30"
               >
@@ -83,6 +100,23 @@
                 </div>
                 <span>{{ macro.label }}</span>
               </label>
+
+              <button
+                v-if="hiddenMacroToggleCount && !showAllMacroOptions"
+                type="button"
+                class="rounded-full border border-white/15 bg-slate-950/60 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-300 transition hover:border-white/30 hover:text-white"
+                @click="showAllMacroOptions = true"
+              >
+                ...
+              </button>
+              <button
+                v-else-if="hiddenMacroToggleCount"
+                type="button"
+                class="rounded-full border border-white/15 bg-slate-950/60 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-300 transition hover:border-white/30 hover:text-white"
+                @click="showAllMacroOptions = false"
+              >
+                ... Show less
+              </button>
             </div>
           </div>
 
@@ -284,6 +318,8 @@ const macroOptions: MacroOption[] = [
 ]
 
 const selectedCategory = ref<CategoryFilterOption>('All')
+const showAllCategoryFilters = ref(false)
+const maxVisibleCategoryFilters = 5
 
 const macroVisibility = reactive<Record<MacroKey, boolean>>(
   macroOptions.reduce(
@@ -300,11 +336,30 @@ const categorySelectOptions = categoryFilters.filter((filter) => filter.value !=
   value: IngredientCategory
 }[]
 
+const hiddenCategoryFiltersCount = computed(() =>
+  Math.max(0, categoryFilters.length - maxVisibleCategoryFilters)
+)
+
+const visibleCategoryFilters = computed(() =>
+  showAllCategoryFilters.value
+    ? categoryFilters
+    : categoryFilters.slice(0, maxVisibleCategoryFilters)
+)
+
 const filteredIngredients = computed(() =>
   ingredients.value.filter((ingredient) => selectedCategory.value === 'All' || ingredient.category === selectedCategory.value)
 )
 
 const visibleMacroOptions = computed(() => macroOptions.filter((option) => macroVisibility[option.key]))
+
+const maxVisibleMacroOptions = 5
+const showAllMacroOptions = ref(false)
+
+const hiddenMacroToggleCount = computed(() => Math.max(0, macroOptions.length - maxVisibleMacroOptions))
+
+const visibleMacroToggleOptions = computed(() =>
+  showAllMacroOptions.value ? macroOptions : macroOptions.slice(0, maxVisibleMacroOptions)
+)
 
 const visibleMacrosByIngredient = computed<Record<string, MacroOption[]>>(() =>
   ingredients.value.reduce((acc, ingredient) => {

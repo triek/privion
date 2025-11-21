@@ -72,7 +72,7 @@
           Summary (optional)
           <textarea
             v-model="newRecipe.summary"
-            class="min-h-[80px] rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+            class="min-h-20 rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
             placeholder="What makes this recipe special?"
           />
         </label>
@@ -87,7 +87,7 @@
               <span class="mx-1">Choose ingredient</span>
               <select
                 v-model="selectedIngredientOption"
-                class="min-w-[240px] rounded-full border border-white/10 bg-slate-900/70 px-4 py-2 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                class="min-w-60 rounded-full border border-white/10 bg-slate-900/70 px-4 py-2 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
                 @change="addSelectedIngredient"
               >
                 <option disabled value="">Add an ingredient</option>
@@ -165,9 +165,9 @@
         <div class="flex flex-col items-end gap-3 sm:flex-row sm:items-center">
           <div class="space-y-2 sm:w-1/2 lg:w-auto">
             <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-400">Main ingredient</h3>
-            <div class="flex flex-wrap gap-2">
+            <div class="flex flex-wrap items-center gap-2">
               <button
-                v-for="filter in ingredientFilters"
+                v-for="filter in visibleIngredientFilters"
                 :key="filter.value"
                 type="button"
                 class="rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition"
@@ -179,6 +179,23 @@
                 @click="selectedIngredient = filter.value"
               >
                 {{ filter.label }}
+              </button>
+
+              <button
+                v-if="hiddenIngredientFiltersCount && !showAllIngredientFilters"
+                type="button"
+                class="rounded-full border border-white/15 bg-slate-950/60 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-300 transition hover:border-white/30 hover:text-white"
+                @click="showAllIngredientFilters = true"
+              >
+                ...
+              </button>
+              <button
+                v-else-if="hiddenIngredientFiltersCount"
+                type="button"
+                class="rounded-full border border-white/15 bg-slate-950/60 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-300 transition hover:border-white/30 hover:text-white"
+                @click="showAllIngredientFilters = false"
+              >
+                ... Show less
               </button>
             </div>
           </div>
@@ -243,6 +260,8 @@ const { ingredients, recipeSummaries } = storeToRefs(nutritionStore)
 const selectedIngredient = ref<IngredientFilterOption>('All')
 const showNewRecipeForm = ref(false)
 const selectedIngredientOption = ref('')
+const showAllIngredientFilters = ref(false)
+const maxVisibleIngredientFilters = 4
 
 const newRecipe = reactive<{ name: string; servings: number; summary: string; ingredients: RecipeIngredient[] }>({
   name: '',
@@ -255,7 +274,8 @@ const ingredientOptions = computed(() => ingredients.value.map((ingredient) => (
 
 const recipeCards = computed(() =>
   recipeSummaries.value.map(({ recipe, totals }) => {
-    const mainIngredient = ingredients.value.find((item) => item.id === recipe.ingredients[0]?.ingredientId)
+    const recipeIngredientIds = recipe.ingredients.map((ingredient) => ingredient.ingredientId)
+    const mainIngredient = ingredients.value.find((item) => item.id === recipeIngredientIds[0])
 
     return {
       id: recipe.id,
@@ -263,6 +283,7 @@ const recipeCards = computed(() =>
       servings: recipe.servings,
       summary: recipe.summary ?? 'Protein-forward prep built from your book.',
       mainIngredient: mainIngredient?.name ?? 'Uncategorized',
+      ingredientIds: recipeIngredientIds,
       totals,
     }
   })
@@ -270,16 +291,32 @@ const recipeCards = computed(() =>
 
 const ingredientFilters = computed(() => [
   { label: 'All ingredients', value: 'All' as IngredientFilterOption },
-  ...[...new Set(recipeCards.value.map((item) => item.mainIngredient))].map((ingredient) => ({ label: ingredient, value: ingredient })),
+  ...[...ingredients.value]
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((ingredient) => ({ label: ingredient.name, value: ingredient.id as IngredientFilterOption })),
 ])
 
+const hiddenIngredientFiltersCount = computed(() =>
+  Math.max(0, ingredientFilters.value.length - maxVisibleIngredientFilters)
+)
+
+const visibleIngredientFilters = computed(() =>
+  showAllIngredientFilters.value
+    ? ingredientFilters.value
+    : ingredientFilters.value.slice(0, maxVisibleIngredientFilters)
+)
+
 const filteredRecipes = computed(() =>
-  recipeCards.value.filter((recipe) => selectedIngredient.value === 'All' || recipe.mainIngredient === selectedIngredient.value)
+  recipeCards.value.filter(
+    (recipe) =>
+      selectedIngredient.value === 'All' ||
+      recipe.ingredientIds.some((ingredientId) => ingredientId === selectedIngredient.value)
+  )
 )
 
 const resetForm = () => {
   newRecipe.name = ''
-  newRecipe.servings = 2
+  newRecipe.servings = 1
   newRecipe.summary = ''
   newRecipe.ingredients = []
   selectedIngredientOption.value = ''
