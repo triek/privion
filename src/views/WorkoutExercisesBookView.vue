@@ -77,20 +77,25 @@
           :key="exercise.name"
           class="flex flex-col gap-3 rounded-2xl border border-white/10 bg-slate-950/70 p-5 text-sm text-slate-300"
         >
-          <header class="flex items-start justify-between gap-3">
+          <button
+            type="button"
+            class="flex w-full items-start justify-between gap-3 text-left"
+            :aria-expanded="isExerciseExpanded(exercise.name)"
+            @click="toggleExercise(exercise.name)"
+          >
             <div class="space-y-1">
               <p class="text-xs uppercase tracking-wide text-emerald-300">{{ exercise.muscle }}</p>
               <h3 class="text-lg font-semibold text-white">{{ exercise.name }}</h3>
             </div>
-            <button
-              type="button"
-              class="rounded-full border border-white/10 bg-slate-900/70 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-200 transition hover:border-white/30 hover:text-white"
-              @click="toggleExercise(exercise.name)"
+            <span
+              aria-hidden="true"
+              class="inline-flex h-8 w-8 items-center justify-center self-end rounded-full border border-white/10 bg-slate-900/70 text-xs font-semibold uppercase tracking-wide text-slate-200 transition hover:border-white/30 hover:text-white transform"
+              :class="{ 'rotate-180': isExerciseExpanded(exercise.name) }"
             >
-              <span aria-hidden="true" class="inline-block transform transition-transform" :class="{ 'rotate-180': isExerciseExpanded(exercise.name) }">▼</span>
-              <span class="sr-only">Toggle details</span>
-            </button>
-          </header>
+              ▼
+            </span>
+            <span class="sr-only">Toggle exercise details</span>
+          </button>
           <div v-if="isExerciseExpanded(exercise.name)" class="space-y-3">
             <p class="text-xs uppercase tracking-wide text-slate-500">Equipment: {{ exercise.equipment }}</p>
             <p class="text-slate-400">{{ exercise.description }}</p>
