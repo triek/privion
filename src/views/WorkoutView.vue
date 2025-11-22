@@ -49,10 +49,10 @@
       </div>
 
       <div ref="historyContainerRef" class="history-scroll overflow-y-auto pr-1">
-        <ul class="space-y-4">
+        <ul class="space-y-2">
           <li v-for="record in visibleHistory" :key="record.session">
-            <article class="space-y-4 rounded-2xl border border-white/10 bg-slate-950/70 p-4">
-              <div class="flex items-baseline justify-between gap-3">
+            <article class="space-y-2 rounded-2xl border border-white/10 bg-slate-950/70 p-4">
+              <div class="flex items-baseline justify-between gap-2">
                 <h3 class="text-lg font-semibold text-white">{{ record.session }}</h3>
                 <span class="text-xs font-semibold uppercase tracking-wide text-emerald-300"
                   >{{ record.exercises.length }} exercises</span
@@ -60,14 +60,14 @@
               </div>
 
               <!-- Session list -->
-              <ul class="space-y-3 text-sm text-slate-200">
+              <ul class="space-y-2 text-sm text-slate-200">
                 <li
                   v-for="(exercise, exerciseIndex) in record.exercises"
                   :key="`${record.session}-${exercise.name}-${exerciseIndex}`"
                   class="space-y-1"
                 >
                   <div
-                    class="text-sm text-slate-200 grid gap-1 sm:grid-cols-[5fr_3fr_2fr] sm:items-center sm:w-full"
+                    class="text-sm text-slate-200 grid sm:grid-cols-[5fr_3fr_2fr] sm:items-center sm:w-full"
                   >
                     <!-- Name -->
                     <div class="flex items-center justify-start">
@@ -655,7 +655,7 @@ function formatWeightForHistory(weightInput: string) {
 
 <style scoped>
 .history-scroll {
-  max-height: calc(3 * 12.5rem + 2rem);
+  max-height: calc(2 * 12.5rem + 2rem);
 }
 
 @media (min-width: 768px) {
