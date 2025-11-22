@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-8">
+  <div class="space-y-4">
     <!-- Navigation buttons -->
     <div class="flex justify-between items-center">
       <RouterLink
@@ -25,20 +25,13 @@
       </p>
     </header>
 
-    <section class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/30">
+    <section class="space-y-4 rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-lg shadow-slate-950/30">
       <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div class="space-y-2">
-          <p class="text-xs font-semibold uppercase tracking-wide text-emerald-200">Active routine</p>
-          <h2 class="text-xl font-semibold text-white">{{ activeRoutine?.name ?? 'No routine selected' }}</h2>
-          <p class="text-sm text-slate-400">
-            Used inside the workout log. Exercises are read-only here so you can review the flow before you train.
-          </p>
+          <p class="text-xs font-semibold uppercase tracking-wide text-emerald-200">Active routine set</p>
+          <h2 class="text-xl font-semibold text-white">{{ activeRoutine?.setName ?? 'No routine selected' }}</h2>
         </div>
         <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-          <div class="flex flex-col text-xs text-slate-400">
-            <span class="font-semibold text-slate-200">{{ routines.length }} routines saved</span>
-            <span>Currently showing {{ activeRoutine?.exercises.length ?? 0 }} exercises</span>
-          </div>
           <button
             type="button"
             class="inline-flex items-center justify-center gap-2 rounded-full border border-emerald-400/60 bg-emerald-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:-translate-y-0.5 hover:border-emerald-300/70"
@@ -49,32 +42,28 @@
         </div>
       </div>
 
-      <div
-        v-if="activeRoutine"
-        class="grid gap-3 md:grid-cols-2 xl:grid-cols-3"
-      >
-        <article
-          v-for="exercise in activeRoutine.exercises"
-          :key="exercise.id"
-          class="rounded-2xl border border-white/10 bg-slate-950/70 p-4"
-        >
-          <div class="flex items-start justify-between gap-3">
-            <div>
-              <p class="text-[11px] font-semibold uppercase tracking-wide text-emerald-200">{{ exercise.muscle }}</p>
-              <p class="text-sm font-semibold text-white">{{ exercise.name }}</p>
-            </div>
-            <span class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Read only</span>
-          </div>
-          <p class="mt-2 text-xs text-slate-400">
-            {{ exercise.sets }} sets · {{ exercise.reps }} reps · {{ exercise.weight }} lb suggested
-          </p>
-        </article>
+      <div v-if="activeRoutine" class="space-y-4">
+        <ul class="mt-3 space-y-2">
+          <li
+            v-for="routine in activeRoutineSetRoutines"
+            :key="routine.id"
+            class="flex items-center justify-between rounded-2xl border border-white/20 bg-slate-950/70 p-3"
+          >
+            <p class="text-sm font-semibold text-white">{{ routine.name }}</p>
+            <span
+              v-if="routine.id === activeRoutineId"
+              class="rounded-full border border-emerald-400/40 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-200"
+            >
+              Active
+            </span>
+          </li>
+        </ul>
       </div>
       <p v-else class="text-sm text-slate-400">No active routine. Select one from the builder below and switch it on.</p>
     </section>
 
     <section>
-      <article class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/30">
+      <article class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-lg shadow-slate-950/30">
         <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div class="space-y-1">
             <p class="text-xs font-semibold uppercase tracking-wide text-emerald-200">Routine builder</p>
@@ -108,6 +97,16 @@
               v-model="selectedRoutine.name"
               class="rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
               type="text"
+            />
+          </label>
+
+          <label class="flex flex-col gap-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+            Routine set name
+            <input
+              v-model="selectedRoutine.setName"
+              class="rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+              type="text"
+              placeholder="e.g. Push / Pull / Legs or Upper / Lower"
             />
           </label>
 
@@ -254,7 +253,7 @@
             </button>
           </div>
         </div>
-        <div v-else class="rounded-2xl border border-dashed border-white/20 bg-slate-950/70 p-6 text-sm text-slate-400">
+        <div v-else class="rounded-2xl border border-dashed border-white/20 bg-slate-950/70 p-4 text-sm text-slate-400">
           Add a routine to start editing the exercise list.
         </div>
       </article>
@@ -266,7 +265,7 @@
       role="dialog"
       aria-modal="true"
     >
-      <div class="w-full max-w-lg space-y-4 rounded-2xl border border-white/10 bg-slate-900/90 p-6 shadow-xl shadow-black/40">
+      <div class="w-full max-w-lg space-y-4 rounded-2xl border border-white/10 bg-slate-900/90 p-4 shadow-xl shadow-black/40">
         <div class="flex items-center justify-between gap-3">
           <div>
             <p class="text-xs font-semibold uppercase tracking-wide text-emerald-200">Switch routine</p>
@@ -291,14 +290,14 @@
                   ? 'border-emerald-400/60 bg-emerald-500/10 text-emerald-100'
                   : 'border-white/10 bg-slate-950/70 text-slate-200 hover:border-white/20'
               "
-              @click="setActiveRoutine(routine.id)"
-            >
-              <div class="space-y-1">
-                <p class="text-sm font-semibold text-white">{{ routine.name }}</p>
-                <p class="text-xs text-slate-400">{{ routine.exercises.length }} exercises</p>
-              </div>
-              <span
-                v-if="routine.id === activeRoutineId"
+            @click="setActiveRoutine(routine.id)"
+          >
+            <div class="space-y-1">
+              <p class="text-sm font-semibold text-white">{{ routine.name }}</p>
+              <p class="text-xs text-slate-400">{{ routine.setName }}</p>
+            </div>
+            <span
+              v-if="routine.id === activeRoutineId"
                 class="rounded-full border border-emerald-400/40 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-200"
               >
                 Active
@@ -327,6 +326,7 @@ type RoutineExercise = {
 type Routine = {
   id: string
   name: string
+  setName: string
   exercises: RoutineExercise[]
 }
 
@@ -354,6 +354,7 @@ const routines = ref<Routine[]>([
   {
     id: 'push-power',
     name: 'Push Power',
+    setName: 'Push / Pull / Legs',
     exercises: [
       { id: 'push-power-1', muscle: 'Chest', name: 'Barbell Bench Press', sets: 4, reps: 6, weight: 185 },
       { id: 'push-power-2', muscle: 'Shoulders', name: 'Standing Overhead Press', sets: 3, reps: 8, weight: 95 },
@@ -364,6 +365,7 @@ const routines = ref<Routine[]>([
   {
     id: 'pull-strength',
     name: 'Pull Strength',
+    setName: 'Push / Pull / Legs',
     exercises: [
       { id: 'pull-strength-1', muscle: 'Back', name: 'Weighted Pull-up', sets: 4, reps: 5, weight: 25 },
       { id: 'pull-strength-2', muscle: 'Back', name: 'Bent-over Row', sets: 4, reps: 8, weight: 145 },
@@ -374,6 +376,7 @@ const routines = ref<Routine[]>([
   {
     id: 'lower-capacity',
     name: 'Lower Capacity',
+    setName: 'Push / Pull / Legs',
     exercises: [
       { id: 'lower-capacity-1', muscle: 'Quads', name: 'Back Squat', sets: 4, reps: 6, weight: 225 },
       { id: 'lower-capacity-2', muscle: 'Hamstrings', name: 'Romanian Deadlift', sets: 3, reps: 10, weight: 185 },
@@ -391,6 +394,11 @@ const showSwitchModal = ref(false)
 
 const activeRoutine = computed(() => routines.value.find((routine) => routine.id === activeRoutineId.value) ?? null)
 const selectedRoutine = computed(() => routines.value.find((routine) => routine.id === selectedRoutineId.value) ?? null)
+const activeRoutineSetRoutines = computed(() => {
+  const setName = activeRoutine.value?.setName
+  if (!setName) return []
+  return routines.value.filter((routine) => routine.setName === setName)
+})
 
 const lastSavedMessage = computed(() =>
   lastSavedAt.value ? `Last saved ${lastSavedAt.value}` : 'Edits are unsaved. Save to update the routine.'
@@ -401,6 +409,7 @@ function addRoutine() {
   const newRoutine: Routine = {
     id: newId,
     name: 'New routine',
+    setName: 'Custom split',
     exercises: [],
   }
   routines.value.unshift(newRoutine)
