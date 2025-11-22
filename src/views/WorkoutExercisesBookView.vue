@@ -117,8 +117,8 @@
 import { computed, reactive, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
-import { hypertrophyExercises } from '@/data/workoutExcercise'
 import type { MuscleGroup } from '@/data/workoutExcercise'
+import { workoutExercises } from '@/data/workoutExcercise'
 
 type FilterOption = 'All' | MuscleGroup
 
@@ -137,7 +137,7 @@ const muscleFilters: { label: string; value: FilterOption }[] = [
   { label: 'Hamstrings', value: 'Hamstrings' },
 ]
 
-const exercises = hypertrophyExercises
+const exercises = workoutExercises
 
 const selectedMuscle = ref<FilterOption>('All')
 const showAllMuscleFilters = ref(false)

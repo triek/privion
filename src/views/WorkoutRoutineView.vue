@@ -92,9 +92,6 @@
             <h2 class="text-lg font-semibold text-white">
               Edit an existing routine or start a new one
             </h2>
-            <p class="text-sm text-slate-400">
-              Pick a routine from the dropdown to update its name, exercises, and ordering.
-            </p>
           </div>
           <div class="flex flex-col gap-2">
             <div class="flex items-center gap-3">
@@ -117,10 +114,10 @@
                 class="rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-200 transition hover:-translate-y-0.5 hover:border-emerald-300/70 hover:text-emerald-100"
                 @click="saveRoutine"
               >
-                Save routine
+                Save
               </button>
             </div>
-            <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+            <p class="text-[11px] font-semibold tracking-wide text-slate-400">
               {{ lastSavedMessage }}
             </p>
           </div>
@@ -398,9 +395,12 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
+import { workoutExercises, type WorkoutExercise } from '@/data/workoutExcercise'
+import { workoutRoutineSets } from '@/data/workoutRoutine'
 
-type RoutineExercise = {
+type RoutineExerciseForm = {
   id: string
+  exerciseId: string
   muscle: string
   name: string
   sets: number
@@ -408,225 +408,75 @@ type RoutineExercise = {
   weight: number
 }
 
-type Routine = {
+type RoutineForm = {
   id: string
   name: string
+  setId: string
   setName: string
-  exercises: RoutineExercise[]
-}
-
-type LibraryExercise = {
-  id: string
-  name: string
-  muscle: string
-  defaultSets: number
-  defaultReps: number
-  defaultWeight: number
+  exercises: RoutineExerciseForm[]
 }
 
 const NEW_ROUTINE_ID = 'new-routine'
 
-const exerciseLibrary: LibraryExercise[] = [
-  {
-    id: 'flat-bench',
-    name: 'Flat Bench Press',
-    muscle: 'Chest',
-    defaultSets: 4,
-    defaultReps: 8,
-    defaultWeight: 155,
-  },
-  {
-    id: 'incline-press',
-    name: 'Incline Dumbbell Press',
-    muscle: 'Chest',
-    defaultSets: 3,
-    defaultReps: 10,
-    defaultWeight: 45,
-  },
-  {
-    id: 'bent-row',
-    name: 'Bent-over Row',
-    muscle: 'Back',
-    defaultSets: 4,
-    defaultReps: 8,
-    defaultWeight: 135,
-  },
-  {
-    id: 'lat-pulldown',
-    name: 'Lat Pulldown',
-    muscle: 'Lats',
-    defaultSets: 3,
-    defaultReps: 12,
-    defaultWeight: 110,
-  },
-  {
-    id: 'back-squat',
-    name: 'Back Squat',
-    muscle: 'Quads',
-    defaultSets: 4,
-    defaultReps: 6,
-    defaultWeight: 205,
-  },
-  {
-    id: 'romanian-deadlift',
-    name: 'Romanian Deadlift',
-    muscle: 'Hamstrings',
-    defaultSets: 3,
-    defaultReps: 10,
-    defaultWeight: 185,
-  },
-  {
-    id: 'overhead-press',
-    name: 'Standing Overhead Press',
-    muscle: 'Shoulders',
-    defaultSets: 3,
-    defaultReps: 8,
-    defaultWeight: 85,
-  },
-  {
-    id: 'hammer-curl',
-    name: 'Hammer Curl',
-    muscle: 'Biceps',
-    defaultSets: 3,
-    defaultReps: 12,
-    defaultWeight: 25,
-  },
-]
+const exerciseLookup = workoutExercises.reduce<Record<string, WorkoutExercise>>((map, exercise) => {
+  map[exercise.id] = exercise
+  return map
+}, {})
 
+const exerciseLibrary = workoutExercises
 const muscleGroups = Array.from(new Set(exerciseLibrary.map((exercise) => exercise.muscle)))
 
-const createEmptyRoutine = (): Routine => ({
+const createEmptyRoutine = (): RoutineForm => ({
   id: NEW_ROUTINE_ID,
   name: 'New routine',
-  setName: 'Custom split',
+  setId: workoutRoutineSets[0]?.id ?? 'custom-split',
+  setName: workoutRoutineSets[0]?.name ?? 'Custom split',
   exercises: [],
 })
 
-const routines = ref<Routine[]>([
-  {
-    id: 'push-power',
-    name: 'Push Power',
-    setName: 'Push / Pull / Legs',
-    exercises: [
-      {
-        id: 'push-power-1',
-        muscle: 'Chest',
-        name: 'Barbell Bench Press',
-        sets: 4,
-        reps: 6,
-        weight: 185,
-      },
-      {
-        id: 'push-power-2',
-        muscle: 'Shoulders',
-        name: 'Standing Overhead Press',
-        sets: 3,
-        reps: 8,
-        weight: 95,
-      },
-      {
-        id: 'push-power-3',
-        muscle: 'Triceps',
-        name: 'Close-grip Bench Press',
-        sets: 3,
-        reps: 10,
-        weight: 135,
-      },
-      { id: 'push-power-4', muscle: 'Chest', name: 'Cable Fly', sets: 3, reps: 15, weight: 40 },
-    ],
-  },
-  {
-    id: 'pull-strength',
-    name: 'Pull Strength',
-    setName: 'Push / Pull / Legs',
-    exercises: [
-      {
-        id: 'pull-strength-1',
-        muscle: 'Back',
-        name: 'Weighted Pull-up',
-        sets: 4,
-        reps: 5,
-        weight: 25,
-      },
-      {
-        id: 'pull-strength-2',
-        muscle: 'Back',
-        name: 'Bent-over Row',
-        sets: 4,
-        reps: 8,
-        weight: 145,
-      },
-      {
-        id: 'pull-strength-3',
-        muscle: 'Rear Delts',
-        name: 'Face Pull',
-        sets: 3,
-        reps: 15,
-        weight: 35,
-      },
-      {
-        id: 'pull-strength-4',
-        muscle: 'Biceps',
-        name: 'Alternating Hammer Curl',
-        sets: 3,
-        reps: 12,
-        weight: 25,
-      },
-    ],
-  },
-  {
-    id: 'lower-capacity',
-    name: 'Lower Capacity',
-    setName: 'Push / Pull / Legs',
-    exercises: [
-      {
-        id: 'lower-capacity-1',
-        muscle: 'Quads',
-        name: 'Back Squat',
-        sets: 4,
-        reps: 6,
-        weight: 225,
-      },
-      {
-        id: 'lower-capacity-2',
-        muscle: 'Hamstrings',
-        name: 'Romanian Deadlift',
-        sets: 3,
-        reps: 10,
-        weight: 185,
-      },
-      {
-        id: 'lower-capacity-3',
-        muscle: 'Glutes',
-        name: 'Walking Lunge',
-        sets: 3,
-        reps: 12,
-        weight: 40,
-      },
-      {
-        id: 'lower-capacity-4',
-        muscle: 'Calves',
-        name: 'Standing Calf Raise',
-        sets: 4,
-        reps: 15,
-        weight: 55,
-      },
-    ],
-  },
-])
-const routineDraft = ref<Routine>(createEmptyRoutine())
+function resolveExercise(
+  routineExercise: { exerciseId: string; sets?: number; reps?: number; weight?: number },
+  routineId: string,
+  index: number,
+): RoutineExerciseForm | null {
+  const baseExercise = exerciseLookup[routineExercise.exerciseId]
+  if (!baseExercise) return null
+
+  return {
+    id: `${routineId}-${routineExercise.exerciseId}-${index + 1}`,
+    exerciseId: routineExercise.exerciseId,
+    muscle: baseExercise.muscle,
+    name: baseExercise.name,
+    sets: routineExercise.sets ?? baseExercise.defaultSets,
+    reps: routineExercise.reps ?? baseExercise.defaultReps,
+    weight: routineExercise.weight ?? baseExercise.defaultWeight,
+  }
+}
+
+const routines = ref<RoutineForm[]>(
+  workoutRoutineSets.flatMap((set) =>
+    set.routines.map((routine) => ({
+      id: routine.id,
+      name: routine.name,
+      setId: set.id,
+      setName: set.name,
+      exercises: routine.exercises
+        .map((exercise, index) => resolveExercise(exercise, routine.id, index))
+        .filter((exercise): exercise is RoutineExerciseForm => Boolean(exercise)),
+    })),
+  ),
+)
+const routineDraft = ref<RoutineForm>(createEmptyRoutine())
 
 const activeRoutineId = ref(routines.value[0]?.id ?? '')
 const selectedRoutineId = ref<string>(NEW_ROUTINE_ID)
 const draggingIndex = ref<number | null>(null)
-const lastSavedAt = ref<string | null>(null)
-const showSwitchModal = ref(false)
 const exerciseSearch = ref('')
-const exerciseMuscleFilter = ref('all')
+const exerciseMuscleFilter = ref<'all' | string>('all')
+const showSwitchModal = ref(false)
+const lastSavedAt = ref<string | null>(null)
 
-const activeRoutine = computed(
-  () => routines.value.find((routine) => routine.id === activeRoutineId.value) ?? null,
-)
+const activeRoutine = computed(() => routines.value.find((routine) => routine.id === activeRoutineId.value) ?? null)
 const selectedRoutine = computed(() => {
   if (selectedRoutineId.value === NEW_ROUTINE_ID) {
     return routineDraft.value
@@ -634,7 +484,7 @@ const selectedRoutine = computed(() => {
   return routines.value.find((routine) => routine.id === selectedRoutineId.value) ?? null
 })
 const routineSets = computed(() => {
-  const grouped: Record<string, Routine[]> = {}
+  const grouped: Record<string, RoutineForm[]> = {}
   routines.value.forEach((routine) => {
     const key = routine.setName || 'Custom split'
     grouped[key] = grouped[key] ? [...grouped[key], routine] : [routine]
@@ -688,11 +538,12 @@ function setActiveRoutineSet(setName: string) {
   setActiveRoutine(routine.id)
 }
 
-function addExerciseFromLibrary(exercise: LibraryExercise) {
+function addExerciseFromLibrary(exercise: WorkoutExercise) {
   const routine = selectedRoutine.value
   if (!routine) return
-  const newExercise: RoutineExercise = {
+  const newExercise: RoutineExerciseForm = {
     id: `${routine.id}-${Date.now()}`,
+    exerciseId: exercise.id,
     muscle: exercise.muscle,
     name: exercise.name,
     sets: exercise.defaultSets,
@@ -733,7 +584,7 @@ function saveRoutine() {
       id: `${newId}-${index + 1}-${idTimestamp + index}`,
     }))
 
-    const newRoutine: Routine = {
+    const newRoutine: RoutineForm = {
       ...routine,
       id: newId,
       exercises: exercisesWithIds,
@@ -747,3 +598,4 @@ function saveRoutine() {
   lastSavedAt.value = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 }
 </script>
+

@@ -1,3 +1,87 @@
+export type RoutineExercise = {
+  exerciseId: string
+}
+
+export type Routine = {
+  id: string
+  name: string
+  exercises: RoutineExercise[]
+}
+
+export type RoutineSet = {
+  id: string
+  name: string
+  routines: Routine[]
+}
+
+export const workoutRoutineSets: RoutineSet[] = [
+  {
+    id: 'push-pull-legs',
+    name: 'Push / Pull / Legs',
+    routines: [
+      {
+        id: 'push-power',
+        name: 'Push Power',
+        exercises: [
+          { exerciseId: 'barbell-bench-press' },
+          { exerciseId: 'standing-overhead-press' },
+          { exerciseId: 'close-grip-bench-press' },
+          { exerciseId: 'cable-fly' },
+        ],
+      },
+      {
+        id: 'pull-strength',
+        name: 'Pull Strength',
+        exercises: [
+          { exerciseId: 'weighted-pull-up' },
+          { exerciseId: 'bent-over-row' },
+          { exerciseId: 'face-pull' },
+          { exerciseId: 'hammer-curl' },
+        ],
+      },
+      {
+        id: 'lower-capacity',
+        name: 'Lower Capacity',
+        exercises: [
+          { exerciseId: 'back-squat' },
+          { exerciseId: 'romanian-deadlift' },
+          { exerciseId: 'walking-lunge' },
+          { exerciseId: 'standing-calf-raise' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'upper-lower',
+    name: 'Upper / Lower',
+    routines: [
+      {
+        id: 'upper-hypertrophy',
+        name: 'Upper Hypertrophy',
+        exercises: [
+          { exerciseId: 'incline-dumbbell-press' },
+          { exerciseId: 'barbell-bench-press' },
+          { exerciseId: 'lat-pulldown' },
+          { exerciseId: 'seated-row' },
+          { exerciseId: 'cable-lateral-raise' },
+          { exerciseId: 'barbell-curl' },
+        ],
+      },
+      {
+        id: 'lower-hypertrophy',
+        name: 'Lower Hypertrophy',
+        exercises: [
+          { exerciseId: 'front-foot-elevated-split-squat' },
+          { exerciseId: 'romanian-deadlift' },
+          { exerciseId: 'leg-press' },
+          { exerciseId: 'seated-leg-curl' },
+          { exerciseId: 'seated-calf-raise' },
+        ],
+      },
+    ],
+  },
+]
+
 export type Exercise = {
   name: string
   sets: number
