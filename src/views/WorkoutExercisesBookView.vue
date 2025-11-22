@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-8">
+  <div class="space-y-6">
     <!-- Navigation buttons -->
     <div class="flex justify-between items-center">
       <RouterLink
@@ -70,12 +70,12 @@
         </div>
       </div>
 
-      <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <div class="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
         <!-- Exercises -->
         <article
           v-for="exercise in filteredExercises"
           :key="exercise.name"
-          class="flex flex-col gap-3 rounded-2xl border border-white/10 bg-slate-950/70 p-5 text-sm text-slate-300"
+          class="flex flex-col gap-3 rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-2 text-sm text-slate-300"
         >
           <button
             type="button"
