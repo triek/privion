@@ -80,6 +80,98 @@ export const workoutRoutineSets: RoutineSet[] = [
       },
     ],
   },
+  {
+    id: 'full-body',
+    name: 'Full Body',
+    routines: [
+      {
+        id: 'full-body-a',
+        name: 'Full Body A',
+        exercises: [
+          { exerciseId: 'back-squat' },
+          { exerciseId: 'barbell-bench-press' },
+          { exerciseId: 'bent-over-row' },
+          { exerciseId: 'hanging-leg-raise-hip-tuck' },
+        ],
+      },
+      {
+        id: 'full-body-b',
+        name: 'Full Body B',
+        exercises: [
+          { exerciseId: 'romanian-deadlift' },
+          { exerciseId: 'standing-overhead-press' },
+          { exerciseId: 'weighted-pull-up' },
+          { exerciseId: 'walking-lunge' },
+        ],
+      },
+      {
+        id: 'full-body-c',
+        name: 'Full Body C',
+        exercises: [
+          { exerciseId: 'front-foot-elevated-split-squat' },
+          { exerciseId: 'incline-dumbbell-press' },
+          { exerciseId: 'seated-row' },
+          { exerciseId: 'cable-pallof-press-iso' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'bro-split',
+    name: 'Bro Split',
+    routines: [
+      {
+        id: 'chest-day',
+        name: 'Chest Focus',
+        exercises: [
+          { exerciseId: 'barbell-bench-press' },
+          { exerciseId: 'incline-dumbbell-press' },
+          { exerciseId: 'cable-fly' },
+          { exerciseId: 'machine-chest-press' },
+        ],
+      },
+      {
+        id: 'back-day',
+        name: 'Back Focus',
+        exercises: [
+          { exerciseId: 'weighted-pull-up' },
+          { exerciseId: 'bent-over-row' },
+          { exerciseId: 'chest-supported-row' },
+          { exerciseId: 'face-pull' },
+        ],
+      },
+      {
+        id: 'shoulders-day',
+        name: 'Shoulders Focus',
+        exercises: [
+          { exerciseId: 'standing-overhead-press' },
+          { exerciseId: 'machine-shoulder-press' },
+          { exerciseId: 'cable-lateral-raise' },
+          { exerciseId: 'reverse-pec-deck-fly' },
+        ],
+      },
+      {
+        id: 'arms-day',
+        name: 'Arms Focus',
+        exercises: [
+          { exerciseId: 'barbell-curl' },
+          { exerciseId: 'incline-dumbbell-curl' },
+          { exerciseId: 'overhead-rope-extension' },
+          { exerciseId: 'cross-body-cable-extension' },
+        ],
+      },
+      {
+        id: 'legs-day',
+        name: 'Legs Focus',
+        exercises: [
+          { exerciseId: 'back-squat' },
+          { exerciseId: 'romanian-deadlift' },
+          { exerciseId: 'leg-press' },
+          { exerciseId: 'seated-calf-raise' },
+        ],
+      },
+    ],
+  },
 ]
 
 export type Exercise = {
