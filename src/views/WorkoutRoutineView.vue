@@ -96,27 +96,33 @@
               Pick a routine from the dropdown to update its name, exercises, and ordering.
             </p>
           </div>
-          <div class="flex items-center gap-3">
-            <label
-              class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-400"
-            >
-              Routine
-              <select
-                v-model="selectedRoutineId"
-                class="rounded-xl border border-white/15 bg-slate-950/70 px-3 py-2 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center gap-3">
+              <label
+                class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-400"
               >
-                <option v-for="routine in routines" :key="routine.id" :value="routine.id">
-                  {{ routine.name }}
-                </option>
-              </select>
-            </label>
-            <button
-              type="button"
-              class="rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-200 transition hover:-translate-y-0.5 hover:border-emerald-300/70 hover:text-emerald-100"
-              @click="addRoutine"
-            >
-              Add routine
-            </button>
+                Routine
+                <select
+                  v-model="selectedRoutineId"
+                  class="rounded-xl border border-white/15 bg-slate-950/70 px-3 py-2 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                >
+                  <option :value="NEW_ROUTINE_ID">New routine</option>
+                  <option v-for="routine in routines" :key="routine.id" :value="routine.id">
+                    {{ routine.name }}
+                  </option>
+                </select>
+              </label>
+              <button
+                type="button"
+                class="rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-200 transition hover:-translate-y-0.5 hover:border-emerald-300/70 hover:text-emerald-100"
+                @click="saveRoutine"
+              >
+                Save routine
+              </button>
+            </div>
+            <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+              {{ lastSavedMessage }}
+            </p>
           </div>
         </div>
 
@@ -221,36 +227,38 @@
                     </div>
 
                     <!-- Sets, reps, weight -->
-                    <div class="grid gap-3 sm:grid-cols-3">
+                    <div class="flex flex-wrap items-center gap-3 text-sm text-slate-300">
                       <label
                         class="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-wide text-slate-400"
                       >
                         <div class="mx-2">Sets</div>
                         <input
                           v-model.number="exercise.sets"
-                          class="h-10 rounded-xl border border-white/10 bg-slate-900/70 px-3 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                          class="h-9 w-12 rounded-lg border border-white/10 bg-slate-900/70 px-2 py-1 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
                           min="1"
                           type="number"
                         />
                       </label>
+
                       <label
                         class="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-wide text-slate-400"
                       >
                         <div class="mx-2">Reps</div>
                         <input
                           v-model.number="exercise.reps"
-                          class="h-10 rounded-xl border border-white/10 bg-slate-900/70 px-3 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                          class="h-9 w-14 rounded-lg border border-white/10 bg-slate-900/70 px-2 py-1 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
                           min="1"
                           type="number"
                         />
                       </label>
+
                       <label
                         class="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-wide text-slate-400"
                       >
                         <div class="mx-2">Weight (lbs)</div>
                         <input
                           v-model.number="exercise.weight"
-                          class="h-10 rounded-xl border border-white/10 bg-slate-900/70 px-3 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                        class="w-20 rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
                           min="0"
                           step="5"
                           type="number"
@@ -263,11 +271,40 @@
             </div>
           </div>
 
-          <div class="space-y-3">
-            <h3 class="text-sm font-semibold text-white">Exercise library</h3>
-            <div class="grid gap-3 md:grid-cols-2">
+          <div class="space-y-5">
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h3 class="text-sm font-semibold text-white">Exercise library</h3>
+                <p class="text-xs text-slate-400">Filter by name or muscle group to find exercises.</p>
+              </div>
+              <div class="grid gap-2 sm:grid-cols-2">
+                <label class="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                  Search
+                  <input
+                    v-model="exerciseSearch"
+                    type="text"
+                    class="rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                    placeholder="e.g. squat"
+                  />
+                </label>
+                <label class="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                  Muscle group
+                  <select
+                    v-model="exerciseMuscleFilter"
+                    class="rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                  >
+                    <option value="all">All muscles</option>
+                    <option v-for="muscle in muscleGroups" :key="muscle" :value="muscle">
+                      {{ muscle }}
+                    </option>
+                  </select>
+                </label>
+              </div>
+            </div>
+
+            <div class="grid gap-2 md:grid-cols-2 max-h-82 overflow-y-auto pr-1">
               <button
-                v-for="exercise in exerciseLibrary"
+                v-for="exercise in filteredExercises"
                 :key="exercise.id"
                 type="button"
                 class="flex flex-col gap-2 rounded-xl border border-white/10 bg-slate-950/70 p-4 text-left text-sm text-slate-300 transition hover:border-emerald-300/60 hover:text-emerald-100"
@@ -284,20 +321,10 @@
                   {{ exercise.defaultWeight }} lb starting point
                 </p>
               </button>
+              <p v-if="!filteredExercises.length" class="text-xs text-slate-400">
+                No exercises match your filters.
+              </p>
             </div>
-          </div>
-
-          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p class="text-xs text-slate-400">
-              {{ lastSavedMessage }}
-            </p>
-            <button
-              type="button"
-              class="inline-flex items-center justify-center gap-2 rounded-full border border-emerald-400/60 bg-emerald-500/10 px-5 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:-translate-y-0.5 hover:border-emerald-300/70"
-              @click="saveRoutine"
-            >
-              Save routine
-            </button>
           </div>
         </div>
         <div
@@ -369,7 +396,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 
 type RoutineExercise = {
@@ -396,6 +423,8 @@ type LibraryExercise = {
   defaultReps: number
   defaultWeight: number
 }
+
+const NEW_ROUTINE_ID = 'new-routine'
 
 const exerciseLibrary: LibraryExercise[] = [
   {
@@ -463,6 +492,15 @@ const exerciseLibrary: LibraryExercise[] = [
     defaultWeight: 25,
   },
 ]
+
+const muscleGroups = Array.from(new Set(exerciseLibrary.map((exercise) => exercise.muscle)))
+
+const createEmptyRoutine = (): Routine => ({
+  id: NEW_ROUTINE_ID,
+  name: 'New routine',
+  setName: 'Custom split',
+  exercises: [],
+})
 
 const routines = ref<Routine[]>([
   {
@@ -576,19 +614,25 @@ const routines = ref<Routine[]>([
     ],
   },
 ])
+const routineDraft = ref<Routine>(createEmptyRoutine())
 
 const activeRoutineId = ref(routines.value[0]?.id ?? '')
-const selectedRoutineId = ref(routines.value[0]?.id ?? '')
+const selectedRoutineId = ref<string>(NEW_ROUTINE_ID)
 const draggingIndex = ref<number | null>(null)
 const lastSavedAt = ref<string | null>(null)
 const showSwitchModal = ref(false)
+const exerciseSearch = ref('')
+const exerciseMuscleFilter = ref('all')
 
 const activeRoutine = computed(
   () => routines.value.find((routine) => routine.id === activeRoutineId.value) ?? null,
 )
-const selectedRoutine = computed(
-  () => routines.value.find((routine) => routine.id === selectedRoutineId.value) ?? null,
-)
+const selectedRoutine = computed(() => {
+  if (selectedRoutineId.value === NEW_ROUTINE_ID) {
+    return routineDraft.value
+  }
+  return routines.value.find((routine) => routine.id === selectedRoutineId.value) ?? null
+})
 const routineSets = computed(() => {
   const grouped: Record<string, Routine[]> = {}
   routines.value.forEach((routine) => {
@@ -606,23 +650,31 @@ const activeRoutineSetRoutines = computed(() => {
   return routines.value.filter((routine) => routine.setName === setName)
 })
 
+const filteredExercises = computed(() => {
+  const searchTerm = exerciseSearch.value.trim().toLowerCase()
+  return exerciseLibrary.filter((exercise) => {
+    const matchesMuscle =
+      exerciseMuscleFilter.value === 'all' || exercise.muscle === exerciseMuscleFilter.value
+    const matchesSearch = !searchTerm || exercise.name.toLowerCase().includes(searchTerm)
+    return matchesMuscle && matchesSearch
+  })
+})
+
 const lastSavedMessage = computed(() =>
   lastSavedAt.value
     ? `Last saved ${lastSavedAt.value}`
     : 'Edits are unsaved. Save to update the routine.',
 )
 
-function addRoutine() {
-  const newId = `routine-${Date.now()}`
-  const newRoutine: Routine = {
-    id: newId,
-    name: 'New routine',
-    setName: 'Custom split',
-    exercises: [],
-  }
-  routines.value.unshift(newRoutine)
-  selectedRoutineId.value = newId
-}
+watch(
+  () => selectedRoutineId.value,
+  (newId) => {
+    if (newId === NEW_ROUTINE_ID) {
+      routineDraft.value = createEmptyRoutine()
+      lastSavedAt.value = null
+    }
+  },
+)
 
 function setActiveRoutine(id: string) {
   activeRoutineId.value = id
@@ -670,6 +722,27 @@ function handleDrop(targetIndex: number) {
 }
 
 function saveRoutine() {
+  const routine = selectedRoutine.value
+  if (!routine) return
+
+  if (selectedRoutineId.value === NEW_ROUTINE_ID) {
+    const idTimestamp = Date.now()
+    const newId = `routine-${idTimestamp}`
+    const exercisesWithIds = routine.exercises.map((exercise, index) => ({
+      ...exercise,
+      id: `${newId}-${index + 1}-${idTimestamp + index}`,
+    }))
+
+    const newRoutine: Routine = {
+      ...routine,
+      id: newId,
+      exercises: exercisesWithIds,
+    }
+
+    routines.value.unshift(newRoutine)
+    selectedRoutineId.value = newId
+  }
+
   const timestamp = new Date()
   lastSavedAt.value = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 }
