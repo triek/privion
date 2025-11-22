@@ -1,4 +1,4 @@
-import type { Plan } from './workoutPlans'
+import type { Plan } from './workoutRoutine'
 
 export type HistoryExercise = {
   name: string

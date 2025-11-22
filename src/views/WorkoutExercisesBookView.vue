@@ -117,8 +117,8 @@
 import { computed, reactive, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
-import { hypertrophyExercises } from '@/data/hypertrophyExercises'
-import type { MuscleGroup } from '@/data/hypertrophyExercises'
+import { hypertrophyExercises } from '@/data/workoutExcercise'
+import type { MuscleGroup } from '@/data/workoutExcercise'
 
 type FilterOption = 'All' | MuscleGroup
 

@@ -20,16 +20,20 @@
     <header class="space-y-3 mx-2">
       <h1 class="text-3xl font-bold text-white">Session history book</h1>
       <p class="max-w-2xl text-sm text-slate-400">
-        Filter every tracked workout just like the exercise and recipe books. Toggle the focus to quickly review Push, Pull, or
-        Leg days and spot trends in your training log.
+        Filter every tracked workout just like the exercise and recipe books. Toggle the focus to
+        quickly review Push, Pull, or Leg days and spot trends in your training log.
       </p>
     </header>
 
-    <section class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/30">
+    <section
+      class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/30"
+    >
       <div class="flex flex-wrap items-start justify-between gap-6">
         <div class="space-y-2">
           <h2 class="text-lg font-semibold text-white">Session filter</h2>
-          <p class="text-xs uppercase tracking-wide text-emerald-200">{{ filteredHistory.length }} sessions · {{ totalExercisesTracked }} exercises</p>
+          <p class="text-xs uppercase tracking-wide text-emerald-200">
+            {{ filteredHistory.length }} sessions · {{ totalExercisesTracked }} exercises
+          </p>
         </div>
         <div class="flex flex-wrap gap-2">
           <button
@@ -59,7 +63,9 @@
         >
           <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
             <h3 class="text-lg font-semibold text-white">{{ record.session }}</h3>
-            <span class="text-xs font-semibold uppercase tracking-wide text-emerald-300">{{ record.exercises.length }} exercises</span>
+            <span class="text-xs font-semibold uppercase tracking-wide text-emerald-300"
+              >{{ record.exercises.length }} exercises</span
+            >
           </div>
 
           <ul class="space-y-3 text-sm text-slate-200">
@@ -68,7 +74,9 @@
               :key="`${record.session}-${exercise.name}-${exerciseIndex}`"
               class="space-y-1"
             >
-              <div class="text-sm text-slate-200 grid gap-1 sm:grid-cols-[5fr_3fr_2fr] sm:items-center sm:w-full">
+              <div
+                class="text-sm text-slate-200 grid gap-1 sm:grid-cols-[5fr_3fr_2fr] sm:items-center sm:w-full"
+              >
                 <div class="flex items-center justify-start">
                   <span class="font-semibold text-white">{{ exercise.name }}</span>
                 </div>
@@ -81,7 +89,9 @@
                   </div>
 
                   <div class="flex items-center sm:justify-end">
-                    <span class="flex justify-center font-semibold text-emerald-200 sm:font-medium sm:text-slate-200 sm:normal-case">
+                    <span
+                      class="flex justify-center font-semibold text-emerald-200 sm:font-medium sm:text-slate-200 sm:normal-case"
+                    >
                       {{ exercise.weight }}
                     </span>
                   </div>
@@ -91,7 +101,10 @@
           </ul>
         </article>
       </div>
-      <div v-else class="rounded-2xl border border-dashed border-white/15 bg-slate-950/70 p-6 text-center text-sm text-slate-400">
+      <div
+        v-else
+        class="rounded-2xl border border-dashed border-white/15 bg-slate-950/70 p-6 text-center text-sm text-slate-400"
+      >
         No sessions match this filter yet. Run a workout to add a new entry.
       </div>
     </section>
@@ -101,8 +114,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { RouterLink } from 'vue-router'
-import type { Plan } from '@/data/workoutPlans'
-import { workoutPlans } from '@/data/workoutPlans'
+import type { Plan } from '@/data/workoutRoutine'
+import { workoutPlans } from '@/data/workoutRoutine'
 import type { SessionRecord } from '@/data/workoutHistory'
 import { useSessionHistoryStore } from '@/stores/sessionHistory'
 
@@ -125,7 +138,7 @@ const filteredHistory = computed<SessionRecord[]>(() => {
 })
 
 const totalExercisesTracked = computed(() =>
-  filteredHistory.value.reduce((total, record) => total + record.exercises.length, 0)
+  filteredHistory.value.reduce((total, record) => total + record.exercises.length, 0),
 )
 
 function formatHistorySets(exercise: SessionRecord['exercises'][number]) {

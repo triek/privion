@@ -4,7 +4,9 @@
       class="grid gap-8 rounded-3xl border border-white/10 bg-slate-900/70 p-4 shadow-[0_25px_60px_-25px_rgba(16,185,129,0.35)] lg:grid-cols-[1.2fr_1fr]"
     >
       <div class="space-y-4">
-        <p class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs uppercase tracking-[0.3em] text-slate-400">
+        <p
+          class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs uppercase tracking-[0.3em] text-slate-400"
+        >
           Daily control center
         </p>
         <div class="space-y-2">
@@ -12,7 +14,8 @@
             Keep training and nutrition in the same rhythm.
           </h1>
           <p class="text-lg text-slate-300">
-            Preview today's intent, check the last logged work, and line up the meals that will fuel the next session.
+            Preview today's intent, check the last logged work, and line up the meals that will fuel
+            the next session.
           </p>
         </div>
 
@@ -32,7 +35,9 @@
         </div>
 
         <div class="space-y-3">
-          <div class="flex items-center justify-between rounded-2xl border border-emerald-400/40 bg-emerald-500/10 p-4">
+          <div
+            class="flex items-center justify-between rounded-2xl border border-emerald-400/40 bg-emerald-500/10 p-4"
+          >
             <div>
               <p class="text-xs uppercase tracking-wide text-emerald-200">Your tracking streak</p>
               <p class="mt-1 text-3xl font-black text-white">
@@ -42,11 +47,15 @@
           </div>
 
           <div class="grid gap-3 grid-cols-2">
-            <div class="rounded-2xl border border-white/10 bg-slate-950/70 p-4 shadow-inner shadow-slate-950/30">
+            <div
+              class="rounded-2xl border border-white/10 bg-slate-950/70 p-4 shadow-inner shadow-slate-950/30"
+            >
               <p class="text-xs uppercase tracking-wide text-slate-400">{{ sessionStat.label }}</p>
               <p class="mt-2 text-2xl font-black text-white">{{ sessionStat.value }}</p>
             </div>
-            <div class="rounded-2xl border border-white/10 bg-slate-950/70 p-4 shadow-inner shadow-slate-950/30">
+            <div
+              class="rounded-2xl border border-white/10 bg-slate-950/70 p-4 shadow-inner shadow-slate-950/30"
+            >
               <p class="text-xs uppercase tracking-wide text-slate-400">{{ mealStat.label }}</p>
               <p class="mt-2 text-2xl font-black text-white">{{ mealStat.value }}</p>
             </div>
@@ -60,7 +69,9 @@
             <div>
               <p class="text-xs uppercase tracking-wide text-emerald-300">Upcoming focus</p>
               <h2 class="text-lg font-semibold text-white">{{ nextPlan?.title }}</h2>
-              <p class="text-sm text-slate-400">{{ nextPlan?.exercises.length }} exercises on deck</p>
+              <p class="text-sm text-slate-400">
+                {{ nextPlan?.exercises.length }} exercises on deck
+              </p>
             </div>
             <RouterLink
               to="/workout"
@@ -77,9 +88,13 @@
             >
               <div>
                 <p class="font-semibold text-white">{{ exercise.name }}</p>
-                <p class="text-xs text-slate-500">{{ exercise.sets }} sets · {{ exercise.reps }} reps</p>
+                <p class="text-xs text-slate-500">
+                  {{ exercise.sets }} sets · {{ exercise.reps }} reps
+                </p>
               </div>
-              <span class="text-xs uppercase tracking-wide text-slate-500">{{ nextPlan?.label }}</span>
+              <span class="text-xs uppercase tracking-wide text-slate-500">{{
+                nextPlan?.label
+              }}</span>
             </li>
           </ul>
         </article>
@@ -135,7 +150,9 @@
           >
             <div class="flex items-center justify-between gap-2">
               <p class="font-semibold text-white">{{ record.session }}</p>
-              <span class="text-xs uppercase tracking-wide text-slate-500">{{ record.exercises.length }} movements</span>
+              <span class="text-xs uppercase tracking-wide text-slate-500"
+                >{{ record.exercises.length }} movements</span
+              >
             </div>
             <p class="mt-2 text-xs text-slate-400">{{ recordSummary(record) }}</p>
           </li>
@@ -146,7 +163,9 @@
         <div class="flex items-start justify-between gap-3">
           <div>
             <h2 class="text-lg font-semibold text-white">Today&apos;s meal log</h2>
-            <p class="text-sm text-slate-400">Meals recorded in the nutrition view, with per-serving macros.</p>
+            <p class="text-sm text-slate-400">
+              Meals recorded in the nutrition view, with per-serving macros.
+            </p>
           </div>
           <RouterLink
             to="/recipes"
@@ -162,19 +181,27 @@
             class="rounded-xl border border-white/10 bg-slate-950/70 p-4"
           >
             <div class="flex items-center justify-between gap-2">
-              <p class="font-semibold text-white">{{ detail.recipe?.name ?? 'Unassigned recipe' }}</p>
-              <span class="text-xs uppercase tracking-wide text-slate-500">{{ detail.entry.mealType }}</span>
+              <p class="font-semibold text-white">
+                {{ detail.recipe?.name ?? 'Unassigned recipe' }}
+              </p>
+              <span class="text-xs uppercase tracking-wide text-slate-500">{{
+                detail.entry.mealType
+              }}</span>
             </div>
             <p class="mt-2 text-xs text-slate-400">
               {{ formatNumber(detail.totals?.protein ?? 0) }}g protein ·
               {{ formatNumber(detail.totals?.carbs ?? 0) }}g carbs ·
               {{ formatNumber(detail.totals?.fat ?? 0) }}g fats
             </p>
-            <p v-if="detail.entry.notes" class="mt-2 text-xs text-slate-500">{{ detail.entry.notes }}</p>
+            <p v-if="detail.entry.notes" class="mt-2 text-xs text-slate-500">
+              {{ detail.entry.notes }}
+            </p>
           </li>
         </ul>
 
-        <div class="rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-emerald-100">
+        <div
+          class="rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-emerald-100"
+        >
           {{ macroProgressMessage }}
         </div>
       </article>
@@ -187,7 +214,7 @@ import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
-import { workoutPlans } from '@/data/workoutPlans'
+import { workoutPlans } from '@/data/workoutRoutine'
 import { useNutritionStore } from '@/stores/nutrition'
 import { useSessionHistoryStore } from '@/stores/sessionHistory'
 import { formatNumber, mealLogTotals } from '@/utils/nutrition'
@@ -196,7 +223,7 @@ const sessionHistoryStore = useSessionHistoryStore()
 const { records } = storeToRefs(sessionHistoryStore)
 
 const nutritionStore = useNutritionStore()
-const { recipes, mealLogs, ingredientMap, } = storeToRefs(nutritionStore)
+const { recipes, mealLogs, ingredientMap } = storeToRefs(nutritionStore)
 
 const nextPlan = computed(() => workoutPlans[0])
 const nextPlanPreview = computed(() => nextPlan.value?.exercises.slice(0, 3) ?? [])
@@ -210,7 +237,7 @@ const mealLogDetails = computed(() =>
     entry,
     recipe: recipes.value.find((recipe) => recipe.id === entry.recipeId),
     totals: mealLogTotals(entry, recipes.value, ingredientMap.value),
-  }))
+  })),
 )
 
 const dailyTotals = computed(() => {
@@ -225,7 +252,7 @@ const dailyTotals = computed(() => {
       accumulator.cost += detail.totals.cost
       return accumulator
     },
-    { calories: 0, protein: 0, carbs: 0, fat: 0, fiber: 0, cost: 0 }
+    { calories: 0, protein: 0, carbs: 0, fat: 0, fiber: 0, cost: 0 },
   )
 })
 
@@ -278,7 +305,8 @@ const proteinTargetMessage = computed(() => {
 })
 
 const macroCallout = computed(
-  () => `${formatNumber(dailyTotals.value.calories)} kcal captured · ${formatNumber(dailyTotals.value.cost)} cost`
+  () =>
+    `${formatNumber(dailyTotals.value.calories)} kcal captured · ${formatNumber(dailyTotals.value.cost)} cost`,
 )
 
 const recordSummary = (record: (typeof records.value)[number]) => {

@@ -288,7 +288,7 @@
 import { computed, reactive, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
-import { ingredientLibrary, type IngredientCardData, type IngredientCategory } from '@/data/ingredients'
+import { ingredientLibrary, type IngredientCardData, type IngredientCategory } from '@/data/ingredient'
 
 type CategoryFilterOption = 'All' | IngredientCategory
 type MacroKey = keyof IngredientCardData['stats']

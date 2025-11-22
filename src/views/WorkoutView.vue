@@ -16,7 +16,8 @@
       </RouterLink>
     </header>
     <p class="text-sm text-slate-300 mx-4">
-      Lock in today's intent, review your recent efforts, and be ready to launch the next session when you're set.
+      Lock in today's intent, review your recent efforts, and be ready to launch the next session
+      when you're set.
     </p>
 
     <!-- Session history -->
@@ -29,7 +30,9 @@
           </p>
         </div>
         <div class="flex flex-col-reverse sm:flex-row mx-2 items-center gap-2">
-          <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">{{ visibleHistory.length }} entries</span>
+          <span class="text-xs font-semibold uppercase tracking-wide text-slate-500"
+            >{{ visibleHistory.length }} entries</span
+          >
           <div class="space-x-2">
             <button
               class="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-100 transition hover:-translate-y-0.5 hover:border-emerald-300/60 hover:text-white"
@@ -187,20 +190,28 @@
                   </template>
                   <template v-else>
                     <div class="flex items-center gap-2">
-                      <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">Sets</span>
+                      <span class="text-xs font-semibold uppercase tracking-wide text-slate-400"
+                        >Sets</span
+                      >
                       <span class="text-sm font-semibold text-white">{{ exercise.sets }}</span>
                     </div>
                     <span class="hidden text-slate-500 sm:inline">·</span>
 
                     <div class="flex items-center gap-2">
-                      <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">Reps</span>
+                      <span class="text-xs font-semibold uppercase tracking-wide text-slate-400"
+                        >Reps</span
+                      >
                       <span class="text-sm font-semibold text-white">{{ exercise.reps }}</span>
                     </div>
                     <span class="hidden text-slate-500 sm:inline">·</span>
 
                     <div class="flex items-center gap-2">
-                      <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">Weight</span>
-                      <span class="text-sm font-semibold text-white">{{ exercise.weight || 'Bodyweight' }}</span>
+                      <span class="text-xs font-semibold uppercase tracking-wide text-slate-400"
+                        >Weight</span
+                      >
+                      <span class="text-sm font-semibold text-white">{{
+                        exercise.weight || 'Bodyweight'
+                      }}</span>
                       <span class="text-sm font-medium text-slate-400">kg</span>
                     </div>
                   </template>
@@ -323,8 +334,8 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
-import type { Plan } from '@/data/workoutPlans'
-import { workoutPlans } from '@/data/workoutPlans'
+import type { Plan } from '@/data/workoutRoutine'
+import { workoutPlans } from '@/data/workoutRoutine'
 import type { SessionRecord } from '@/data/workoutHistory'
 import { useSessionHistoryStore } from '@/stores/sessionHistory'
 
@@ -353,13 +364,13 @@ const sessionExercises = ref<SessionExercise[]>([])
 const sessionHistoryStore = useSessionHistoryStore()
 
 const workoutHistoryStart = computed(() =>
-  Math.min(sessionHistoryStore.workoutClearedThrough, sessionHistoryStore.records.length)
+  Math.min(sessionHistoryStore.workoutClearedThrough, sessionHistoryStore.records.length),
 )
 
 const historySessions = computed<SessionRecord[]>(() => sessionHistoryStore.records)
 
 const visibleHistory = computed<SessionRecord[]>(() =>
-  sessionHistoryStore.records.slice(workoutHistoryStart.value)
+  sessionHistoryStore.records.slice(workoutHistoryStart.value),
 )
 
 const historyContainerRef = ref<HTMLElement | null>(null)
@@ -415,7 +426,7 @@ watch(
   () => visibleHistory.value.length,
   () => {
     scrollHistoryToBottom()
-  }
+  },
 )
 
 function scrollHistoryToBottom() {
