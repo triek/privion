@@ -38,15 +38,62 @@
         </div>
       </article>
 
-        <div class="grid gap-2 grid-cols-3">
+      <div class="relative">
+        <div ref="macrosAnchor" class="absolute -top-6 h-1 w-full"></div>
+        <transition name="fade">
+          <div
+            v-if="showStickyMacros"
+            class="fixed inset-x-0 top-20 z-20 border-b border-white/5 bg-slate-900/90 px-4 py-3 backdrop-blur"
+          >
+            <div class="mx-auto max-w-6xl grid grid-cols-3 gap-2">
+              <div
+                v-for="macro in macroCards"
+                :key="macro.label"
+                class="p-2 text-[11px] text-slate-300"
+              >
+                <div class="flex items-center justify-center gap-3">
+                  <div class="relative h-28 w-28">
+                    <svg class="h-full w-full -rotate-90" viewBox="0 0 80 80" fill="none">
+                      <circle
+                        cx="40"
+                        cy="40"
+                        r="32"
+                        class="stroke-white/10"
+                        stroke-width="10"
+                      />
+                      <circle
+                        cx="40"
+                        cy="40"
+                        r="32"
+                        class="stroke-emerald-400"
+                        stroke-width="10"
+                        stroke-linecap="round"
+                        :stroke-dasharray="macro.circumference"
+                        :stroke-dashoffset="macro.strokeOffset"
+                      />
+                    </svg>
+                    <div class="absolute inset-0 flex flex-row items-center justify-center gap-1">
+                      <div>
+                        <p class="flex justify-center text-sm font-semibold uppercase text-emerald-100">{{ macro.label }}</p>
+                        <p class="flex justify-center text-xs text-slate-300">{{ macro.value }}g</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </transition>
+
+        <div ref="macroSection" class="grid grid-cols-3 gap-2">
           <div
             v-for="macro in macroCards"
             :key="macro.label"
             class="rounded-2xl border border-white/10 bg-slate-900/60 p-2 text-sm text-slate-300"
           >
-            <p class="flex justify-center text-md uppercase text-slate-200 font-semibold mt-1">{{ macro.label }}</p>
+            <p class="mt-1 flex justify-center text-md font-semibold uppercase text-slate-200">{{ macro.label }}</p>
             <div class="flex items-center justify-center gap-4">
-              <div class="relative w-32 h-32">
+              <div class="relative h-32 w-32">
                 <svg class="h-full w-full -rotate-90" viewBox="0 0 80 80" fill="none">
                   <circle
                     cx="40"
@@ -66,7 +113,7 @@
                     :stroke-dashoffset="macro.strokeOffset"
                   />
                 </svg>
-                <div class="absolute inset-0 flex items-center justify-center flex-row gap-1">
+                <div class="absolute inset-0 flex flex-row items-center justify-center gap-1">
                   <div>
                     <p class="flex justify-center text-lg font-semibold text-white">{{ macro.value }}g</p>
                     <p class="flex justify-center text-xs text-slate-500">/{{ macro.goal }}g</p>
@@ -76,11 +123,12 @@
             </div>
           </div>
         </div>
-        <p
-          class="rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-100"
-        >
-          {{ proteinTargetMessage }}
-        </p>
+      </div>
+      <p
+        class="rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-100"
+      >
+        {{ proteinTargetMessage }}
+      </p>
 
       <!-- Today's lineup -->
       <article class="space-y-6 rounded-2xl border border-white/10 bg-slate-900/60 p-4">
@@ -162,11 +210,11 @@
       </article>
     </section>
 
-     </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import type { MealLogEntry } from '@/types/nutrition'
 import { useNutritionStore } from '@/stores/nutrition'
@@ -180,6 +228,10 @@ const macroTargets = {
   carbs: 300,
   fat: 70,
 }
+
+const macrosAnchor = ref<HTMLElement | null>(null)
+const macroSection = ref<HTMLElement | null>(null)
+const showStickyMacros = ref(false)
 
 const plannedMeals = ref<(string | null)[]>([null, null, null])
 
@@ -261,6 +313,26 @@ const dailyTotals = computed(() => {
 const progressRadius = 32
 const circumference = 2 * Math.PI * progressRadius
 
+let macrosObserver: IntersectionObserver | null = null
+
+onMounted(() => {
+  if (!macrosAnchor.value) return
+
+  macrosObserver = new IntersectionObserver(
+    (entries) => {
+      if (entries.length === 0) return
+      showStickyMacros.value = !entries[0]!.isIntersecting
+    },
+    { threshold: [0, 1] }
+  )
+
+  macrosObserver.observe(macrosAnchor.value)
+})
+
+onBeforeUnmount(() => {
+  macrosObserver?.disconnect()
+})
+
 const macroCards = computed(() => {
   const macros = [
     { label: 'Protein', value: dailyTotals.value.protein, goal: macroTargets.protein },
@@ -291,7 +363,7 @@ const proteinTargetMessage = computed(() => {
 
   const contributions = new Map<MealLogEntry['mealType'], number>()
   mealLogDetails.value.forEach((detail) => {
-    if (!detail.totals) return
+    if (!detail.totals || !detail.entry) return
     contributions.set(
       detail.entry.mealType,
       (contributions.get(detail.entry.mealType) ?? 0) + detail.totals.protein
