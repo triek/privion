@@ -25,7 +25,7 @@
       </p>
     </header>
 
-    <section class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-lg shadow-slate-950/30">
+    <section class="panel-surface space-y-6">
       <div class="flex flex-wrap items-start justify-between gap-6">
         <div class="space-y-2">
           <!-- Filter -->
@@ -75,7 +75,7 @@
         <article
           v-for="exercise in filteredExercises"
           :key="exercise.name"
-          class="flex flex-col gap-3 rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-2 text-sm text-slate-300"
+          class="card-surface flex flex-col gap-3 px-4 py-2 text-sm text-slate-300"
         >
           <button
             type="button"

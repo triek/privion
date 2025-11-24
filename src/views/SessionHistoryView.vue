@@ -59,7 +59,7 @@
         <article
           v-for="record in filteredHistory"
           :key="record.session"
-          class="space-y-4 rounded-2xl border border-white/10 bg-slate-950/70 p-5"
+          class="card-surface space-y-4 p-5"
         >
           <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
             <h3 class="text-lg font-semibold text-white">{{ record.session }}</h3>

@@ -24,7 +24,7 @@
       </p>
     </header>
 
-    <section class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-lg shadow-slate-950/30">
+    <section class="panel-surface space-y-6">
       <div class="grid gap-6 lg:grid-cols-[2fr_1fr]">
         <div class="space-y-6">
           <!-- Ingredient filter -->
@@ -124,7 +124,7 @@
             <article
               v-for="ingredient in filteredIngredients"
               :key="ingredient.name"
-              class="flex flex-col gap-2 rounded-2xl border border-white/10 bg-slate-950/70 p-4 text-sm text-slate-300"
+              class="card-surface flex flex-col gap-2 p-4 text-sm text-slate-300"
             >
               <div class="flex items-start justify-between gap-2">
                 <div class="space-y-1">
@@ -147,7 +147,7 @@
         </div>
 
         <!-- Add ingredient -->
-        <form class="space-y-4 rounded-2xl border border-white/10 bg-slate-950/70 p-5" @submit.prevent="addIngredient">
+        <form class="card-surface space-y-4 p-5" @submit.prevent="addIngredient">
           <div class="space-y-1">
             <p class="text-xs uppercase tracking-wide text-slate-400">Add ingredient</p>
             <p class="text-sm text-slate-300">Keep the essentials: tag, name, and core macro stats.</p>
