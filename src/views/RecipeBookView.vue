@@ -153,6 +153,7 @@
     </section>
 
     <section class="panel-surface space-y-6">
+      <!-- Recipe filter -->
       <div class="flex flex-wrap items-start justify-between gap-6">
         <div class="space-y-2">
           <h2 class="text-lg font-semibold text-white">Recipe filter</h2>
@@ -164,6 +165,7 @@
         </div>
         <div class="flex flex-col items-end gap-3 sm:flex-row sm:items-center">
           <div class="space-y-2 sm:w-1/2 lg:w-auto">
+            <!-- Ingredients items -->
             <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-400">Main ingredient</h3>
             <div class="flex flex-wrap items-center gap-2">
               <button
@@ -181,6 +183,7 @@
                 {{ filter.label }}
               </button>
 
+              <!-- Show more/Show less button -->
               <button
                 v-if="hiddenIngredientFiltersCount && !showAllIngredientFilters"
                 type="button"
@@ -202,12 +205,12 @@
         </div>
       </div>
 
-      <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <div class="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
         <!-- Recipes -->
         <article
           v-for="recipe in filteredRecipes"
           :key="recipe.id"
-          class="card-surface flex flex-col gap-3 p-5 text-sm text-slate-300"
+          class="card-surface flex flex-col gap-3 p-4 text-sm text-slate-300"
         >
           <button
             type="button"
@@ -224,6 +227,7 @@
               </h3>
             </div>
 
+            <!-- Expand details button -->
             <span
               aria-hidden="true"
               class="inline-flex h-8 w-8 items-center justify-center self-end rounded-full border border-white/10 bg-slate-900/70 text-xs font-semibold uppercase tracking-wide text-slate-200 transition hover:border-white/30 hover:text-white transform"
@@ -234,6 +238,7 @@
             <span class="sr-only">Toggle recipe details</span>
           </button>
 
+          <!-- Recipe details -->
           <div v-if="isRecipeExpanded(recipe.id)" class="space-y-3">
             <p class="text-xs uppercase tracking-wide text-slate-500">Serves {{ recipe.servings }}</p>
             <p class="text-slate-400">{{ recipe.summary }}</p>
