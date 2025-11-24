@@ -37,7 +37,7 @@
 
     <section
       v-if="showNewRecipeForm"
-      class="space-y-4 rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-lg shadow-slate-950/30"
+      class="panel-surface space-y-4"
     >
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div class="space-y-1">
@@ -152,7 +152,7 @@
       </form>
     </section>
 
-    <section class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-lg shadow-slate-950/30">
+    <section class="panel-surface space-y-6">
       <div class="flex flex-wrap items-start justify-between gap-6">
         <div class="space-y-2">
           <h2 class="text-lg font-semibold text-white">Recipe filter</h2>
@@ -207,7 +207,7 @@
         <article
           v-for="recipe in filteredRecipes"
           :key="recipe.id"
-          class="flex flex-col gap-3 rounded-2xl border border-white/10 bg-slate-950/70 p-5 text-sm text-slate-300"
+          class="card-surface flex flex-col gap-3 p-5 text-sm text-slate-300"
         >
           <button
             type="button"

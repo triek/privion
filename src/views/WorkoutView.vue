@@ -54,7 +54,7 @@
       <div ref="historyContainerRef" class="history-scroll overflow-y-auto pr-1">
         <ul class="space-y-2">
           <li v-for="record in visibleHistory" :key="record.session">
-            <article class="space-y-2 rounded-2xl border border-white/10 bg-slate-950/70 p-4">
+            <article class="card-surface space-y-2 p-4">
               <div class="flex items-baseline justify-between gap-2">
                 <h3 class="text-lg font-semibold text-white">{{ record.session }}</h3>
                 <span class="text-xs font-semibold uppercase tracking-wide text-emerald-300"
@@ -103,10 +103,7 @@
       </div>
     </section>
 
-    <section
-      v-if="sessionActive && activePlan"
-      class="space-y-4 rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-lg shadow-slate-950/30"
-    >
+    <section v-if="sessionActive && activePlan" class="panel-surface space-y-4">
       <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div class="flex items-start gap-3">
           <div>
@@ -128,7 +125,7 @@
         <article
           v-for="(exercise, index) in sessionExercises"
           :key="`${exercise.name}-${index}`"
-          class="space-y-2 rounded-2xl border border-white/10 bg-slate-950/70 p-4"
+          class="card-surface space-y-2 p-4"
         >
           <div class="flex flex-col gap-3">
             <div class="flex items-start justify-between gap-3">
@@ -256,9 +253,7 @@
     </section>
 
     <!-- Session creation -->
-    <section
-      class="rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-lg shadow-slate-950/30"
-    >
+    <section class="panel-surface">
       <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div class="space-y-2">
           <h2 class="text-2xl font-semibold text-white">Ready for the next one?</h2>

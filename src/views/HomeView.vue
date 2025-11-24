@@ -47,15 +47,11 @@
           </div>
 
           <div class="grid gap-3 grid-cols-2">
-            <div
-              class="rounded-2xl border border-white/10 bg-slate-950/70 p-4 shadow-inner shadow-slate-950/30"
-            >
+            <div class="card-surface p-4 shadow-inner shadow-slate-950/30">
               <p class="text-xs uppercase tracking-wide text-slate-400">{{ sessionStat.label }}</p>
               <p class="mt-2 text-2xl font-black text-white">{{ sessionStat.value }}</p>
             </div>
-            <div
-              class="rounded-2xl border border-white/10 bg-slate-950/70 p-4 shadow-inner shadow-slate-950/30"
-            >
+            <div class="card-surface p-4 shadow-inner shadow-slate-950/30">
               <p class="text-xs uppercase tracking-wide text-slate-400">{{ mealStat.label }}</p>
               <p class="mt-2 text-2xl font-black text-white">{{ mealStat.value }}</p>
             </div>
@@ -64,7 +60,7 @@
       </div>
 
       <div class="space-y-4">
-        <article class="rounded-2xl border border-white/10 bg-slate-950/70 p-5">
+        <article class="card-surface p-5">
           <div class="flex items-center justify-between gap-2">
             <div>
               <p class="text-xs uppercase tracking-wide text-emerald-300">Upcoming focus</p>
@@ -99,7 +95,7 @@
           </ul>
         </article>
 
-        <article class="rounded-2xl border border-white/10 bg-slate-950/70 p-5">
+        <article class="card-surface p-5">
           <div class="flex items-center justify-between gap-2">
             <div>
               <p class="text-xs uppercase tracking-wide text-emerald-300">Fuel snapshot</p>
@@ -146,7 +142,7 @@
           <li
             v-for="record in recentSessions"
             :key="record.session"
-            class="rounded-xl border border-white/10 bg-slate-950/70 p-4"
+            class="tile-surface p-4"
           >
             <div class="flex items-center justify-between gap-2">
               <p class="font-semibold text-white">{{ record.session }}</p>
@@ -178,7 +174,7 @@
           <li
             v-for="detail in todayMeals"
             :key="detail.entry.id"
-            class="rounded-xl border border-white/10 bg-slate-950/70 p-4"
+            class="tile-surface p-4"
           >
             <div class="flex items-center justify-between gap-2">
               <p class="font-semibold text-white">

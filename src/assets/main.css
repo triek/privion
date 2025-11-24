@@ -1,2 +1,16 @@
 @import "tailwindcss";
 :root { color-scheme: light; }
+
+@layer components {
+  .panel-surface {
+    @apply rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-lg shadow-slate-950/30;
+  }
+
+  .card-surface {
+    @apply rounded-2xl border border-white/10 bg-slate-950/70;
+  }
+
+  .tile-surface {
+    @apply rounded-xl border border-white/10 bg-slate-950/70;
+  }
+}

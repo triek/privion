@@ -25,9 +25,7 @@
       </p>
     </header>
 
-    <section
-      class="space-y-4 rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-lg shadow-slate-950/30"
-    >
+    <section class="panel-surface space-y-4">
       <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div class="space-y-2">
           <p class="text-xs font-semibold uppercase tracking-wide text-emerald-200">
@@ -82,7 +80,7 @@
 
     <section>
       <article
-        class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-4 shadow-lg shadow-slate-950/30"
+        class="panel-surface space-y-6"
       >
         <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div class="space-y-1">
@@ -304,7 +302,7 @@
                 v-for="exercise in filteredExercises"
                 :key="exercise.id"
                 type="button"
-                class="flex flex-col gap-2 rounded-xl border border-white/10 bg-slate-950/70 p-4 text-left text-sm text-slate-300 transition hover:border-emerald-300/60 hover:text-emerald-100"
+                class="tile-surface flex flex-col gap-2 p-4 text-left text-sm text-slate-300 transition hover:border-emerald-300/60 hover:text-emerald-100"
                 @click="addExerciseFromLibrary(exercise)"
               >
                 <div class="flex items-center justify-between gap-2">

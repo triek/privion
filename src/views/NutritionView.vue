@@ -182,7 +182,7 @@
               v-for="item in recipeSummaries"
               :key="item.recipe.id"
               type="button"
-              class="flex flex-col gap-2 rounded-xl border border-white/10 bg-slate-950/70 p-4 text-left text-sm text-slate-300 transition hover:border-emerald-300/60 hover:text-emerald-100"
+              class="tile-surface flex flex-col gap-2 p-4 text-left text-sm text-slate-300 transition hover:border-emerald-300/60 hover:text-emerald-100"
               :class="{
                 'opacity-60 hover:border-white/10 hover:text-slate-300': planIsFull && !plannedMealCounts[item.recipe.id],
                 'border-emerald-300/60 text-emerald-100': plannedMealCounts[item.recipe.id],
