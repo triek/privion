@@ -103,6 +103,7 @@
       </div>
     </section>
 
+    <!-- New session form -->
     <section v-if="sessionActive && activePlan" class="panel-surface space-y-4">
       <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div class="flex items-start gap-3">
@@ -120,7 +121,7 @@
         </button>
       </div>
 
-      <!-- Sessions -->
+      <!-- Exercises -->
       <div class="space-y-2">
         <article
           v-for="(exercise, index) in sessionExercises"
