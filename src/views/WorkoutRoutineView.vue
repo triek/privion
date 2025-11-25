@@ -25,6 +25,7 @@
       </p>
     </header>
 
+    <!-- Active routine -->
     <section class="panel-surface space-y-4">
       <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div class="space-y-2">
@@ -43,6 +44,8 @@
               }}</span
             >
           </div>
+
+          <!-- Switch routine set button -->
           <button
             type="button"
             class="inline-flex items-center justify-center gap-2 rounded-full border border-emerald-400/60 bg-emerald-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:-translate-y-0.5 hover:border-emerald-300/70"
@@ -53,6 +56,7 @@
         </div>
       </div>
 
+      <!-- Active routines -->
       <div v-if="activeRoutine" class="space-y-4">
         <div v-if="activeRoutine" class="space-y-4">
           <ul class="mt-3 space-y-2">
@@ -73,11 +77,13 @@
         </div>
         <p v-else class="text-sm text-slate-400">No active routine. Select one from the builder below and switch it on.</p>
       </div>
+
       <p v-else class="text-sm text-slate-400">
         No active routine. Select one from the builder below and switch it on.
       </p>
     </section>
 
+    <!-- Routine builder -->
     <section>
       <article
         class="panel-surface space-y-6"
@@ -91,6 +97,8 @@
               Edit an existing routine or start a new one
             </h2>
           </div>
+
+          <!-- Routine dropdown -->
           <div class="flex flex-col gap-2">
             <div class="flex items-center gap-3">
               <label
@@ -115,6 +123,7 @@
                 Save
               </button>
             </div>
+
             <p class="text-[11px] font-semibold tracking-wide text-slate-400">
               {{ lastSavedMessage }}
             </p>
@@ -145,6 +154,7 @@
             />
           </label>
 
+          <!-- Routine cards -->
           <div class="space-y-3">
             <div class="flex items-center justify-between gap-3">
               <div>
@@ -266,6 +276,7 @@
             </div>
           </div>
 
+          <!-- Exercise library -->
           <div class="space-y-5">
             <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
@@ -297,6 +308,7 @@
               </div>
             </div>
 
+            <!-- Exercise items -->
             <div class="grid gap-2 md:grid-cols-2 max-h-82 overflow-y-auto pr-1">
               <button
                 v-for="exercise in filteredExercises"
@@ -331,6 +343,7 @@
       </article>
     </section>
 
+    <!-- Switch routine set window -->
     <div
       v-if="showSwitchModal"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
@@ -356,6 +369,7 @@
           </button>
         </div>
 
+        <!-- Routine set items -->
         <ul class="space-y-3">
           <li v-for="routineSet in routineSets" :key="routineSet.setName">
             <button
