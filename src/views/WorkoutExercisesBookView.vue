@@ -29,13 +29,15 @@
       <div class="flex flex-wrap items-start justify-between gap-6">
         <div class="space-y-2">
           <!-- Filter -->
-          <h2 class="text-lg font-semibold text-white">Exercise filter</h2>
+          <h2 class="text-xl font-semibold text-white">Exercise filter</h2>
           <p class="max-w-xl text-sm text-slate-400">
             Each movement is selected for hypertrophy-focused training with controlled tempos, defined end ranges, and simple
             coaching cues. Use the filter to lock in the area you want to bring up.
           </p>
           <p class="text-xs uppercase tracking-wide text-emerald-200">{{ filteredExercises.length }} movements available</p>
         </div>
+
+        <!-- Muscle filter items -->
         <div class="flex flex-wrap items-center gap-2">
           <button
             v-for="filter in visibleMuscleFilters"
@@ -51,6 +53,8 @@
           >
             {{ filter.label }}
           </button>
+
+          <!-- Show more button -->
           <button
             v-if="hiddenMuscleFiltersCount && !showAllMuscleFilters"
             type="button"
@@ -59,6 +63,8 @@
           >
             ...
           </button>
+
+          <!-- Show less button -->
           <button
             v-else-if="hiddenMuscleFiltersCount"
             type="button"
