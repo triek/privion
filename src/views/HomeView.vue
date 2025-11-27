@@ -141,31 +141,63 @@
       <article class="space-y-4 rounded-2xl border border-white/10 bg-slate-900/70 p-4">
         <div class="flex items-start justify-between gap-3">
           <div>
-            <h2 class="text-lg font-semibold text-white">Recent workout momentum</h2>
-            <p class="text-sm text-slate-400">Pulled directly from the session history feed.</p>
+            <h2 class="text-lg font-semibold text-white">Recovery &amp; Readiness</h2>
+            <p class="text-sm text-slate-400">A daily sense-check before dialing up intensity.</p>
           </div>
           <RouterLink
             to="/session-history"
             class="text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:text-emerald-100"
           >
-            Full history
+            Session feed
           </RouterLink>
         </div>
-        <ul class="space-y-3 text-sm text-slate-300">
-          <li
-            v-for="record in recentSessions"
-            :key="record.session"
-            class="tile-surface p-4"
-          >
-            <div class="flex items-center justify-between gap-2">
-              <p class="font-semibold text-white">{{ record.session }}</p>
-              <span class="text-xs uppercase tracking-wide text-slate-500"
-                >{{ record.exercises.length }} movements</span
-              >
+
+        <div class="grid gap-3 sm:grid-cols-2">
+          <div class="tile-surface space-y-3 p-4">
+            <div class="flex items-center justify-between text-xs uppercase tracking-wide text-slate-400">
+              <span>Sleep quality</span>
+              <span class="text-emerald-300">Score {{ sleepQuality.score }}</span>
             </div>
-            <p class="mt-2 text-xs text-slate-400">{{ recordSummary(record) }}</p>
-          </li>
-        </ul>
+            <div class="flex items-center justify-between text-3xl font-black text-white">
+              <span>{{ sleepQuality.hours }}</span>
+              <span class="text-base font-semibold text-slate-300">hrs</span>
+            </div>
+            <p class="text-xs text-slate-400">Tracked from your latest night of sleep.</p>
+          </div>
+
+          <div class="tile-surface space-y-3 p-4">
+            <div class="flex items-center justify-between text-xs uppercase tracking-wide text-slate-400">
+              <span>Muscle soreness</span>
+              <span class="text-emerald-300">{{ sorenessLabel }}</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <input
+                v-model.number="muscleSoreness"
+                type="range"
+                min="1"
+                max="5"
+                step="1"
+                class="h-2 w-full cursor-pointer appearance-none rounded-full bg-slate-800 accent-emerald-400"
+              />
+              <span class="rounded-full bg-white/5 px-3 py-1 text-xs font-semibold text-white">{{ muscleSoreness }}</span>
+            </div>
+            <p class="text-xs text-slate-400">Self-reported or synced from your tracker.</p>
+          </div>
+        </div>
+
+        <div
+          class="tile-surface flex flex-col gap-2 border border-emerald-400/40 bg-emerald-500/10 p-4 text-sm text-emerald-50 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <div class="flex items-center gap-3">
+            <span
+              class="inline-flex rounded-full bg-emerald-300/20 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-50"
+            >
+              {{ readinessRecommendation.label }}
+            </span>
+            <p class="font-semibold text-white">{{ readinessRecommendation.headline }}</p>
+          </div>
+          <p class="text-xs text-emerald-100/80">{{ readinessRecommendation.detail }}</p>
+        </div>
       </article>
 
       <article class="space-y-4 rounded-2xl border border-white/10 bg-slate-900/70 p-4">
@@ -219,7 +251,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
@@ -229,7 +261,6 @@ import { useSessionHistoryStore } from '@/stores/sessionHistory'
 import { formatNumber, mealLogTotals } from '@/utils/nutrition'
 
 const sessionHistoryStore = useSessionHistoryStore()
-const { records } = storeToRefs(sessionHistoryStore)
 
 const nutritionStore = useNutritionStore()
 const { recipes, mealLogs, ingredientMap } = storeToRefs(nutritionStore)
@@ -237,7 +268,8 @@ const { recipes, mealLogs, ingredientMap } = storeToRefs(nutritionStore)
 const nextPlan = computed(() => workoutPlans[0])
 const nextPlanPreview = computed(() => nextPlan.value?.exercises ?? [])
 
-const recentSessions = computed(() => records.value.slice(-3).reverse())
+const sleepQuality = ref({ hours: 7.8, score: 86 })
+const muscleSoreness = ref(3)
 
 const macroTargets = { protein: 190, carbs: 300, fat: 70 }
 
@@ -326,9 +358,36 @@ const macroCallout = computed(
     `${formatNumber(dailyTotals.value.calories)} kcal captured · ${formatNumber(dailyTotals.value.cost)} cost`,
 )
 
-const recordSummary = (record: (typeof records.value)[number]) => {
-  const mainLift = record.exercises[0]
-  if (!mainLift) return 'No exercises recorded.'
-  return `${mainLift.name} anchored the day with ${mainLift.setsCompleted}×${mainLift.reps}`
-}
+const sorenessLabel = computed(() => {
+  const labels = ['Minimal', 'Light', 'Noticeable', 'High', 'Severe']
+  const index = Math.min(Math.max(muscleSoreness.value, 1), 5) - 1
+  return labels[index]
+})
+
+const readinessRecommendation = computed(() => {
+  const { score, hours } = sleepQuality.value
+  const soreness = muscleSoreness.value
+
+  if (score >= 85 && soreness <= 2 && hours >= 7) {
+    return {
+      label: 'Train hard',
+      headline: 'Green lights across recovery markers.',
+      detail: 'Prioritize compound lifts and higher volume while energy is high.',
+    }
+  }
+
+  if (score >= 70 && soreness <= 3) {
+    return {
+      label: 'Moderate',
+      headline: 'Stay on plan with mindful pacing.',
+      detail: 'Keep rest tight and avoid all-out sets while muscle fatigue clears.',
+    }
+  }
+
+  return {
+    label: 'Deload',
+    headline: 'Dial back intensity to recover fully.',
+    detail: 'Swap to technique work, mobility, and easy cardio until soreness drops.',
+  }
+})
 </script>
