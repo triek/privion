@@ -74,21 +74,18 @@
               View plan
             </RouterLink>
           </div>
-          <ul class="mt-4 space-y-3 text-sm text-slate-300">
+          <ul class="mt-4 grid grid-cols-2 gap-3 text-sm text-slate-200">
             <li
               v-for="exercise in nextPlanPreview"
               :key="exercise.name"
-              class="flex items-center justify-between rounded-xl border border-white/10 bg-slate-900/80 px-3 py-2"
+              class="tile-surface flex flex-col gap-2 p-4"
             >
-              <div>
-                <p class="font-semibold text-white">{{ exercise.name }}</p>
-                <p class="text-xs text-slate-500">
-                  {{ exercise.sets }} sets · {{ exercise.reps }} reps
-                </p>
+              <span class="font-semibold text-white">{{ exercise.name }}</span>
+              <div class="flex items-center gap-2 text-slate-300">
+                <span>{{ exercise.sets }} sets</span>
+                <span class="text-slate-600">·</span>
+                <span>{{ exercise.reps }} reps</span>
               </div>
-              <span class="text-xs uppercase tracking-wide text-slate-500">{{
-                nextPlan?.label
-              }}</span>
             </li>
           </ul>
         </article>
@@ -220,7 +217,7 @@ const nutritionStore = useNutritionStore()
 const { recipes, mealLogs, ingredientMap } = storeToRefs(nutritionStore)
 
 const nextPlan = computed(() => workoutPlans[0])
-const nextPlanPreview = computed(() => nextPlan.value?.exercises.slice(0, 3) ?? [])
+const nextPlanPreview = computed(() => nextPlan.value?.exercises ?? [])
 
 const recentSessions = computed(() => records.value.slice(-3).reverse())
 
