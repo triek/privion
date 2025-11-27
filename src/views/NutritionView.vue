@@ -239,6 +239,7 @@ const plannedMealDetails = computed(() =>
   plannedMeals.value.map((id) => recipeSummaries.value.find((item) => item.recipe.id === id) ?? null)
 )
 
+// Meal count
 const plannedMealCounts = computed<Record<string, number>>(() => {
   const counts: Record<string, number> = {}
   plannedMeals.value.forEach((id) => {
