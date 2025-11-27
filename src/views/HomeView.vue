@@ -34,9 +34,9 @@
           </RouterLink>
         </div>
 
-        <div class="space-y-3">
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
           <div
-            class="flex items-center justify-between rounded-2xl border border-emerald-400/40 bg-emerald-500/10 p-4"
+            class="col-span-2 flex items-center justify-between rounded-2xl border border-emerald-400/40 bg-emerald-500/10 p-4 sm:col-span-1"
           >
             <div>
               <p class="text-xs uppercase tracking-wide text-emerald-200">Your tracking streak</p>
@@ -46,15 +46,13 @@
             </div>
           </div>
 
-          <div class="grid gap-3 grid-cols-2">
-            <div class="card-surface p-4 shadow-inner shadow-slate-950/30">
-              <p class="text-xs uppercase tracking-wide text-slate-400">{{ sessionStat.label }}</p>
-              <p class="mt-2 text-2xl font-black text-white">{{ sessionStat.value }}</p>
-            </div>
-            <div class="card-surface p-4 shadow-inner shadow-slate-950/30">
-              <p class="text-xs uppercase tracking-wide text-slate-400">{{ mealStat.label }}</p>
-              <p class="mt-2 text-2xl font-black text-white">{{ mealStat.value }}</p>
-            </div>
+          <div class="card-surface p-4 shadow-inner shadow-slate-950/30">
+            <p class="text-xs uppercase tracking-wide text-slate-400">{{ sessionStat.label }}</p>
+            <p class="mt-2 text-2xl font-black text-white">{{ sessionStat.value }}</p>
+          </div>
+          <div class="card-surface p-4 shadow-inner shadow-slate-950/30">
+            <p class="text-xs uppercase tracking-wide text-slate-400">{{ mealStat.label }}</p>
+            <p class="mt-2 text-2xl font-black text-white">{{ mealStat.value }}</p>
           </div>
         </div>
       </div>
