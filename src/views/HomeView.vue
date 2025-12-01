@@ -255,6 +255,7 @@ import { computed, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
+import type { Plan } from '@/data/workoutRoutine'
 import { workoutPlans } from '@/data/workoutRoutine'
 import { useNutritionStore } from '@/stores/nutrition'
 import { useSessionHistoryStore } from '@/stores/sessionHistory'
@@ -265,7 +266,33 @@ const sessionHistoryStore = useSessionHistoryStore()
 const nutritionStore = useNutritionStore()
 const { recipes, mealLogs, ingredientMap } = storeToRefs(nutritionStore)
 
-const nextPlan = computed(() => workoutPlans[0])
+const rotationOrder: Plan['id'][] = ['push', 'pull', 'legs']
+
+const historySessions = computed(() => sessionHistoryStore.records)
+
+const nextPlan = computed<Plan | null>(() => {
+  if (workoutPlans.length === 0) {
+    return null
+  }
+
+  const lastRecordIndex = historySessions.value.length - 1
+  const lastPlanId =
+    lastRecordIndex >= 0 ? historySessions.value[lastRecordIndex]?.planId : undefined
+
+  if (!lastPlanId) {
+    return workoutPlans[0]
+  }
+
+  const currentIndex = rotationOrder.indexOf(lastPlanId)
+  const nextPlanId =
+    currentIndex === -1
+      ? rotationOrder[0]
+      : rotationOrder[(currentIndex + 1) % rotationOrder.length]
+
+  const upcomingPlan = workoutPlans.find((plan) => plan.id === nextPlanId)
+  return upcomingPlan ?? workoutPlans[0]
+})
+
 const nextPlanPreview = computed(() => nextPlan.value?.exercises ?? [])
 
 const sleepQuality = ref({ hours: 7.8, score: 86 })
