@@ -58,84 +58,82 @@
       </div>
     </section>
 
-      <div class="space-y-4">
-        <article class="card-surface p-5">
-          <div class="flex items-center justify-between gap-2">
-            <div>
-              <p class="text-xs uppercase tracking-wide text-emerald-300">Upcoming focus</p>
-              <h2 class="text-lg font-semibold text-white">{{ nextPlan?.title }}</h2>
-              <p class="text-sm text-slate-400">
-                {{ nextPlan?.exercises.length }} exercises on deck
-              </p>
-            </div>
-            <RouterLink
-              to="/workout"
-              class="inline-flex items-center gap-2 rounded-full border border-emerald-400/50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:-translate-y-0.5 hover:border-emerald-300/70"
-            >
-              View plan
-            </RouterLink>
+    <div class="space-y-4">
+      <article class="card-surface p-5">
+        <div class="flex items-center justify-between gap-2">
+          <div>
+            <p class="text-xs uppercase tracking-wide text-emerald-300">Upcoming focus</p>
+            <h2 class="text-lg font-semibold text-white">{{ nextPlan?.title }}</h2>
+            <p class="text-sm text-slate-400">{{ nextPlan?.exercises.length }} exercises on deck</p>
           </div>
-          <ul class="mt-4 grid grid-cols-2 gap-3 text-sm text-slate-200">
-            <li
-              v-for="exercise in nextPlanPreview"
-              :key="exercise.name"
-              class="tile-surface flex flex-col gap-2 p-4"
-            >
-              <span class="font-semibold text-white">{{ exercise.name }}</span>
-              <div class="flex items-center gap-2 text-slate-300">
-                <span>{{ exercise.sets }} sets</span>
-                <span class="text-slate-600">·</span>
-                <span>{{ exercise.reps }} reps</span>
-              </div>
-            </li>
-          </ul>
-        </article>
+          <RouterLink
+            to="/workout"
+            class="inline-flex items-center gap-2 rounded-full border border-emerald-400/50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:-translate-y-0.5 hover:border-emerald-300/70"
+          >
+            View plan
+          </RouterLink>
+        </div>
+        <ul class="mt-4 grid grid-cols-2 gap-3 text-sm text-slate-200">
+          <li
+            v-for="exercise in nextPlanPreview"
+            :key="exercise.name"
+            class="tile-surface flex flex-col gap-2 p-4"
+          >
+            <span class="font-semibold text-white">{{ exercise.name }}</span>
+            <div class="flex items-center gap-2 text-slate-300">
+              <span>{{ exercise.sets }} sets</span>
+              <span class="text-slate-600">·</span>
+              <span>{{ exercise.reps }} reps</span>
+            </div>
+          </li>
+        </ul>
+      </article>
 
-        <article class="card-surface p-5">
-          <div class="flex items-center justify-between gap-2">
-            <div>
-              <p class="text-xs uppercase tracking-wide text-emerald-300">Fuel snapshot</p>
-              <h2 class="text-lg font-semibold text-white">{{ proteinTargetMessage }}</h2>
-              <p class="text-sm text-slate-400">{{ macroCallout }}</p>
-            </div>
-            <RouterLink
-              to="/nutrition"
-              class="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-100 transition hover:-translate-y-0.5 hover:border-emerald-300/70"
-            >
-              Meal log
-            </RouterLink>
+      <article class="card-surface p-5">
+        <div class="flex items-center justify-between gap-2">
+          <div>
+            <p class="text-xs uppercase tracking-wide text-emerald-300">Fuel snapshot</p>
+            <h2 class="text-lg font-semibold text-white">{{ proteinTargetMessage }}</h2>
+            <p class="text-sm text-slate-400">{{ macroCallout }}</p>
           </div>
-          <div class="mt-4 grid gap-3 sm:grid-cols-3">
-            <div
-              v-for="macro in macroCards"
-              :key="macro.label"
-              class="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-slate-900/80 p-3 text-center text-sm text-slate-300"
-            >
-              <p class="text-xs uppercase tracking-wide text-slate-500">{{ macro.label }}</p>
-              <div class="relative h-28 w-28">
-                <svg class="h-full w-full -rotate-90" viewBox="0 0 80 80" fill="none">
-                  <circle cx="40" cy="40" r="32" class="stroke-white/10" stroke-width="10" />
-                  <circle
-                    cx="40"
-                    cy="40"
-                    r="32"
-                    class="stroke-emerald-400"
-                    stroke-width="10"
-                    stroke-linecap="round"
-                    :stroke-dasharray="macro.circumference"
-                    :stroke-dashoffset="macro.strokeOffset"
-                  />
-                </svg>
-                <div class="absolute inset-0 flex flex-col items-center justify-center gap-1">
-                  <p class="text-lg font-bold text-white">{{ macro.displayValue }}</p>
-                  <p class="text-[11px] text-slate-500">/ {{ macro.goalLabel }}</p>
-                </div>
+          <RouterLink
+            to="/nutrition"
+            class="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-100 transition hover:-translate-y-0.5 hover:border-emerald-300/70"
+          >
+            Meal log
+          </RouterLink>
+        </div>
+        <div class="mt-4 grid gap-3 sm:grid-cols-3">
+          <div
+            v-for="macro in macroCards"
+            :key="macro.label"
+            class="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-slate-900/80 p-3 text-center text-sm text-slate-300"
+          >
+            <p class="text-xs uppercase tracking-wide text-slate-500">{{ macro.label }}</p>
+            <div class="relative h-28 w-28">
+              <svg class="h-full w-full -rotate-90" viewBox="0 0 80 80" fill="none">
+                <circle cx="40" cy="40" r="32" class="stroke-white/10" stroke-width="10" />
+                <circle
+                  cx="40"
+                  cy="40"
+                  r="32"
+                  class="stroke-emerald-400"
+                  stroke-width="10"
+                  stroke-linecap="round"
+                  :stroke-dasharray="macro.circumference"
+                  :stroke-dashoffset="macro.strokeOffset"
+                />
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center gap-1">
+                <p class="text-lg font-bold text-white">{{ macro.displayValue }}</p>
+                <p class="text-[11px] text-slate-500">/ {{ macro.goalLabel }}</p>
               </div>
-              <p class="text-xs text-slate-400">{{ macro.progress }}% to goal</p>
             </div>
+            <p class="text-xs text-slate-400">{{ macro.progress }}% to goal</p>
           </div>
-        </article>
-      </div>
+        </div>
+      </article>
+    </div>
 
     <section class="grid gap-6 lg:grid-cols-2">
       <article class="space-y-4 rounded-2xl border border-white/10 bg-slate-900/70 p-4">
@@ -154,7 +152,9 @@
 
         <div class="grid gap-3 sm:grid-cols-2">
           <div class="tile-surface space-y-3 p-4">
-            <div class="flex items-center justify-between text-xs uppercase tracking-wide text-slate-400">
+            <div
+              class="flex items-center justify-between text-xs uppercase tracking-wide text-slate-400"
+            >
               <span>Sleep quality</span>
               <span class="text-emerald-300">Score {{ sleepQuality.score }}</span>
             </div>
@@ -166,7 +166,9 @@
           </div>
 
           <div class="tile-surface space-y-3 p-4">
-            <div class="flex items-center justify-between text-xs uppercase tracking-wide text-slate-400">
+            <div
+              class="flex items-center justify-between text-xs uppercase tracking-wide text-slate-400"
+            >
               <span>Muscle soreness</span>
               <span class="text-emerald-300">{{ sorenessLabel }}</span>
             </div>
@@ -179,7 +181,9 @@
                 step="1"
                 class="h-2 w-full cursor-pointer appearance-none rounded-full bg-slate-800 accent-emerald-400"
               />
-              <span class="rounded-full bg-white/5 px-3 py-1 text-xs font-semibold text-white">{{ muscleSoreness }}</span>
+              <span class="rounded-full bg-white/5 px-3 py-1 text-xs font-semibold text-white">{{
+                muscleSoreness
+              }}</span>
             </div>
             <p class="text-xs text-slate-400">Self-reported or synced from your tracker.</p>
           </div>
@@ -216,11 +220,7 @@
           </RouterLink>
         </div>
         <ul class="space-y-3 text-sm text-slate-300">
-          <li
-            v-for="detail in todayMeals"
-            :key="detail.entry.id"
-            class="tile-surface p-4"
-          >
+          <li v-for="detail in todayMeals" :key="detail.entry.id" class="tile-surface p-4">
             <div class="flex items-center justify-between gap-2">
               <p class="font-semibold text-white">
                 {{ detail.recipe?.name ?? 'Unassigned recipe' }}
@@ -280,7 +280,7 @@ const nextPlan = computed<Plan | null>(() => {
     lastRecordIndex >= 0 ? historySessions.value[lastRecordIndex]?.planId : undefined
 
   if (!lastPlanId) {
-    return workoutPlans[0]
+    return workoutPlans[0] ?? null
   }
 
   const currentIndex = rotationOrder.indexOf(lastPlanId)
@@ -290,7 +290,7 @@ const nextPlan = computed<Plan | null>(() => {
       : rotationOrder[(currentIndex + 1) % rotationOrder.length]
 
   const upcomingPlan = workoutPlans.find((plan) => plan.id === nextPlanId)
-  return upcomingPlan ?? workoutPlans[0]
+  return upcomingPlan ?? workoutPlans[0] ?? null
 })
 
 const nextPlanPreview = computed(() => nextPlan.value?.exercises ?? [])
