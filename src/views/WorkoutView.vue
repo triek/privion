@@ -103,6 +103,66 @@
       </div>
     </section>
 
+    <!-- Session reflection -->
+    <section class="panel-surface space-y-4">
+      <div class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+        <div class="space-y-1">
+          <h2 class="text-2xl font-semibold text-white">Session insights</h2>
+          <p class="text-sm text-slate-400">
+            Pick a few prompts to talk through the session and capture what mattered most.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button
+            v-for="insight in insightPrompts"
+            :key="insight.id"
+            type="button"
+            :aria-pressed="activeInsights.includes(insight.id)"
+            class="rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+            :class="
+              activeInsights.includes(insight.id)
+                ? 'border-emerald-400/60 bg-emerald-400/10 text-emerald-100 hover:border-emerald-300/70'
+                : 'border-white/15 bg-slate-900/60 text-slate-200 hover:border-emerald-300/70 hover:text-white'
+            "
+            @click="toggleInsight(insight.id)"
+          >
+            {{ insight.title }}
+          </button>
+        </div>
+      </div>
+
+      <div class="grid gap-3 md:grid-cols-2">
+        <article
+          v-for="insight in selectedInsights"
+          :key="insight.id"
+          class="tile-surface flex flex-col gap-2 border border-white/10 p-4"
+        >
+          <h3 class="text-sm font-semibold uppercase tracking-wide text-emerald-300">{{ insight.title }}</h3>
+          <p class="text-sm text-slate-300">{{ insight.description }}</p>
+          <p class="text-xs font-medium text-slate-400">Prompt: {{ insight.prompt }}</p>
+        </article>
+
+        <p v-if="selectedInsights.length === 0" class="text-sm text-slate-400">
+          No insights selected yet. Choose a few prompts above to guide your recap.
+        </p>
+      </div>
+
+      <div class="space-y-2">
+        <label for="session-discussion" class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+          Discussion notes
+        </label>
+        <textarea
+          id="session-discussion"
+          v-model="sessionDiscussion"
+          class="min-h-[120px] w-full rounded-2xl border border-white/10 bg-slate-950/60 p-3 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+          :placeholder="insightPlaceholder"
+        ></textarea>
+        <p class="text-xs text-slate-500">
+          Capture cues, questions for your coach, or a quick summary to revisit next time.
+        </p>
+      </div>
+    </section>
+
     <!-- New session form -->
     <section v-if="sessionActive && activePlan" class="panel-surface space-y-4">
       <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -358,6 +418,73 @@ const sessionActive = ref(false)
 const activePlan = ref<Plan | null>(null)
 const sessionExercises = ref<SessionExercise[]>([])
 const sessionHistoryStore = useSessionHistoryStore()
+
+type SessionInsight = {
+  id: string
+  title: string
+  description: string
+  prompt: string
+}
+
+const sessionDiscussion = ref('')
+
+const insightPrompts: SessionInsight[] = [
+  {
+    id: 'readiness',
+    title: 'How you felt',
+    description: 'Energy, focus, and warm-up quality set the tone.',
+    prompt: 'Did you feel switched on or sluggish before the first working set?',
+  },
+  {
+    id: 'execution',
+    title: 'Execution quality',
+    description: 'Form cues, tempo, and range of motion on key lifts.',
+    prompt: 'Which exercises felt the most dialed in? Where did form start to slip?',
+  },
+  {
+    id: 'progression',
+    title: 'Progression check',
+    description: 'Weight jumps, rep quality, and whether top sets moved.',
+    prompt: 'Where did you add load or reps compared to last week?',
+  },
+  {
+    id: 'recovery',
+    title: 'Recovery signals',
+    description: 'Soreness, joint feedback, or niggles to note.',
+    prompt: 'Any joints or muscle groups that need extra mobility or warm-up next time?',
+  },
+  {
+    id: 'next-step',
+    title: 'Next session setup',
+    description: 'Adjustments for pacing, exercise order, or equipment.',
+    prompt: 'What will you change for the next run of this session?',
+  },
+]
+
+const activeInsights = ref<string[]>(['readiness', 'progression'])
+
+const selectedInsights = computed(() =>
+  insightPrompts.filter((insight) => activeInsights.value.includes(insight.id)),
+)
+
+const insightPlaceholder = computed(() => {
+  if (selectedInsights.value.length === 0) {
+    return 'Pick a few prompts to guide your session recap.'
+  }
+
+  const bullets = selectedInsights.value.map((insight) => `• ${insight.prompt}`)
+  return bullets.join('\n')
+})
+
+function toggleInsight(id: string) {
+  const index = activeInsights.value.indexOf(id)
+  if (index !== -1) {
+    activeInsights.value.splice(index, 1)
+    return
+  }
+
+  activeInsights.value.push(id)
+}
 
 const workoutHistoryStart = computed(() =>
   Math.min(sessionHistoryStore.workoutClearedThrough, sessionHistoryStore.records.length),
