@@ -5,6 +5,7 @@
       <p class="text-sm text-slate-400">Sync workouts, meals, and recovery into one adaptive hub.</p>
     </header>
 
+    <!-- Signup form -->
     <form
       class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/60 p-8 shadow-lg shadow-emerald-500/10"
       @submit.prevent="handleSubmit"
@@ -14,6 +15,7 @@
       </div>
 
       <div class="grid gap-4 sm:grid-cols-2">
+        <!-- Name -->
         <div class="space-y-2">
           <label for="name" class="text-sm font-medium text-slate-200">Full name *</label>
           <input
@@ -25,6 +27,7 @@
             class="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40"
           />
         </div>
+        <!-- Email -->
         <div class="space-y-2">
           <label for="email" class="text-sm font-medium text-slate-200">Email *</label>
           <input
@@ -40,6 +43,7 @@
 
       <div class="grid gap-4 sm:grid-cols-2">
         <div class="space-y-2">
+          <!-- Password -->
           <label for="password" class="text-sm font-medium text-slate-200">Password *</label>
           <input
             id="password"
@@ -51,6 +55,7 @@
           />
         </div>
         <div class="space-y-2">
+          <!-- Primary goal -->
           <label for="goal" class="text-sm font-medium text-slate-200">Primary goal *</label>
           <select
             id="goal"
@@ -67,6 +72,7 @@
 
       <div class="grid gap-4 sm:grid-cols-2">
         <div class="space-y-2">
+          <!-- Location -->
           <label for="location" class="text-sm font-medium text-slate-200">Location *</label>
           <input
             id="location"
@@ -78,6 +84,7 @@
           />
         </div>
         <div class="space-y-2">
+          <!-- Training focus -->
           <label for="focus" class="text-sm font-medium text-slate-200">Training focus *</label>
           <input
             id="focus"
@@ -91,6 +98,7 @@
       </div>
 
       <div class="space-y-2">
+        <!-- Experience level -->
         <label for="experience" class="text-sm font-medium text-slate-200">Experience level *</label>
         <select
           id="experience"
@@ -104,6 +112,7 @@
         </select>
       </div>
 
+      <!-- Submit button -->
       <button
         type="submit"
         class="w-full rounded-full bg-emerald-400 px-6 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-emerald-400/40 transition hover:-translate-y-0.5 hover:bg-emerald-300"
@@ -112,6 +121,7 @@
       </button>
     </form>
 
+    <!-- Already have an account -->
     <p class="text-center text-sm text-slate-400">
       Already have an account?
       <RouterLink to="/login" class="font-semibold text-emerald-300 hover:text-emerald-200">Log in here</RouterLink>.
