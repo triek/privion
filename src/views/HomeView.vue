@@ -9,7 +9,7 @@
         >
           Daily control center
         </p>
-        <div class="space-y-2">
+        <div class="space-y-2 mx-1">
           <h1 class="text-3xl font-black leading-tight text-white sm:text-4xl">
             Keep training and nutrition in the same rhythm.
           </h1>
