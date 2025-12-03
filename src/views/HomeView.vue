@@ -103,11 +103,11 @@
             Meal log
           </RouterLink>
         </div>
-        <div class="mt-4 grid gap-3 sm:grid-cols-3">
+        <div class="mt-2 grid gap-3 grid-cols-3">
           <div
             v-for="macro in macroCards"
             :key="macro.label"
-            class="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-slate-900/80 p-3 text-center text-sm text-slate-300"
+            class="flex flex-col items-center gap-1 pt-3 text-center text-sm text-slate-300"
           >
             <p class="text-xs uppercase tracking-wide text-slate-500">{{ macro.label }}</p>
             <div class="relative h-28 w-28">
@@ -158,11 +158,11 @@
               <span>Sleep quality</span>
               <span class="text-emerald-300">Score {{ sleepQuality.score }}</span>
             </div>
-            <div class="flex items-center justify-between text-3xl font-black text-white">
+            <div class="flex items-center text-3xl font-black text-white">
               <span>{{ sleepQuality.hours }}</span>
-              <span class="text-base font-semibold text-slate-300">hrs</span>
+              <span class="text-xl font-semibold text-slate-300 mx-2">hrs</span>
             </div>
-            <p class="text-xs text-slate-400">Tracked from your latest night of sleep.</p>
+            <p class="text-xs text-slate-400">You are well rested!</p>
           </div>
 
           <div class="tile-surface space-y-3 p-4">
@@ -185,7 +185,7 @@
                 muscleSoreness
               }}</span>
             </div>
-            <p class="text-xs text-slate-400">Self-reported or synced from your tracker.</p>
+            <p class="text-xs text-slate-400">Move the slider to determine your soreness.</p>
           </div>
         </div>
 
@@ -207,43 +207,126 @@
       <article class="space-y-4 rounded-2xl border border-white/10 bg-slate-900/70 p-4">
         <div class="flex items-start justify-between gap-3">
           <div>
-            <h2 class="text-lg font-semibold text-white">Today&apos;s meal log</h2>
+            <h2 class="text-lg font-semibold text-white">Trend Insights (Weekly Snapshot)</h2>
             <p class="text-sm text-slate-400">
-              Meals recorded in the nutrition view, with per-serving macros.
+              Patterns across training and nutrition to steer the next block.
             </p>
           </div>
           <RouterLink
-            to="/recipes"
+            to="/session-history"
             class="text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:text-emerald-100"
           >
-            Recipe book
+            Session feed
           </RouterLink>
         </div>
-        <ul class="space-y-3 text-sm text-slate-300">
-          <li v-for="detail in todayMeals" :key="detail.entry.id" class="tile-surface p-4">
-            <div class="flex items-center justify-between gap-2">
-              <p class="font-semibold text-white">
-                {{ detail.recipe?.name ?? 'Unassigned recipe' }}
-              </p>
-              <span class="text-xs uppercase tracking-wide text-slate-500">{{
-                detail.entry.mealType
-              }}</span>
-            </div>
-            <p class="mt-2 text-xs text-slate-400">
-              {{ formatNumber(detail.totals?.protein ?? 0) }}g protein ·
-              {{ formatNumber(detail.totals?.carbs ?? 0) }}g carbs ·
-              {{ formatNumber(detail.totals?.fat ?? 0) }}g fats
-            </p>
-            <p v-if="detail.entry.notes" class="mt-2 text-xs text-slate-500">
-              {{ detail.entry.notes }}
-            </p>
-          </li>
-        </ul>
 
-        <div
-          class="rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-emerald-100"
-        >
-          {{ macroProgressMessage }}
+        <div class="grid gap-3 md:grid-cols-2">
+          <div class="tile-surface space-y-3 p-4">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <p class="text-xs uppercase tracking-wide text-emerald-300">Protein rhythm</p>
+                <h3 class="text-sm font-semibold text-white">
+                  Avg {{ proteinTrend.thisWeek }}g per day
+                </h3>
+              </div>
+              <span
+                class="inline-flex items-center gap-1 rounded-full bg-emerald-400/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-100"
+              >
+                {{ proteinTrend.direction === 'up' ? '↗' : '↘' }}
+                {{ formatNumber(Math.abs(proteinTrend.delta)) }}g vs last week
+              </span>
+            </div>
+            <p class="text-xs text-slate-400">
+              {{ proteinTrend.lastWeek }}g average last week · {{ proteinTrend.percentLabel }}% shift.
+            </p>
+          </div>
+
+          <div class="tile-surface space-y-3 p-4">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <p class="text-xs uppercase tracking-wide text-emerald-300">Training consistency</p>
+                <h3 class="text-sm font-semibold text-white">
+                  {{ trainingTrend.thisWeek }} sessions this week
+                </h3>
+              </div>
+              <span
+                class="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white"
+              >
+                {{ trainingTrend.icon }}
+                {{ trainingTrend.deltaLabel }}
+              </span>
+            </div>
+            <p class="text-xs text-slate-400">
+              {{ trainingTrend.lastWeek }} logged last week · {{ trainingTrend.signal }} rhythm.
+            </p>
+          </div>
+
+          <div class="tile-surface space-y-3 p-4 md:col-span-2">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <p class="text-xs uppercase tracking-wide text-emerald-300">Calorie trend</p>
+                <h3 class="text-sm font-semibold text-white">
+                  {{ formatNumber(calorieSparkline.averageThisWeek) }} kcal daily avg
+                </h3>
+              </div>
+              <span
+                class="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white"
+                :class="calorieSparkline.direction === 'up' ? 'text-emerald-200' : 'text-amber-200'"
+              >
+                {{ calorieSparkline.direction === 'up' ? '↗' : '↘' }}
+                {{ calorieSparkline.deltaLabel }}
+              </span>
+            </div>
+            <div class="space-y-2">
+              <svg viewBox="0 0 120 42" class="h-16 w-full text-emerald-300" role="img" aria-label="Weekly calorie sparkline">
+                <polyline
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  :points="calorieSparkline.points"
+                  class="drop-shadow-[0_8px_20px_rgba(16,185,129,0.35)]"
+                />
+              </svg>
+              <p class="text-xs text-slate-400">
+                {{ calorieSparkline.label }} Last week sat at {{ formatNumber(calorieSparkline.averageLastWeek) }} kcal.
+              </p>
+            </div>
+          </div>
+
+          <div class="tile-surface space-y-3 p-4 md:col-span-2">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <p class="text-xs uppercase tracking-wide text-emerald-300">Strength momentum</p>
+                <h3 class="text-sm font-semibold text-white">Key lifts moving up</h3>
+              </div>
+              <RouterLink
+                to="/workout"
+                class="text-[11px] font-semibold uppercase tracking-wide text-emerald-200 transition hover:text-emerald-100"
+              >
+                Workout view
+              </RouterLink>
+            </div>
+            <div class="grid gap-3 sm:grid-cols-2">
+              <div
+                v-for="lift in strengthTrends"
+                :key="lift.lift"
+                class="flex items-start justify-between gap-3 rounded-2xl border border-white/10 bg-slate-900/80 p-4"
+              >
+                <div class="space-y-1">
+                  <p class="text-sm font-semibold text-white">{{ lift.lift }}</p>
+                  <p class="text-xs text-slate-400">{{ lift.detail }}</p>
+                </div>
+                <span
+                  class="mt-1 inline-flex items-center gap-1 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wide"
+                  :class="lift.direction === 'up' ? 'bg-emerald-400/10 text-emerald-200' : 'bg-amber-400/10 text-amber-200'"
+                >
+                  {{ lift.direction === 'up' ? '↗' : '↘' }}
+                  {{ lift.delta }}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </article>
     </section>
@@ -364,15 +447,6 @@ const mealStat = computed(() => ({
   context: 'Using the updated meal log',
 }))
 
-const todayMeals = computed(() => mealLogDetails.value.slice(0, 3))
-
-const macroProgressMessage = computed(() => {
-  if (!dailyTotals.value.protein) return 'Log a meal to see your protein and carb run-rate.'
-  const proteinGap = Math.max(macroTargets.protein - dailyTotals.value.protein, 0)
-  const carbsGap = Math.max(macroTargets.carbs - dailyTotals.value.carbs, 0)
-  return `Still ${formatNumber(proteinGap)}g protein and ${formatNumber(carbsGap)}g carbs from target.`
-})
-
 const proteinTargetMessage = computed(() => {
   const protein = dailyTotals.value.protein
   if (!protein) return 'Start the log with a protein-heavy meal.'
@@ -417,4 +491,99 @@ const readinessRecommendation = computed(() => {
     detail: 'Swap to technique work, mobility, and easy cardio until soreness drops.',
   }
 })
+
+const average = (values: number[]) => (values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0)
+
+const proteinTrend = computed(() => {
+  const thisWeek = 184
+  const lastWeek = 171
+  const delta = thisWeek - lastWeek
+  const percentChangeRaw = lastWeek ? Math.round((delta / lastWeek) * 100) : 0
+
+  return {
+    thisWeek,
+    lastWeek,
+    delta,
+    direction: delta >= 0 ? 'up' : 'down',
+    percentLabel: `${percentChangeRaw >= 0 ? '+' : '−'}${Math.abs(percentChangeRaw)}`,
+  }
+})
+
+const trainingTrend = computed(() => {
+  const thisWeek = 4
+  const lastWeek = 3
+  const delta = thisWeek - lastWeek
+
+  return {
+    thisWeek,
+    lastWeek,
+    delta,
+    deltaLabel: `${delta >= 0 ? '+' : '−'}${Math.abs(delta)} vs last week`,
+    icon: delta >= 0 ? '↗' : '↘',
+    signal: delta >= 0 ? 'Building momentum' : 'Rebuild consistency',
+  }
+})
+
+const calorieTrend = {
+  thisWeek: [2320, 2475, 2410, 2520, 2600, 2380, 2450],
+  lastWeek: [2210, 2300, 2285, 2350, 2400, 2260, 2325],
+}
+
+const calorieSparkline = computed(() => {
+  const values = calorieTrend.thisWeek
+  const max = Math.max(...values)
+  const min = Math.min(...values)
+  const height = 36
+  const width = 120
+  const range = max - min || 1
+  const step = values.length > 1 ? width / (values.length - 1) : width
+  const points = values
+    .map((value, index) => {
+      const normalized = (value - min) / range
+      const y = height - normalized * height
+      const x = index * step
+      return `${x.toFixed(1)},${y.toFixed(1)}`
+    })
+    .join(' ')
+
+  const averageThisWeek = average(values)
+  const averageLastWeek = average(calorieTrend.lastWeek)
+  const delta = averageThisWeek - averageLastWeek
+
+  return {
+    points,
+    averageThisWeek,
+    averageLastWeek,
+    direction: delta >= 0 ? 'up' : 'down',
+    deltaLabel: `${delta >= 0 ? '+' : '−'}${formatNumber(Math.abs(delta))} kcal`,
+    label: 'Sparkline reflects the current 7-day run-rate.',
+  }
+})
+
+const strengthTrends = [
+  {
+    lift: 'Barbell Bench Press',
+    delta: '+2.5kg',
+    detail: 'Settled at 4×10 @ 42.5kg with smoother lockouts.',
+    direction: 'up' as const,
+  },
+  {
+    lift: 'Back Squat',
+    delta: '+5kg',
+    detail: 'Heavier doubles moved to working weight without form drift.',
+    direction: 'up' as const,
+  },
+  {
+    lift: 'Romanian Deadlift',
+    delta: '+4kg',
+    detail: 'Hip hinge felt stronger; grip stayed consistent set to set.',
+    direction: 'up' as const,
+  },
+  {
+    lift: 'Weighted Pull-up',
+    delta: '+1 rep',
+    detail: 'Maintained tempo while adding a clean rep to top set.',
+    direction: 'up' as const,
+  },
+]
 </script>
