@@ -43,7 +43,7 @@
         <transition name="fade">
           <div
             v-if="showStickyMacros"
-            class="fixed inset-x-0 top-20 z-20 border-b border-white/5 bg-slate-900/90 px-4 py-3 backdrop-blur"
+            class="fixed inset-x-0 top-20 z-20 border-b border-white/5 bg-slate-900/90 px-4 backdrop-blur"
           >
             <div class="mx-auto max-w-6xl grid grid-cols-3 gap-2">
               <div
