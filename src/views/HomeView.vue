@@ -34,7 +34,10 @@
           </RouterLink>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      </div>
+
+      <div class="space-y-4 lg:space-y-5">
+        <div class="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
           <div
             class="col-span-2 flex items-center justify-between rounded-2xl border border-emerald-400/40 bg-emerald-500/10 p-4 sm:col-span-1"
           >
@@ -58,81 +61,85 @@
       </div>
     </section>
 
-    <article class="card-surface p-5">
-      <div class="flex items-center justify-between gap-2">
-        <div>
-          <p class="text-xs uppercase tracking-wide text-emerald-300">Upcoming focus</p>
-          <h2 class="text-lg font-semibold text-white">{{ nextPlan?.title }}</h2>
-          <p class="text-sm text-slate-400">{{ nextPlan?.exercises.length }} exercises on deck</p>
-        </div>
-        <RouterLink
-          to="/workout"
-          class="inline-flex items-center gap-2 rounded-full border border-emerald-400/50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:-translate-y-0.5 hover:border-emerald-300/70"
-        >
-          View plan
-        </RouterLink>
-      </div>
-
-      <ul class="max-h-[270px] space-y-3 overflow-y-auto pr-2 text-sm text-slate-200">
-        <li
-          v-for="exercise in nextPlanPreview"
-          :key="exercise.name"
-          class="tile-surface flex flex-col gap-2 p-4"
-        >
-          <span class="font-semibold text-white">{{ exercise.name }}</span>
-          <div class="flex items-center gap-2 text-slate-300">
-            <span>{{ exercise.sets }} sets</span>
-            <span class="text-slate-600">·</span>
-            <span>{{ exercise.reps }} reps</span>
+    <section class="grid gap-4 md:grid-cols-[1fr_2fr]">
+      <!-- Workout tracker -->
+      <article class="card-surface p-5">
+        <div class="flex items-center justify-between gap-2">
+          <div>
+            <p class="text-xs uppercase tracking-wide text-emerald-300">Workout tracker</p>
+            <h2 class="text-lg font-semibold text-white">{{ nextPlan?.title }}</h2>
+            <p class="text-sm text-slate-400">{{ nextPlan?.exercises.length }} exercises on deck</p>
           </div>
-        </li>
-      </ul>
-    </article>
-
-    <article class="card-surface p-5">
-      <div class="flex items-center justify-between gap-2">
-        <div>
-          <p class="text-xs uppercase tracking-wide text-emerald-300">Fuel snapshot</p>
-          <h2 class="text-lg font-semibold text-white">{{ proteinTargetMessage }}</h2>
-          <p class="text-sm text-slate-400">{{ macroCallout }}</p>
+          <RouterLink
+            to="/workout"
+            class="inline-flex items-center gap-2 rounded-full border border-emerald-400/50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:-translate-y-0.5 hover:border-emerald-300/70"
+          >
+            View plan
+          </RouterLink>
         </div>
-        <RouterLink
-          to="/nutrition"
-          class="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-100 transition hover:-translate-y-0.5 hover:border-emerald-300/70"
-        >
-          Meal log
-        </RouterLink>
-      </div>
-      <div class="mt-2 grid gap-3 grid-cols-3">
-        <div
-          v-for="macro in macroCards"
-          :key="macro.label"
-          class="flex flex-col items-center gap-1 pt-3 text-center text-sm text-slate-300"
-        >
-          <p class="text-xs uppercase tracking-wide text-slate-500">{{ macro.label }}</p>
-          <div class="relative h-28 w-28">
-            <svg class="h-full w-full -rotate-90" viewBox="0 0 80 80" fill="none">
-              <circle cx="40" cy="40" r="32" class="stroke-white/10" stroke-width="10" />
-              <circle
-                cx="40"
-                cy="40"
-                r="32"
-                class="stroke-emerald-400"
-                stroke-width="10"
-                stroke-linecap="round"
-                :stroke-dasharray="macro.circumference"
-                :stroke-dashoffset="macro.strokeOffset"
-              />
-            </svg>
-            <div class="absolute inset-0 flex flex-col items-center justify-center gap-1">
-              <p class="text-lg font-bold text-white">{{ macro.displayValue }}</p>
-              <p class="text-[11px] text-slate-500">/ {{ macro.goalLabel }}</p>
+
+        <ul class="max-h-[270px] space-y-3 overflow-y-auto pr-2 text-sm text-slate-200">
+          <li
+            v-for="exercise in nextPlanPreview"
+            :key="exercise.name"
+            class="tile-surface flex flex-col gap-2 p-4"
+          >
+            <span class="font-semibold text-white">{{ exercise.name }}</span>
+            <div class="flex items-center gap-2 text-slate-300">
+              <span>{{ exercise.sets }} sets</span>
+              <span class="text-slate-600">·</span>
+              <span>{{ exercise.reps }} reps</span>
             </div>
+          </li>
+        </ul>
+      </article>
+
+      <!-- Nutrient tracker -->
+      <article class="card-surface p-5">
+        <div class="flex items-center justify-between gap-2">
+          <div>
+            <p class="text-xs uppercase tracking-wide text-emerald-300">Nutrient tracker</p>
+            <h2 class="text-lg font-semibold text-white">{{ proteinTargetMessage }}</h2>
+            <p class="text-sm text-slate-400">{{ macroCallout }}</p>
           </div>
-          <p class="text-xs text-slate-400">{{ macro.progress }}% to goal</p>
+          <RouterLink
+            to="/nutrition"
+            class="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-100 transition hover:-translate-y-0.5 hover:border-emerald-300/70"
+          >
+            Meal log
+          </RouterLink>
         </div>
-      </div>
-    </article>
+        <div class="mt-2 grid gap-3 grid-cols-3">
+          <div
+            v-for="macro in macroCards"
+            :key="macro.label"
+            class="flex flex-col items-center gap-1 pt-3 text-center text-sm text-slate-300"
+          >
+            <p class="text-base uppercase tracking-wide text-slate-300">{{ macro.label }}</p>
+            <div class="relative h-28 w-28 sm:h-36 sm:w-36">
+              <svg class="h-full w-full -rotate-90" viewBox="0 0 80 80" fill="none">
+                <circle cx="40" cy="40" r="32" class="stroke-white/10" stroke-width="10" />
+                <circle
+                  cx="40"
+                  cy="40"
+                  r="32"
+                  class="stroke-emerald-400"
+                  stroke-width="10"
+                  stroke-linecap="round"
+                  :stroke-dasharray="macro.circumference"
+                  :stroke-dashoffset="macro.strokeOffset"
+                />
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center gap-1">
+                <p class="text-base sm:text-xl font-bold text-white">{{ macro.displayValue }}</p>
+                <p class="text-sm sm:text-md text-slate-500">/{{ macro.goalLabel }}</p>
+              </div>
+            </div>
+            <p class="text-xs text-slate-500">{{ macro.progress }}% to goal</p>
+          </div>
+        </div>
+      </article>
+    </section>
 
     <section class="grid gap-6 lg:grid-cols-2">
       <article class="space-y-4 rounded-2xl border border-white/10 bg-slate-900/70 p-4">
@@ -310,7 +317,7 @@
               <div
                 v-for="lift in strengthTrends"
                 :key="lift.lift"
-                class="flex items-start justify-between gap-3 rounded-2xl border border-white/10 bg-slate-900/80 p-4"
+                class="flex items-start justify-between gap-3 rounded-xl border border-white/10 p-4"
               >
                 <div class="space-y-1">
                   <p class="text-sm font-semibold text-white">{{ lift.lift }}</p>
