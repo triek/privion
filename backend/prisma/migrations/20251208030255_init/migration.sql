@@ -1,0 +1,8 @@
+-- CreateTable
+CREATE TABLE "WorkoutSession" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "title" TEXT NOT NULL,
+    "date" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "notes" TEXT,
+    "completed" BOOLEAN NOT NULL DEFAULT false
+);
