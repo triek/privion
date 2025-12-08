@@ -405,10 +405,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
-import { workoutExercises, type WorkoutExercise } from '@/data/workoutExcercise'
+import { storeToRefs } from 'pinia'
+
+import { useSessionStore } from '@/stores/workoutSessions'
 import { workoutRoutineSets } from '@/data/workoutRoutine'
+import type { WorkoutExercise } from '@/types/workout'
 
 type RoutineExerciseForm = {
   id: string
@@ -430,13 +433,18 @@ type RoutineForm = {
 
 const NEW_ROUTINE_ID = 'new-routine'
 
-const exerciseLookup = workoutExercises.reduce<Record<string, WorkoutExercise>>((map, exercise) => {
-  map[exercise.id] = exercise
-  return map
-}, {})
+const sessionStore = useSessionStore()
+const { exercises, loading, error } = storeToRefs(sessionStore)
 
-const exerciseLibrary = workoutExercises
-const muscleGroups = Array.from(new Set(exerciseLibrary.map((exercise) => exercise.muscle)))
+const exerciseLookup = computed(() =>
+  exercises.value.reduce<Record<string, WorkoutExercise>>((map, exercise) => {
+    map[exercise.id] = exercise
+    return map
+  }, {}),
+)
+
+const exerciseLibrary = computed(() => exercises.value)
+const muscleGroups = computed(() => Array.from(new Set(exerciseLibrary.value.map((exercise) => exercise.muscle))))
 
 const createEmptyRoutine = (): RoutineForm => ({
   id: NEW_ROUTINE_ID,
@@ -446,12 +454,18 @@ const createEmptyRoutine = (): RoutineForm => ({
   exercises: [],
 })
 
+onMounted(() => {
+  if (!exercises.value.length && !loading.value && !error.value) {
+    sessionStore.fetchExercises()
+  }
+})
+
 function resolveExercise(
   routineExercise: { exerciseId: string; sets?: number; reps?: number; weight?: number },
   routineId: string,
   index: number,
 ): RoutineExerciseForm | null {
-  const baseExercise = exerciseLookup[routineExercise.exerciseId]
+  const baseExercise = exerciseLookup.value[routineExercise.exerciseId]
   if (!baseExercise) return null
 
   return {
@@ -465,23 +479,12 @@ function resolveExercise(
   }
 }
 
-const routines = ref<RoutineForm[]>(
-  workoutRoutineSets.flatMap((set) =>
-    set.routines.map((routine) => ({
-      id: routine.id,
-      name: routine.name,
-      setId: set.id,
-      setName: set.name,
-      exercises: routine.exercises
-        .map((exercise, index) => resolveExercise(exercise, routine.id, index))
-        .filter((exercise): exercise is RoutineExerciseForm => Boolean(exercise)),
-    })),
-  ),
-)
+const routines = ref<RoutineForm[]>([])
 const routineDraft = ref<RoutineForm>(createEmptyRoutine())
 
-const activeRoutineId = ref(routines.value[0]?.id ?? '')
+const activeRoutineId = ref('')
 const selectedRoutineId = ref<string>(NEW_ROUTINE_ID)
+const initializedRoutines = ref(false)
 const draggingIndex = ref<number | null>(null)
 const exerciseSearch = ref('')
 const exerciseMuscleFilter = ref<'all' | string>('all')
@@ -514,7 +517,7 @@ const activeRoutineSetRoutines = computed(() => {
 
 const filteredExercises = computed(() => {
   const searchTerm = exerciseSearch.value.trim().toLowerCase()
-  return exerciseLibrary.filter((exercise) => {
+  return exerciseLibrary.value.filter((exercise) => {
     const matchesMuscle =
       exerciseMuscleFilter.value === 'all' || exercise.muscle === exerciseMuscleFilter.value
     const matchesSearch = !searchTerm || exercise.name.toLowerCase().includes(searchTerm)
@@ -526,6 +529,30 @@ const lastSavedMessage = computed(() =>
   lastSavedAt.value
     ? `Last saved ${lastSavedAt.value}`
     : 'Edits are unsaved. Save to update the routine.',
+)
+
+watch(
+  () => exercises.value,
+  (currentExercises) => {
+    if (!currentExercises.length || initializedRoutines.value) return
+
+    routines.value = workoutRoutineSets.flatMap((set) =>
+      set.routines.map((routine) => ({
+        id: routine.id,
+        name: routine.name,
+        setId: set.id,
+        setName: set.name,
+        exercises: routine.exercises
+          .map((exercise, index) => resolveExercise(exercise, routine.id, index))
+          .filter((exercise): exercise is RoutineExerciseForm => Boolean(exercise)),
+      })),
+    )
+
+    activeRoutineId.value = routines.value[0]?.id ?? ''
+    selectedRoutineId.value = routines.value[0]?.id ?? NEW_ROUTINE_ID
+    initializedRoutines.value = true
+  },
+  { immediate: true },
 )
 
 watch(

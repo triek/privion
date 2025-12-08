@@ -2,7 +2,26 @@ import { defineStore } from 'pinia'
 
 import type { WorkoutExercise, WorkoutExercisePayload } from '@/types/workout'
 
-const SESSIONS_ENDPOINT = '/api/sessions'
+const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '')
+const SESSIONS_ENDPOINT = `${apiBaseUrl}/api/sessions`
+
+const ensureJsonResponse = async <T>(response: Response): Promise<T> => {
+  const contentType = response.headers.get('content-type')
+
+  if (!contentType?.includes('application/json')) {
+    const bodyPreview = await response.text()
+    const previewMessage = bodyPreview ? ` Response preview: ${bodyPreview.slice(0, 120)}` : ''
+    throw new Error(
+      `Server returned a non-JSON response${contentType ? ` (${contentType})` : ''}.${previewMessage}`.trim(),
+    )
+  }
+
+  try {
+    return (await response.json()) as T
+  } catch (error) {
+    throw new Error('Received malformed JSON from the server')
+  }
+}
 
 export const useSessionStore = defineStore('sessionStore', {
   state: () => ({
@@ -21,7 +40,7 @@ export const useSessionStore = defineStore('sessionStore', {
           throw new Error('Failed to load workout sessions')
         }
 
-        const data: WorkoutExercise[] = await response.json()
+        const data = await ensureJsonResponse<WorkoutExercise[]>(response)
         this.exercises = data
       } catch (error) {
         this.error = error instanceof Error ? error.message : 'Unexpected error while loading exercises'
@@ -45,7 +64,7 @@ export const useSessionStore = defineStore('sessionStore', {
           throw new Error('Failed to create workout session')
         }
 
-        const createdExercise: WorkoutExercise = await response.json()
+        const createdExercise = await ensureJsonResponse<WorkoutExercise>(response)
         this.exercises = [...this.exercises, createdExercise]
 
         return createdExercise

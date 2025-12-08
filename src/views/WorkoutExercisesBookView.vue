@@ -77,6 +77,11 @@
       </div>
 
       <div class="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+        <p v-if="loading" class="text-sm text-slate-400">Loading exercises...</p>
+        <p v-else-if="error" class="text-sm text-rose-300">Failed to load exercises: {{ error }}</p>
+        <p v-else-if="!filteredExercises.length" class="text-sm text-slate-400">
+          No exercises available. Try adding a new session in the API.
+        </p>
         <!-- Exercises -->
         <article
           v-for="exercise in filteredExercises"
@@ -120,11 +125,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { RouterLink } from 'vue-router'
+import { storeToRefs } from 'pinia'
 
-import type { MuscleGroup } from '@/data/workoutExcercise'
-import { workoutExercises } from '@/data/workoutExcercise'
+import { useSessionStore } from '@/stores/workoutSessions'
+import type { MuscleGroup } from '@/types/workout'
 
 type FilterOption = 'All' | MuscleGroup
 
@@ -143,18 +149,21 @@ const muscleFilters: { label: string; value: FilterOption }[] = [
   { label: 'Hamstrings', value: 'Hamstrings' },
 ]
 
-const exercises = workoutExercises
+const sessionStore = useSessionStore()
+const { exercises, loading, error } = storeToRefs(sessionStore)
 
 const selectedMuscle = ref<FilterOption>('All')
 const showAllMuscleFilters = ref(false)
 const maxVisibleMuscleFilters = 6
 const expandedExercises = reactive<Record<string, boolean>>({})
 
-const filteredExercises = computed(() =>
-  selectedMuscle.value === 'All'
-    ? exercises
-    : exercises.filter((exercise) => exercise.muscle === selectedMuscle.value)
-)
+const filteredExercises = computed(() => {
+  if (selectedMuscle.value === 'All') {
+    return exercises.value
+  }
+
+  return exercises.value.filter((exercise) => exercise.muscle === selectedMuscle.value)
+})
 
 const hiddenMuscleFiltersCount = computed(() => Math.max(0, muscleFilters.length - maxVisibleMuscleFilters))
 
@@ -167,4 +176,10 @@ const toggleExercise = (name: string) => {
 }
 
 const isExerciseExpanded = (name: string) => Boolean(expandedExercises[name])
+
+onMounted(() => {
+  if (!exercises.value.length && !loading.value && !error.value) {
+    sessionStore.fetchExercises()
+  }
+})
 </script>
