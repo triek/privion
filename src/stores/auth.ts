@@ -17,12 +17,15 @@ type Credentials = {
 
 type SignupPayload = UserProfile & { password: string }
 
+// Store providing authentication state and related helpers
 export const useAuthStore = defineStore('auth', () => {
   const profile = ref<UserProfile | null>(null)
   const credentials = ref<Credentials | null>(null)
 
+  // Tracks whether a user profile exists to indicate authentication
   const isAuthenticated = computed(() => profile.value !== null)
 
+  // Handles signup validation and profile creation
   const signup = (payload: SignupPayload) => {
     const requiredFields = ['name', 'email', 'password', 'goal', 'location', 'focus', 'experience'] as const
     const missing = requiredFields.filter((field) => !payload[field])
@@ -43,6 +46,7 @@ export const useAuthStore = defineStore('auth', () => {
     credentials.value = { email: payload.email.trim(), password: payload.password }
   }
 
+  // Validates provided credentials and hydrates a profile
   const login = (email: string, password: string) => {
     if (!credentials.value) {
       throw new Error('No account found. Please sign up first.')
@@ -67,6 +71,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  // Clears the current user session data
   const logout = () => {
     profile.value = null
   }
