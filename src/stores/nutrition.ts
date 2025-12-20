@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import type { Ingredient, MealLogEntry, Recipe } from '@/types/nutrition'
 import { perServingTotals, sumRecipeTotals } from '@/utils/nutrition'
 
+// Generates a short random identifier for new nutrition records.
 const createId = () => Math.random().toString(36).slice(2, 9)
 
 const sampleIngredients: Ingredient[] = [
@@ -298,15 +299,18 @@ const sampleMealLogs: MealLogEntry[] = [
   },
 ]
 
+// Store managing nutrition data including ingredients, recipes, and meal logs.
 export const useNutritionStore = defineStore('nutrition', () => {
   const ingredients = ref<Ingredient[]>(sampleIngredients)
   const recipes = ref<Recipe[]>(sampleRecipes)
   const mealLogs = ref<MealLogEntry[]>(sampleMealLogs)
 
+  // Provides quick lookup for ingredients by id.
   const ingredientMap = computed(
     () => new Map(ingredients.value.map((ingredient) => [ingredient.id, ingredient]))
   )
 
+  // Summarizes recipe nutrition totals and per-serving values.
   const recipeSummaries = computed(() =>
     recipes.value.map((recipe) => ({
       recipe,
@@ -315,20 +319,24 @@ export const useNutritionStore = defineStore('nutrition', () => {
     }))
   )
 
+  // Adds a new ingredient with a generated id.
   const addIngredient = (payload: Omit<Ingredient, 'id'>) => {
     ingredients.value.push({ ...payload, id: createId() })
   }
 
+  // Adds a new recipe with a generated id.
   const addRecipe = (payload: Omit<Recipe, 'id'>) => {
     recipes.value.push({ ...payload, id: createId() })
   }
 
+  // Toggles whether a recipe is marked as a template.
   const toggleTemplate = (recipeId: string) => {
     const recipe = recipes.value.find((item) => item.id === recipeId)
     if (!recipe) return
     recipe.isTemplate = !recipe.isTemplate
   }
 
+  // Records a meal log entry at the beginning of the log list.
   const addMealLog = (payload: Omit<MealLogEntry, 'id'>) => {
     mealLogs.value.unshift({ ...payload, id: createId() })
   }
