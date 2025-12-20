@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { workoutExercises } from '@/data/workoutExcercise'
 import type { WorkoutExercise, WorkoutExercisePayload } from '@/types/workout'
 
+// Builds the backend URL when running inside GitHub Codespaces.
 const getCodespaceBackendUrl = () => {
   if (typeof window === 'undefined') return null
 
@@ -17,6 +18,7 @@ const getCodespaceBackendUrl = () => {
   return null
 }
 
+// Determines a sensible default API base URL for different environments.
 const getDefaultApiBaseUrl = () => {
   const codespaceBackend = getCodespaceBackendUrl()
 
@@ -38,6 +40,7 @@ const getDefaultApiBaseUrl = () => {
 const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || getDefaultApiBaseUrl()).replace(/\/$/, '')
 const SESSIONS_ENDPOINT = `${apiBaseUrl}/api/sessions`
 
+// Ensures the response contains valid JSON before parsing.
 const ensureJsonResponse = async <T>(response: Response): Promise<T> => {
   const contentType = response.headers.get('content-type')
 
@@ -56,6 +59,7 @@ const ensureJsonResponse = async <T>(response: Response): Promise<T> => {
   }
 }
 
+// Builds a user-friendly error when exercise loading fails.
 const buildExerciseLoadError = (error: unknown): string => {
   if (error instanceof Error) {
     const previewLooksLikeHtml = error.message.includes('text/html') || error.message.includes('<!doctype html>')
@@ -70,13 +74,16 @@ const buildExerciseLoadError = (error: unknown): string => {
   return 'Unexpected error while loading exercises. Loaded built-in exercises instead.'
 }
 
+// Store handling workout session exercises and API interactions.
 export const useSessionStore = defineStore('sessionStore', {
+  // Initializes default exercise state and status flags.
   state: () => ({
     exercises: [] as WorkoutExercise[],
     loading: false,
     error: null as string | null,
   }),
   actions: {
+    // Loads exercises from the API, falling back to bundled data.
     async fetchExercises() {
       this.loading = true
       this.error = null
@@ -97,6 +104,7 @@ export const useSessionStore = defineStore('sessionStore', {
         this.loading = false
       }
     },
+    // Creates a new exercise via the API and stores locally as needed.
     async createExercise(payload: WorkoutExercisePayload) {
       this.error = null
 
