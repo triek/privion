@@ -515,6 +515,8 @@ const proteinTrend = computed(() => {
   }
 })
 
+
+
 const trainingTrend = computed(() => {
   const thisWeek = 4
   const lastWeek = 3
